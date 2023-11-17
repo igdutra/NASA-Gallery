@@ -71,8 +71,7 @@
 		925D35FB2B08037000FE12DA /* NASAGallery */ = {
 			isa = PBXGroup;
 			children = (
-				925D36112B08037A00FE12DA /* APODItem.swift */,
-				925D36132B0804A900FE12DA /* APODLoader.swift */,
+				925D36152B08057300FE12DA /* APOD Feature */,
 			);
 			path = NASAGallery;
 			sourceTree = "<group>";
@@ -83,6 +82,15 @@
 				925D36062B08037000FE12DA /* NASAGalleryTests.swift */,
 			);
 			path = NASAGalleryTests;
+			sourceTree = "<group>";
+		};
+		925D36152B08057300FE12DA /* APOD Feature */ = {
+			isa = PBXGroup;
+			children = (
+				925D36112B08037A00FE12DA /* APODItem.swift */,
+				925D36132B0804A900FE12DA /* APODLoader.swift */,
+			);
+			path = "APOD Feature";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
