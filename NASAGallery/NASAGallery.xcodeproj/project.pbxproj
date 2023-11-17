@@ -10,6 +10,7 @@
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36072B08037000FE12DA /* NASAGalleryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36062B08037000FE12DA /* NASAGalleryTests.swift */; };
 		925D36122B08037A00FE12DA /* APODItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* APODItem.swift */; };
+		925D36142B0804A900FE12DA /* APODLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* APODLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +28,7 @@
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36062B08037000FE12DA /* NASAGalleryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryTests.swift; sourceTree = "<group>"; };
 		925D36112B08037A00FE12DA /* APODItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APODItem.swift; sourceTree = "<group>"; };
+		925D36132B0804A900FE12DA /* APODLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APODLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				925D36112B08037A00FE12DA /* APODItem.swift */,
+				925D36132B0804A900FE12DA /* APODLoader.swift */,
 			);
 			path = NASAGallery;
 			sourceTree = "<group>";
@@ -191,6 +194,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				925D36142B0804A900FE12DA /* APODLoader.swift in Sources */,
 				925D36122B08037A00FE12DA /* APODItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
