@@ -7,9 +7,29 @@
 
 import XCTest
 
-final class RemoteAPODLoader: XCTestCase {
+class RemoteAPODLoader {
+    
+}
 
-    func test() {
-        XCTFail("Initial failing test.")
+protocol HTTPClient {
+    func get(from url: URL)
+}
+
+class HTTPClientSpy: HTTPClient {
+    var requestedURL: URL?
+    
+    func get(from url: URL) {
+        
+    }
+}
+
+
+final class RemoteAPODLoaderTests: XCTestCase {
+
+    func test_init_doesNotRequestDataFromURL() {
+        let sut = RemoteAPODLoader()
+        let client = HTTPClientSpy()
+        
+        XCTAssertNil(client.requestedURL)
     }
 }
