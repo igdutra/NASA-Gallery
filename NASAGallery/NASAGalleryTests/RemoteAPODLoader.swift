@@ -11,7 +11,7 @@ class RemoteAPODLoader {
     let client: HTTPClient
     let url: URL
     
-    init(url: URL = URL(string: "a-url.com")!, client: HTTPClient) {
+    init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client
     }
@@ -37,19 +37,25 @@ class HTTPClientSpy: HTTPClient {
 final class RemoteAPODLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL() {
-        let client = HTTPClientSpy()
-        let sut = RemoteAPODLoader(client: client)
+        let (_, client) = makeSUT()
         
         XCTAssertNil(client.requestedURL)
     }
     
     func test_load_requestDataFromURL() {
         let url = URL(string: "b-url.com")!
-        let client = HTTPClientSpy()
-        let sut = RemoteAPODLoader(url: url, client: client)
+        let (sut, client) = makeSUT(url: url)
         
         sut.load()
         
         XCTAssertEqual(client.requestedURL, url)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteAPODLoader, spy: HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteAPODLoader(url: url, client: client)
+        return (sut, client)
     }
 }
