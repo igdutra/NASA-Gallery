@@ -1,5 +1,5 @@
 //
-//  APODItem.swift
+//  GalleryItem.swift
 //  NASAGallery
 //
 //  Created by Ivo on 17/11/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APODItem {
+struct GalleryItem {
     let title: String
     let url: URL
     let date: String
