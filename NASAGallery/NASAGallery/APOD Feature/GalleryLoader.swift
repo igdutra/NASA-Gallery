@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol APODLoader {
+protocol GalleryLoader {
     func load() async throws -> [APODItem]
 }
