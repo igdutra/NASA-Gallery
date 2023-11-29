@@ -1,5 +1,5 @@
 //
-//  RemoteAPODLoader.swift
+//  RemoteGalleryLoaderTests.swift
 //  NASAGalleryTests
 //
 //  Created by Ivo on 20/11/23.
@@ -34,7 +34,7 @@ class HTTPClientSpy: HTTPClient {
 }
 
 
-final class RemoteAPODLoaderTests: XCTestCase {
+final class RemoteGalleryLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
