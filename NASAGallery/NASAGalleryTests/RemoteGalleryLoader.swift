@@ -7,7 +7,7 @@
 
 import XCTest
 
-class RemoteAPODLoader {
+class RemoteGalleryLoader {
     let client: HTTPClient
     let url: URL
     
@@ -53,9 +53,9 @@ final class RemoteAPODLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteAPODLoader, spy: HTTPClientSpy) {
+    private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
         let client = HTTPClientSpy()
-        let sut = RemoteAPODLoader(url: url, client: client)
+        let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
     }
 }
