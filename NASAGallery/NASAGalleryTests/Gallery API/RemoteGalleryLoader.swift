@@ -6,32 +6,7 @@
 //
 
 import XCTest
-
-class RemoteGalleryLoader {
-    let client: HTTPClient
-    let url: URL
-    
-    init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
-    }
-    
-    func load() {
-        client.get(from: url)
-    }
-}
-
-protocol HTTPClient {
-    func get(from url: URL)
-}
-
-class HTTPClientSpy: HTTPClient {
-    var requestedURL: URL?
-    
-    func get(from url: URL) {
-        requestedURL = url
-    }
-}
+import NASAGallery
 
 
 final class RemoteGalleryLoaderTests: XCTestCase {
@@ -57,5 +32,17 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
+    }
+}
+
+// MARK: - Spy
+
+private extension RemoteGalleryLoaderTests {
+    class HTTPClientSpy: HTTPClient {
+        var requestedURL: URL?
+        
+        func get(from url: URL) {
+            requestedURL = url
+        }
     }
 }

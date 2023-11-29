@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */; };
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryItem.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36112B08037A00FE12DA /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
@@ -50,6 +52,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		922F11F72B17DBDF008B3FB8 /* Gallery API */ = {
+			isa = PBXGroup;
+			children = (
+				92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */,
+			);
+			path = "Gallery API";
+			sourceTree = "<group>";
+		};
+		922F11F82B17DBEC008B3FB8 /* Gallery API */ = {
+			isa = PBXGroup;
+			children = (
+				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
+			);
+			path = "Gallery API";
+			sourceTree = "<group>";
+		};
 		925D35EF2B08037000FE12DA = {
 			isa = PBXGroup;
 			children = (
@@ -72,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				925D36152B08057300FE12DA /* Gallery Feature */,
+				922F11F82B17DBEC008B3FB8 /* Gallery API */,
 			);
 			path = NASAGallery;
 			sourceTree = "<group>";
@@ -79,7 +98,7 @@
 		925D36052B08037000FE12DA /* NASAGalleryTests */ = {
 			isa = PBXGroup;
 			children = (
-				92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */,
+				922F11F72B17DBDF008B3FB8 /* Gallery API */,
 			);
 			path = NASAGalleryTests;
 			sourceTree = "<group>";
@@ -202,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */,
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */,
 			);
