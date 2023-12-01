@@ -26,6 +26,16 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         XCTAssertEqual(client.receivedMessages, [.load(url)])
     }
     
+    func test_loadTwice_requestsDataFromURLTwice() {
+        let url = URL(string: "https://a-given-url.com")!
+        let (sut, client) = makeSUT(url: url)
+
+        sut.load()
+        sut.load()
+
+        XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
