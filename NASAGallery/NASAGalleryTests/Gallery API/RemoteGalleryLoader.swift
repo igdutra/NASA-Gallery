@@ -54,21 +54,27 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOnNon200HTTPResponse() async {
-        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-        let clientResult: HTTPClientSpy.Result = .success(HTTPURLResponse(statusCode: 400))
-        let (sut, _) = makeSUT(result: clientResult)
+        let samples = [199, 201, 300, 400, 500]
         
-        var capturedResults: [HTTPClientSpy.Result] = []
-        do {
-            _ = try await sut.load()
-            XCTFail("Should return RemoteGalleryLoader.Error but returned sucessifuly instead")
-        } catch let error as RemoteGalleryLoader.Error {
-            capturedResults.append(.failure(error))
-        } catch {
-            XCTFail("Should return RemoteGalleryLoader.Error but returned \(error) instead")
+        // Note: .forEach() method expects a synchronous closure
+        for code in samples {
+            // TODO: possible to remove client from makeSUT, since results are stubbed upfront
+            let clientResult: HTTPClientSpy.Result = .success(HTTPURLResponse(statusCode: code))
+            let (sut, _) = makeSUT(result: clientResult)
+            
+            var capturedResults: [HTTPClientSpy.Result] = []
+            do {
+                _ = try await sut.load()
+                XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
+            } catch let error as RemoteGalleryLoader.Error {
+                capturedResults.append(.failure(error))
+            } catch {
+                XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
+            }
+            
+            print("code", code)
+            XCTAssertEqual(capturedResults, [.failure(RemoteGalleryLoader.Error.invalidData)], "Expected .invalidData error for HTTP status code \(code)")
         }
-        
-        XCTAssertEqual(capturedResults, [.failure(RemoteGalleryLoader.Error.invalidData)])
     }
     
     // MARK: - Helpers
