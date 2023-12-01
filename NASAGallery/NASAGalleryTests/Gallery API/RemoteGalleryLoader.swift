@@ -18,7 +18,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_requestDataFromURL() async {
-        let url = anyURL("b-url.com")
+        let url = anyURL("b-url")
         let (sut, client) = makeSUT(url: url)
         
         try? await sut.load()
@@ -27,7 +27,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_loadTwice_requestsDataFromURLTwice() async {
-        let url = anyURL("https://a-given-url.com")
+        let url = anyURL("a-given-url")
         let (sut, client) = makeSUT(url: url)
 
         try? await sut.load()
@@ -38,7 +38,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOnClientError() async {
         // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-        let clientResult: RemoteGalleryLoader.Error = .connectivity
+        let clientResult: HTTPClientSpy.Result = .failure(.connectivity)
         let (sut, _) = makeSUT(result: clientResult)
         
         var capturedErrors: [RemoteGalleryLoader.Error] = []
@@ -53,10 +53,28 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
+    func test_load_deliversErrorOnNon200HTTPResponse() async {
+        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
+        let clientResult: HTTPClientSpy.Result = .success(HTTPURLResponse(statusCode: 400))
+        let (sut, _) = makeSUT(result: clientResult)
+        
+        var capturedResults: [HTTPClientSpy.Result] = []
+        do {
+            _ = try await sut.load()
+            XCTFail("Should return RemoteGalleryLoader.Error but returned sucessifuly instead")
+        } catch let error as RemoteGalleryLoader.Error {
+            capturedResults.append(.failure(error))
+        } catch {
+            XCTFail("Should return RemoteGalleryLoader.Error but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedResults, [.failure(RemoteGalleryLoader.Error.invalidData)])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(url: URL = anyURL(),
-                         result: RemoteGalleryLoader.Error = .connectivity) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
+                         result: HTTPClientSpy.Result = .failure(.connectivity)) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
         let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
@@ -75,19 +93,20 @@ private extension RemoteGalleryLoaderTests {
             case load(URL)
         }
         
+        typealias Result = Swift.Result<HTTPURLResponse, RemoteGalleryLoader.Error>
+        
         private(set) var receivedMessages = [ReceivedMessage]()
+        private let result: Result
         
-        private let result: RemoteGalleryLoader.Error
-        
-        public init(result: RemoteGalleryLoader.Error) {
+        public init(result: Result) {
             self.result = result
         }
         
         // MARK: - HTTPClient
         
-        func get(from url: URL) async throws {
+        func get(from url: URL) async throws -> HTTPURLResponse {
             receivedMessages.append(.load(url))
-            throw result
+            return try result.get()
         }
     }
 }
