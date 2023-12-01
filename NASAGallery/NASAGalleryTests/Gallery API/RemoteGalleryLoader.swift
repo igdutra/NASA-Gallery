@@ -18,7 +18,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_requestDataFromURL() async {
-        let url = URL(string: "b-url.com")!
+        let url = anyURL("b-url.com")
         let (sut, client) = makeSUT(url: url)
         
         try? await sut.load()
@@ -27,7 +27,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_loadTwice_requestsDataFromURLTwice() async {
-        let url = URL(string: "https://a-given-url.com")!
+        let url = anyURL("https://a-given-url.com")
         let (sut, client) = makeSUT(url: url)
 
         try? await sut.load()
@@ -54,7 +54,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(url: URL = URL(string: "a-url.com")!,
+    private func makeSUT(url: URL = anyURL(),
                          result: RemoteGalleryLoader.Error = .connectivity) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
         let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
@@ -90,5 +90,3 @@ private extension RemoteGalleryLoaderTests {
         }
     }
 }
-
-// TODO: move URls to free-functions so that can be used by helper methods
