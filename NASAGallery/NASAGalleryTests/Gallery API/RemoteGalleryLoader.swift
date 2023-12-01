@@ -14,7 +14,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
-        XCTAssertNil(client.requestedURL)
+        XCTAssertTrue(client.receivedMessages.isEmpty)
     }
     
     func test_load_requestDataFromURL() {
@@ -23,7 +23,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         
         sut.load()
         
-        XCTAssertEqual(client.requestedURL, url)
+        XCTAssertEqual(client.receivedMessages, [.load(url)])
     }
     
     // MARK: - Helpers
@@ -39,10 +39,14 @@ final class RemoteGalleryLoaderTests: XCTestCase {
 
 private extension RemoteGalleryLoaderTests {
     class HTTPClientSpy: HTTPClient {
-        var requestedURL: URL?
+        enum ReceivedMessage: Equatable {
+            case load(URL)
+        }
+        
+        private(set) var receivedMessages = [ReceivedMessage]()
         
         func get(from url: URL) {
-            requestedURL = url
+            receivedMessages.append(.load(url))
         }
     }
 }
