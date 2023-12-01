@@ -10,7 +10,7 @@ import NASAGallery
 
 
 final class RemoteGalleryLoaderTests: XCTestCase {
-
+    
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
@@ -29,10 +29,10 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     func test_loadTwice_requestsDataFromURLTwice() async {
         let url = anyURL("a-given-url")
         let (sut, client) = makeSUT(url: url)
-
+        
         try? await sut.load()
         try? await sut.load()
-
+        
         XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
     }
     
@@ -76,11 +76,13 @@ final class RemoteGalleryLoaderTests: XCTestCase {
             XCTAssertEqual(capturedResults, [.failure(RemoteGalleryLoader.Error.invalidData)], "Expected .invalidData error for HTTP status code \(code)")
         }
     }
+}
+// MARK: - Helpers
+
+private extension RemoteGalleryLoaderTests {
     
-    // MARK: - Helpers
-    
-    private func makeSUT(url: URL = anyURL(),
-                         result: HTTPClientSpy.Result = .failure(.connectivity)) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
+    func makeSUT(url: URL = anyURL(),
+                 result: HTTPClientSpy.Result = .failure(.connectivity)) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
         let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
