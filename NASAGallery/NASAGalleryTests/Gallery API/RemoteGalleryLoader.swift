@@ -37,20 +37,9 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOnClientError() async {
-        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-        let clientResult: HTTPClientSpy.Result = .failure(.connectivity)
-        let (sut, _) = makeSUT(result: clientResult)
-        
-        var capturedErrors: [RemoteGalleryLoader.Error] = []
-        do {
-            try await sut.load()
-        } catch let error as RemoteGalleryLoader.Error {
-            capturedErrors.append(error)
-        } catch {
-            XCTFail("Should return RemoteGalleryLoader.Error but returned \(error) instead")
-        }
-        
-        XCTAssertEqual(capturedErrors, [.connectivity])
+       
+       await expectSUTLoad(toThrow: .connectivity,
+                           whenClientReturns: .failure(.connectivity))
     }
     
     func test_load_deliversErrorOnNon200HTTPResponse() async {
@@ -58,22 +47,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
-            // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-            let clientResult: HTTPClientSpy.Result = .success(HTTPURLResponse(statusCode: code))
-            let (sut, _) = makeSUT(result: clientResult)
-            
-            var capturedResults: [HTTPClientSpy.Result] = []
-            do {
-                _ = try await sut.load()
-                XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
-            } catch let error as RemoteGalleryLoader.Error {
-                capturedResults.append(.failure(error))
-            } catch {
-                XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
-            }
-            
-            print("code", code)
-            XCTAssertEqual(capturedResults, [.failure(RemoteGalleryLoader.Error.invalidData)], "Expected .invalidData error for HTTP status code \(code)")
+            await expectSUTLoad(toThrow: .invalidData,
+                                whenClientReturns: .success(HTTPURLResponse(statusCode: code)))
         }
     }
 }
@@ -86,6 +61,27 @@ private extension RemoteGalleryLoaderTests {
         let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
+    }
+    
+    // Note: first implementation of the expect method.
+    // Wait for more testst to come, maybe just add a helper for the do/catch block and let the rest in the test scope.
+    // XCTAsyncAssertThrowingFunction(...)
+    func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
+                       whenClientReturns clientResult: HTTPClientSpy.Result) async {
+        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
+        let (sut, _) = makeSUT(result: clientResult)
+        
+        var capturedResults: [HTTPClientSpy.Result] = []
+        do {
+            _ = try await sut.load()
+            XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
+        } catch let error as RemoteGalleryLoader.Error {
+            capturedResults.append(.failure(error))
+        } catch {
+            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
 }
 
