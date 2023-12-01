@@ -17,23 +17,29 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         XCTAssertTrue(client.receivedMessages.isEmpty)
     }
     
-    func test_load_requestDataFromURL() {
+    func test_load_requestDataFromURL() async {
         let url = URL(string: "b-url.com")!
         let (sut, client) = makeSUT(url: url)
         
-        sut.load()
+        await sut.load()
         
         XCTAssertEqual(client.receivedMessages, [.load(url)])
     }
     
-    func test_loadTwice_requestsDataFromURLTwice() {
+    func test_loadTwice_requestsDataFromURLTwice() async {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
-        sut.load()
-        sut.load()
+        await sut.load()
+        await sut.load()
 
         XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
+    }
+    
+    func test_load_deliversErrorOnClientError() {
+        let (sut, client) = makeSUT()
+        
+//        client.completeWithError()
     }
     
     // MARK: - Helpers
@@ -55,7 +61,7 @@ private extension RemoteGalleryLoaderTests {
         
         private(set) var receivedMessages = [ReceivedMessage]()
         
-        func get(from url: URL) {
+        func get(from url: URL) async {
             receivedMessages.append(.load(url))
         }
     }

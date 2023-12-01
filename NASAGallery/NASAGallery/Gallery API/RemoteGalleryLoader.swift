@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol HTTPClient {
-    func get(from url: URL)
+    func get(from url: URL) async
 }
 
 public class RemoteGalleryLoader {
@@ -20,7 +20,7 @@ public class RemoteGalleryLoader {
         self.client = client
     }
     
-    public func load() {
-        client.get(from: url)
+    public func load() async {
+        await client.get(from: url)
     }
 }
