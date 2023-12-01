@@ -44,11 +44,13 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         var capturedError: RemoteGalleryLoader.Error?
         do {
             try await sut.load()
+        } catch let error as RemoteGalleryLoader.Error {
+            capturedError = error
         } catch {
-            capturedError = error as? RemoteGalleryLoader.Error
+            XCTFail("Should return RemoteGalleryLoader.Error but returned \(error) instead")
         }
         
-        XCTAssertEqual(capturedError, RemoteGalleryLoader.Error.connectivity)
+        XCTAssertEqual(capturedError, .connectivity)
     }
     
     // MARK: - Helpers
