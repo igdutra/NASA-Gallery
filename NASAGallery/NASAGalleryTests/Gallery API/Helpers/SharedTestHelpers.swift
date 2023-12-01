@@ -16,6 +16,11 @@ func anyURL(_ host: String = "a-url.com") -> URL {
     return components.url!
 }
 
+func anyError() -> Error {
+    struct AnyError: Error { }
+    return AnyError()
+}
+
 // MARK: - HTTPURLResponse
 
 extension HTTPURLResponse {
