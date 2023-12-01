@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol HTTPClient {
-    func get(from url: URL) async
+    func get(from url: URL) async throws
 }
 
 public class RemoteGalleryLoader {
@@ -20,7 +20,17 @@ public class RemoteGalleryLoader {
         self.client = client
     }
     
-    public func load() async {
-        await client.get(from: url)
+    public func load() async throws {
+        do {
+            try await client.get(from: url)
+        } catch {
+            throw Error.connectivity
+        }
+    }
+    
+    // MARK: - Errors
+    
+    public enum Error: Swift.Error {
+        case connectivity
     }
 }

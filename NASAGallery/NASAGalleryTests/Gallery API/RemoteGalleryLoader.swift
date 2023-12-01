@@ -21,7 +21,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let url = URL(string: "b-url.com")!
         let (sut, client) = makeSUT(url: url)
         
-        await sut.load()
+        try? await sut.load()
         
         XCTAssertEqual(client.receivedMessages, [.load(url)])
     }
@@ -30,16 +30,25 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
-        await sut.load()
-        await sut.load()
+        try? await sut.load()
+        try? await sut.load()
 
         XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
     }
     
-    func test_load_deliversErrorOnClientError() {
+    func test_load_deliversErrorOnClientError() async {
         let (sut, client) = makeSUT()
+        client.completeWith(error: .connectivity)
         
-//        client.completeWithError()
+        // TODO: use arrays
+        var capturedError: RemoteGalleryLoader.Error?
+        do {
+            try await sut.load()
+        } catch {
+            capturedError = error as? RemoteGalleryLoader.Error
+        }
+        
+        XCTAssertEqual(capturedError, RemoteGalleryLoader.Error.connectivity)
     }
     
     // MARK: - Helpers
@@ -61,8 +70,20 @@ private extension RemoteGalleryLoaderTests {
         
         private(set) var receivedMessages = [ReceivedMessage]()
         
-        func get(from url: URL) async {
+        func get(from url: URL) async throws {
             receivedMessages.append(.load(url))
+            
+            if let error = returningError {
+                throw error
+            }
+        }
+        
+        // MARK: - Completions
+        
+        var returningError: Error?
+        
+        public func completeWith(error: RemoteGalleryLoader.Error) {
+            returningError = error
         }
     }
 }
