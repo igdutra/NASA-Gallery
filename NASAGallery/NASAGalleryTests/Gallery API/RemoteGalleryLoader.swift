@@ -40,17 +40,16 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         client.completeWith(error: .connectivity)
         
-        // TODO: use arrays
-        var capturedError: RemoteGalleryLoader.Error?
+        var capturedErrors: [RemoteGalleryLoader.Error] = []
         do {
             try await sut.load()
         } catch let error as RemoteGalleryLoader.Error {
-            capturedError = error
+            capturedErrors.append(error)
         } catch {
             XCTFail("Should return RemoteGalleryLoader.Error but returned \(error) instead")
         }
         
-        XCTAssertEqual(capturedError, .connectivity)
+        XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
     // MARK: - Helpers
