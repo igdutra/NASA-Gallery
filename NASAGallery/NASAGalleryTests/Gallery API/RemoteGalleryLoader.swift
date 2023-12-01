@@ -38,7 +38,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOnClientError() async {
         // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-        let (sut, _) = makeSUT(result: .connectivity)
+        let clientResult: RemoteGalleryLoader.Error = .connectivity
+        let (sut, _) = makeSUT(result: clientResult)
         
         var capturedErrors: [RemoteGalleryLoader.Error] = []
         do {
