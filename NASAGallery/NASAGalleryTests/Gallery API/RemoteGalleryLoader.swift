@@ -37,8 +37,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOnClientError() async {
-        let (sut, client) = makeSUT()
-        client.completeWith(error: .connectivity)
+        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
+        let (sut, _) = makeSUT(result: .connectivity)
         
         var capturedErrors: [RemoteGalleryLoader.Error] = []
         do {
@@ -54,8 +54,9 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
-        let client = HTTPClientSpy()
+    private func makeSUT(url: URL = URL(string: "a-url.com")!,
+                         result: RemoteGalleryLoader.Error = .connectivity) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
+        let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
         return (sut, client)
     }
@@ -63,6 +64,10 @@ final class RemoteGalleryLoaderTests: XCTestCase {
 
 // MARK: - Spy
 
+/* NOTE Spy vs Stub
+ 
+ This Spy is not "pure" a spy: it not only captures values, but also outputs pre-defined reponses!
+ */
 private extension RemoteGalleryLoaderTests {
     class HTTPClientSpy: HTTPClient {
         enum ReceivedMessage: Equatable {
@@ -71,20 +76,19 @@ private extension RemoteGalleryLoaderTests {
         
         private(set) var receivedMessages = [ReceivedMessage]()
         
-        func get(from url: URL) async throws {
-            receivedMessages.append(.load(url))
-            
-            if let error = returningError {
-                throw error
-            }
+        private let result: RemoteGalleryLoader.Error
+        
+        public init(result: RemoteGalleryLoader.Error) {
+            self.result = result
         }
         
-        // MARK: - Completions
+        // MARK: - HTTPClient
         
-        var returningError: Error?
-        
-        public func completeWith(error: RemoteGalleryLoader.Error) {
-            returningError = error
+        func get(from url: URL) async throws {
+            receivedMessages.append(.load(url))
+            throw result
         }
     }
 }
+
+// TODO: move URls to free-functions so that can be used by helper methods
