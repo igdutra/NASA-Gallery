@@ -86,6 +86,10 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         
         XCTAssertEqual(capturedResults, [.success([])])
     }
+    
+//    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
+//        let
+//    }
 }
 // MARK: - Helpers
 

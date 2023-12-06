@@ -18,11 +18,15 @@ public struct GalleryItem: Equatable {
     let copyright: String?
     let hdurl: URL?
     let thumbnailUrl: URL?
-
-    enum CodingKeys: String, CodingKey {
-        case date, explanation, title, url, hdurl
-        case mediaType = "media_type"
-        case thumbnailUrl = "thumbnail_url"
-        case copyright
+    
+    public init(title: String, url: URL, date: String, explanation: String, mediaType: String, copyright: String?, hdurl: URL?, thumbnailUrl: URL?) {
+        self.title = title
+        self.url = url
+        self.date = date
+        self.explanation = explanation
+        self.mediaType = mediaType
+        self.copyright = copyright
+        self.hdurl = hdurl
+        self.thumbnailUrl = thumbnailUrl
     }
 }
