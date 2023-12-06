@@ -20,14 +20,14 @@ public class RemoteGalleryLoader {
         self.client = client
     }
     
-    public func load() async throws {
+    public func load() async throws -> [GalleryItem] {
         guard let (response, data) = try? await client.get(from: url) else {
             throw Error.connectivity
         }
         
         if response.statusCode == 200,
            let _ = try? JSONSerialization.jsonObject(with: data) {
-            return // No need to return any items yet. Returning is returning sucessfully
+            return []
         } else {
             throw Error.invalidData
         }

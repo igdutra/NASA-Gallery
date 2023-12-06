@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GalleryItem {
+public struct GalleryItem: Equatable {
     let title: String
     let url: URL
     let date: String

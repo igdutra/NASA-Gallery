@@ -16,6 +16,8 @@ import NASAGallery
 
 final class RemoteGalleryLoaderTests: XCTestCase {
     
+    typealias LoaderResult = Result<[GalleryItem], RemoteGalleryLoader.Error>
+    
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
@@ -26,7 +28,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let url = anyURL("b-url")
         let (sut, client) = makeSUT(url: url)
         
-        try? await sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(client.receivedMessages, [.load(url)])
     }
@@ -35,8 +37,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let url = anyURL("a-given-url")
         let (sut, client) = makeSUT(url: url)
         
-        try? await sut.load()
-        try? await sut.load()
+        _ = try? await sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
     }
@@ -64,6 +66,25 @@ final class RemoteGalleryLoaderTests: XCTestCase {
      
         await expectSUTLoad(toThrow: .invalidData,
                             whenClientReturns: .success(expectedResult))
+    }
+    
+    func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() async {
+        let emptyJSON = Data("[]".utf8)
+        let expectedLoadReturn: [GalleryItem] = []
+        let clientResult = clientSuccess(statusCode: 200, data: emptyJSON)
+        
+        let (sut, _) = makeSUT(result: .success(clientResult))
+        
+        var capturedResults: [LoaderResult] = []
+        
+        do {
+            let items = try await sut.load()
+            capturedResults.append(.success(items))
+        } catch {
+            XCTFail("Expected Success but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedResults, [.success([])])
     }
 }
 // MARK: - Helpers
