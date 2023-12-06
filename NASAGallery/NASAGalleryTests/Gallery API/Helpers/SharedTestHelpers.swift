@@ -21,6 +21,10 @@ func anyError() -> Error {
     return AnyError()
 }
 
+func invalidJSON() -> Data {
+    Data("Invalid JSON".utf8)
+}
+
 // MARK: - HTTPURLResponse
 
 extension HTTPURLResponse {

@@ -55,8 +55,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
-        let invalidJSON = Data(bytes: "invalid JSON".utf8)
-//        let emptyListJSON = Data(bytes: "{\"items\": []}".utf8)
+        let invalidJSON = invalidJSON()
         let expectedResult = HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
         
         await expectSUTLoad(toThrow: .invalidData,
