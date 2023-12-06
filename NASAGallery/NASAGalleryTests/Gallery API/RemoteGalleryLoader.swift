@@ -11,6 +11,13 @@ import NASAGallery
 /* TODOs
  
  1- Refactor the makeSUT to not return client.
+ 2- Inoumeros refactors to make
+    - remove all references to results. case client is better to wrap in result, use helper methods
+ 3- don't forget to create production mapper (without breaking testes! :) )
+ 4- crete 2 expectReturns: one when trowing func another on positive result
+    makes sense to create 2 expected returns because the do/catch assertions will be different!
+ 5- enhance fixture methods to return at least 2 fixtures (and don't use only default values)
+ 6- the ideia is: remove all "RESULT" reference from tests, use and abuse of TEST DSLs (the result type lives in the test alone!)
  
  */
 
@@ -43,6 +50,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         XCTAssertEqual(client.receivedMessages, [.load(url), .load(url)])
     }
     
+    // MARK: - Error Cases
+    
     func test_load_deliversErrorOnClientError() async {
        
        await expectSUTLoad(toThrow: .connectivity,
@@ -67,6 +76,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         await expectSUTLoad(toThrow: .invalidData,
                             whenClientReturns: .success(expectedResult))
     }
+    
+    // MARK: - Happy Path
     
     func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() async {
         let emptyJSON = Data("[]".utf8)
