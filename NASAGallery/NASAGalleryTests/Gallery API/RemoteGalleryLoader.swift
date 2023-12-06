@@ -8,6 +8,11 @@
 import XCTest
 import NASAGallery
 
+/* TODOs
+ 
+ 1- Refactor the makeSUT to not return client.
+ 
+ */
 
 final class RemoteGalleryLoaderTests: XCTestCase {
     
@@ -45,10 +50,9 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     func test_load_deliversErrorOnNon200HTTPResponse() async {
         let samples = [199, 201, 300, 400, 500]
       
-        
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
-            let expectedResult = HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: code), data: Data())
+            let expectedResult = clientSuccess(statusCode: code, data: Data())
             await expectSUTLoad(toThrow: .invalidData,
                                 whenClientReturns: .success(expectedResult))
         }
@@ -56,8 +60,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
         let invalidJSON = invalidJSON()
-        let expectedResult = HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
-        
+        let expectedResult = clientSuccess(statusCode: 200, data: invalidJSON)
+     
         await expectSUTLoad(toThrow: .invalidData,
                             whenClientReturns: .success(expectedResult))
     }
@@ -92,6 +96,10 @@ private extension RemoteGalleryLoaderTests {
         }
         
         XCTAssertEqual(capturedResults, [.failure(expectedError)])
+    }
+    
+    func clientSuccess(statusCode: Int, data: Data) -> HTTPClientSpy.SpyResponse {
+        HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: statusCode), data: data)
     }
 }
 
