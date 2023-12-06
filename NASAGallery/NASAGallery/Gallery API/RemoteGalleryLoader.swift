@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol HTTPClient {
-    func get(from url: URL) async throws -> HTTPURLResponse
+    func get(from url: URL) async throws -> (HTTPURLResponse, Data)
 }
 
 public class RemoteGalleryLoader {
@@ -21,12 +21,16 @@ public class RemoteGalleryLoader {
     }
     
     public func load() async throws {
-        guard let _ = try? await client.get(from: url) else {
+        guard let (response, data) = try? await client.get(from: url) else {
             throw Error.connectivity
         }
         
-        // Note: For now, following TDD, if the client succeds, force deliver .invalidData
-        throw Error.invalidData
+        if response.statusCode == 200,
+           let _ = try? JSONSerialization.jsonObject(with: data) {
+            return // No need to return any items yet. Returning is returning sucessfully
+        } else {
+            throw Error.invalidData
+        }
     }
     
     // MARK: - Errors

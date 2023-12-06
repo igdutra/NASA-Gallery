@@ -44,12 +44,23 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOnNon200HTTPResponse() async {
         let samples = [199, 201, 300, 400, 500]
+      
         
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
+            let expectedResult = HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: code), data: Data())
             await expectSUTLoad(toThrow: .invalidData,
-                                whenClientReturns: .success(HTTPURLResponse(statusCode: code)))
+                                whenClientReturns: .success(expectedResult))
         }
+    }
+    
+    func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
+        let invalidJSON = Data(bytes: "invalid JSON".utf8)
+//        let emptyListJSON = Data(bytes: "{\"items\": []}".utf8)
+        let expectedResult = HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
+        
+        await expectSUTLoad(toThrow: .invalidData,
+                            whenClientReturns: .success(expectedResult))
     }
 }
 // MARK: - Helpers
@@ -97,7 +108,12 @@ private extension RemoteGalleryLoaderTests {
             case load(URL)
         }
         
-        typealias Result = Swift.Result<HTTPURLResponse, RemoteGalleryLoader.Error>
+        struct SpyResponse: Equatable {
+            let response: HTTPURLResponse
+            let data: Data
+        }
+        
+        typealias Result = Swift.Result<SpyResponse, RemoteGalleryLoader.Error>
         
         private(set) var receivedMessages = [ReceivedMessage]()
         private let result: Result
@@ -108,9 +124,15 @@ private extension RemoteGalleryLoaderTests {
         
         // MARK: - HTTPClient
         
-        func get(from url: URL) async throws -> HTTPURLResponse {
+        func get(from url: URL) async throws -> (HTTPURLResponse, Data) {
             receivedMessages.append(.load(url))
-            return try result.get()
+            switch result {
+            case let .success(spyResponse):
+                return (spyResponse.response, spyResponse.data)
+            case let .failure(error):
+                throw error
+            }
         }
     }
+    
 }
