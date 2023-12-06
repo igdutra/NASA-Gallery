@@ -41,24 +41,17 @@ func makeGalleryJSON(_ items: [[String: Any]]) -> Data {
 
 extension GalleryItem {
     func toJSON() -> [String: Any] {
-        var json: [String: Any] = [
+        let json: [String: Any] = [
             "title": self.title,
-            "url": self.url.absoluteString, // Convert URL to String so that JSON Serialization can work
+            "url": self.url.absoluteString, // Can't serialize URLs
             "date": self.date,
             "explanation": self.explanation,
             "media_type": self.mediaType,
+            "copyright": self.copyright,
+            "hdurl": self.hdurl?.absoluteString,
+            "thumbnail_url": self.thumbnailUrl?.absoluteString,
             "service_version": "v1", // Not used!
-        ]
-        
-        if let copyright = self.copyright {
-            json["copyright"] = copyright
-        }
-        if let hdurl = self.hdurl {
-            json["hdurl"] = hdurl.absoluteString
-        }
-        if let thumbnailUrl = self.thumbnailUrl {
-            json["thumbnail_url"] = thumbnailUrl.absoluteString
-        }
+        ].compactMapValues { $0 }
         
         return json
     }
