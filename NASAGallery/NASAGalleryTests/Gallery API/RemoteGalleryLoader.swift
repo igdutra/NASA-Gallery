@@ -87,9 +87,25 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         XCTAssertEqual(capturedResults, [.success([])])
     }
     
-//    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
-//        let
-//    }
+    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
+        let expectedReturnItems = [makeGalleryItemFixture()]
+        let expectedJSON: [[String : Any]] = expectedReturnItems.map { $0.toJSON() }
+        let expextedJSONData: Data = makeGalleryJSON(expectedJSON)
+        let clientResult = clientSuccess(statusCode: 200, data: expextedJSONData)
+        
+        let (sut, _) = makeSUT(result: .success(clientResult))
+        
+        var capturedItems: [GalleryItem] = []
+        
+        do {
+            let items = try await sut.load()
+            capturedItems.append(contentsOf: items)
+        } catch {
+            XCTFail("Expected Success but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedItems, expectedReturnItems)
+    }
 }
 // MARK: - Helpers
 

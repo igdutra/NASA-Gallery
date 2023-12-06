@@ -25,14 +25,20 @@ public class RemoteGalleryLoader {
             throw Error.connectivity
         }
         
-        if response.statusCode == 200,
-           let _ = try? JSONSerialization.jsonObject(with: data) {
-            return []
+        
+        if response.statusCode == 200 {
+            do {
+                let items = try JSONDecoder().decode([GalleryItem].self, from: data)
+                return items
+            } catch {
+                print(error)
+                throw Error.invalidData
+            }
         } else {
             throw Error.invalidData
         }
     }
-    
+        
     // MARK: - Errors
     
     public enum Error: Swift.Error {

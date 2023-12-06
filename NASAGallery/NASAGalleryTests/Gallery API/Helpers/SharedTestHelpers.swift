@@ -11,7 +11,7 @@ import NASAGallery
 // MARK: - Fixtures
 
 func makeGalleryItemFixture(title: String = "A Title",
-                            urlString: String = "https://example.com/default.jpg",
+                            urlString: String = "example.com",
                             date: String = "2023-01-01",
                             explanation: String = "A explanation",
                             mediaType: String = "image",
@@ -31,6 +31,39 @@ func makeGalleryItemFixture(title: String = "A Title",
                        copyright: copyright,
                        hdurl: hdurl,
                        thumbnailUrl: thumbnailUrl)
+}
+
+func makeGalleryJSON(_ items: [[String: Any]]) -> Data {
+    do {
+        return try JSONSerialization.data(withJSONObject: items)
+    } catch {
+        fatalError("Invalid JSON: \(error)")
+    }
+}
+
+extension GalleryItem {
+    func toJSON() -> [String: Any] {
+        var json: [String: Any] = [
+            "title": self.title,
+            "url": self.url.absoluteString, // Convert URL to String so that JSON Serialization can work
+            "date": self.date,
+            "explanation": self.explanation,
+            "media_type": self.mediaType,
+            "service_version": "v1", // Not used!
+        ]
+        
+        if let copyright = self.copyright {
+            json["copyright"] = copyright
+        }
+        if let hdurl = self.hdurl {
+            json["hdurl"] = hdurl.absoluteString
+        }
+        if let thumbnailUrl = self.thumbnailUrl {
+            json["thumbnail_url"] = thumbnailUrl.absoluteString
+        }
+        
+        return json
+    }
 }
 
 // MARK: - Free Funcs
