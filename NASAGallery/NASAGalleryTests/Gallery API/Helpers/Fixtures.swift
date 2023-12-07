@@ -8,6 +8,8 @@
 import Foundation
 import NASAGallery
 
+// MARK: - GalleryItem
+
 func makeGalleryItemFixture(title: String = "A Title",
                             urlString: String = "example.com",
                             date: String = "2023-01-01",
@@ -31,15 +33,50 @@ func makeGalleryItemFixture(title: String = "A Title",
                        thumbnailUrl: thumbnailUrl)
 }
 
-func makeGalleryJSON(_ items: [[String: Any]]) -> Data {
+// MARK: - Data representation, ModelArray -> Data
+
+func makeGalleryJSONData(_ items: [GalleryItem]) -> Data {
+    // Created a root type, same as the RemoteGalleryMapper strategy, so that we avoid conforming GalleryItem directly to encodable
+    // This replaces the JSONSerialization approach and the try!
+    struct EncodableGalleryItem: Encodable {
+        let galleryItem: GalleryItem
+
+        enum CodingKeys: String, CodingKey {
+            case date, explanation, title, url, hdurl
+            case mediaType = "media_type"
+            case thumbnailUrl = "thumbnail_url"
+            case copyright
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(galleryItem.title, forKey: .title)
+            try container.encode(galleryItem.url.absoluteString, forKey: .url)
+            try container.encode(galleryItem.date, forKey: .date)
+            try container.encode(galleryItem.explanation, forKey: .explanation)
+            try container.encode(galleryItem.mediaType, forKey: .mediaType)
+            try container.encodeIfPresent(galleryItem.copyright, forKey: .copyright)
+            try container.encodeIfPresent(galleryItem.hdurl?.absoluteString, forKey: .hdurl)
+            try container.encodeIfPresent(galleryItem.thumbnailUrl?.absoluteString, forKey: .thumbnailUrl)
+        }
+    }
+
+    let encoder = JSONEncoder()
     do {
-        return try JSONSerialization.data(withJSONObject: items)
+        let encodableItems = items.map { EncodableGalleryItem(galleryItem: $0) }
+        let jsonData = try encoder.encode(encodableItems)
+        return jsonData
     } catch {
-        fatalError("Invalid JSON: \(error)")
+        fatalError("Failed to encode GalleryItems: \(error)")
     }
 }
 
-extension GalleryItem {
+/* NOTE Old compactMapValues
+ 
+ Following chatGPT: using JSONEncoder is cleaner, safer, and more performant because leverages the compiler's understanding of your types to ensure everything is encoded correctly, avoiding the runtime overhead associated with dictionaries and Any types.
+ Adding private to not impact outside this scope
+ */
+private extension GalleryItem {
     func toJSON() -> [String: Any] {
         let json: [String: Any] = [
             "title": self.title,

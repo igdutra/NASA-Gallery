@@ -99,10 +99,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     }
     
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
-        let expectedReturnItems = [makeGalleryItemFixture()]
-        let expectedJSON: [[String : Any]] = expectedReturnItems.map { $0.toJSON() }
-        let expextedJSONData: Data = makeGalleryJSON(expectedJSON)
-        let clientResult = clientSuccess(statusCode: 200, data: expextedJSONData)
+        let (expectedItems, expectedJSONData) = makeItems()
+        let clientResult = clientSuccess(statusCode: 200, data: expectedJSONData)
         
         let (sut, _) = makeSUT(result: .success(clientResult))
         
@@ -115,7 +113,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
             XCTFail("Expected Success but returned \(error) instead")
         }
         
-        XCTAssertEqual(capturedItems, expectedReturnItems)
+        XCTAssertEqual(capturedItems, expectedItems)
     }
 }
 // MARK: - Helpers
@@ -152,6 +150,17 @@ private extension RemoteGalleryLoaderTests {
     
     func clientSuccess(statusCode: Int, data: Data) -> HTTPClientSpy.SpyResponse {
         HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: statusCode), data: data)
+    }
+    
+    // MARK: Factories
+    
+    func makeItems() -> ([GalleryItem], Data) {
+        let item1 = makeGalleryItemFixture(title: "First Item")
+        let item2 = makeGalleryItemFixture(urlString: "image1", explanation: "This is the second Item")
+        let items = [item1, item2]
+        let data = makeGalleryJSONData(items)
+        
+        return (items, data)
     }
 }
 
