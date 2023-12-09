@@ -26,14 +26,16 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     typealias LoaderResult = Result<[GalleryItem], RemoteGalleryLoader.Error>
     
     func test_init_doesNotRequestDataFromURL() {
-        let (_, client) = makeSUT()
+        let client = HTTPClientSpy(result: .failure(.connectivity))
+        let sut = RemoteGalleryLoader(url: anyURL(), client: client)
         
         XCTAssertTrue(client.receivedMessages.isEmpty)
     }
     
     func test_load_requestDataFromURL() async {
         let url = anyURL("b-url")
-        let (sut, client) = makeSUT(url: url)
+        let client = HTTPClientSpy(result: .failure(.connectivity))
+        let sut = RemoteGalleryLoader(url: url, client: client)
         
         _ = try? await sut.load()
         
@@ -42,7 +44,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_loadTwice_requestsDataFromURLTwice() async {
         let url = anyURL("a-given-url")
-        let (sut, client) = makeSUT(url: url)
+        let client = HTTPClientSpy(result: .failure(.connectivity))
+        let sut = RemoteGalleryLoader(url: url, client: client)
         
         _ = try? await sut.load()
         _ = try? await sut.load()
@@ -84,7 +87,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let expectedLoadReturn: [GalleryItem] = []
         let clientResult = clientSuccess(statusCode: 200, data: emptyJSON)
         
-        let (sut, _) = makeSUT(result: .success(clientResult))
+        let sut = makeSUT(result: .success(clientResult))
         
         var capturedResults: [LoaderResult] = []
         
@@ -102,7 +105,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let (expectedItems, expectedJSONData) = makeItems()
         let clientResult = clientSuccess(statusCode: 200, data: expectedJSONData)
         
-        let (sut, _) = makeSUT(result: .success(clientResult))
+        let sut = makeSUT(result: .success(clientResult))
         
         var capturedItems: [GalleryItem] = []
         
@@ -120,11 +123,13 @@ final class RemoteGalleryLoaderTests: XCTestCase {
 
 private extension RemoteGalleryLoaderTests {
     
+    
     func makeSUT(url: URL = anyURL(),
-                 result: HTTPClientSpy.Result = .failure(.connectivity)) -> (sut: RemoteGalleryLoader, spy: HTTPClientSpy) {
+                 result: HTTPClientSpy.Result = .failure(.connectivity)) -> RemoteGalleryLoader {
         let client = HTTPClientSpy(result: result)
         let sut = RemoteGalleryLoader(url: url, client: client)
-        return (sut, client)
+        // Note: client was ommited from makeSUT return since results are stubbed upfront
+        return sut
     }
     
     // Note: first implementation of the expect method.
@@ -132,8 +137,7 @@ private extension RemoteGalleryLoaderTests {
     // XCTAsyncAssertThrowingFunction(...)
     func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
                        whenClientReturns clientResult: HTTPClientSpy.Result) async {
-        // TODO: possible to remove client from makeSUT, since results are stubbed upfront
-        let (sut, _) = makeSUT(result: clientResult)
+        let sut = makeSUT(result: clientResult)
         
         var capturedResults: [HTTPClientSpy.Result] = []
         do {
