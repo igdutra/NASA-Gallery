@@ -22,11 +22,9 @@ import NASAGallery
 
 final class RemoteGalleryLoaderTests: XCTestCase {
     
-    typealias LoaderResult = Result<[GalleryItem], RemoteGalleryLoader.Error>
-    
     func test_init_doesNotRequestDataFromURL() {
         let client = HTTPClientSpy(result: .failure(.connectivity))
-        let sut = RemoteGalleryLoader(url: anyURL(), client: client)
+        let _ = RemoteGalleryLoader(url: anyURL(), client: client)
         
         XCTAssertTrue(client.receivedMessages.isEmpty)
     }
@@ -81,12 +79,14 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Happy Path
     
+    typealias LoaderResult = Result<[GalleryItem], RemoteGalleryLoader.Error>
+    
     func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() async {
         let emptyJSON = Data("[]".utf8)
         let expectedLoadReturn: [GalleryItem] = []
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: emptyJSON)
         
-        let sut = makeSUT(result: .success(clientResponse))
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
         var capturedResults: [LoaderResult] = []
         
@@ -104,7 +104,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let (expectedItems, expectedJSONData) = makeItems()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: expectedJSONData)
         
-        let sut = makeSUT(result: .success(clientResponse))
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
         var capturedItems: [GalleryItem] = []
         
@@ -125,11 +125,31 @@ private extension RemoteGalleryLoaderTests {
     typealias SuccessResponse = HTTPClientSpy.SuccessResponse
     
     func makeSUT(url: URL = anyURL(),
-                 result: HTTPClientSpy.Result = .failure(.connectivity)) -> RemoteGalleryLoader {
+                 withSuccessfulClientResponse response: SuccessResponse? = nil,
+                 withClientFailure error: RemoteGalleryLoader.Error? = nil) -> RemoteGalleryLoader {
+
+        let successResult = response.map(HTTPClientSpy.Result.success)
+        let failureResult = error.map(HTTPClientSpy.Result.failure)
+        let result = successResult ?? failureResult ?? .failure(.connectivity) // Default Value
+        
+        /* NOTE Map vs If
+         
+         This map approach is a replacement of the if/else chain below
+         if let response = response {
+             result = .success(response)
+         } else if let error = error {
+             result = .failure(error)
+         } else {
+             result = .failure(.connectivity)
+         }
+         which according to bench tests are close to 2x faster
+         makeSUT with If: 0.034626007080078125 seconds
+         makeSUT with Map: 0.019369006156921387 seconds
+         
+         */
+
         let client = HTTPClientSpy(result: result)
-        let sut = RemoteGalleryLoader(url: url, client: client)
-        // Note: client was ommited from makeSUT return since results are stubbed upfront
-        return sut
+        return RemoteGalleryLoader(url: url, client: client)
     }
     
     // Note: first implementation of the expect method.
@@ -137,7 +157,7 @@ private extension RemoteGalleryLoaderTests {
     // XCTAsyncAssertThrowingFunction(...)
     func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
                        whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
-        let sut = makeSUT(result: .success(clientResponse))
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
         var capturedResults: [HTTPClientSpy.Result] = []
         do {
@@ -156,8 +176,7 @@ private extension RemoteGalleryLoaderTests {
     
     func expectSUTLoadMethod(toThrow expectedError: RemoteGalleryLoader.Error,
                              whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
-        let clientResult: HTTPClientSpy.Result = .failure(clientError)
-        let sut = makeSUT(result: clientResult)
+        let sut = makeSUT(withClientFailure: clientError)
         
         var capturedErrors: [RemoteGalleryLoader.Error] = []
         do {
@@ -192,6 +211,7 @@ private extension RemoteGalleryLoaderTests {
  */
 private extension RemoteGalleryLoaderTests {
     class HTTPClientSpy: HTTPClient {
+        // ReceivedMessages is the method signature
         enum ReceivedMessage: Equatable {
             case load(URL)
         }
