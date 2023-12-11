@@ -9,11 +9,9 @@ import XCTest
 import NASAGallery
 
 /* TODOs
- 
- 3- don't forget to create production mapper (without breaking testes! :) )
+
 
  */
-
 final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
