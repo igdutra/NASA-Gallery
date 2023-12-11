@@ -71,7 +71,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
         let invalidJSON = invalidJSON()
-        let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: Data())
+        let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
         
         await expectSUTLoad(toThrow: .invalidData,
                             whenClientReturnsSuccessfullyWith: clientResponse)
@@ -211,7 +211,7 @@ private extension RemoteGalleryLoaderTests {
  */
 private extension RemoteGalleryLoaderTests {
     class HTTPClientSpy: HTTPClient {
-        // ReceivedMessages is the method signature
+        // ReceivedMessage is the method signature
         enum ReceivedMessage: Equatable {
             case load(URL)
         }
