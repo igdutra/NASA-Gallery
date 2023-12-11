@@ -66,7 +66,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         for code in samples {
             let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: code), data: Data())
             await assertLoad(toThrow: .invalidData,
-                             whenClientReturnsWithSuccess: clientResponse)
+                             whenClientReturnsWithResponse: clientResponse)
         }
     }
     
@@ -75,7 +75,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
         
         await assertLoad(toThrow: .invalidData,
-                         whenClientReturnsWithSuccess: clientResponse)
+                         whenClientReturnsWithResponse: clientResponse)
     }
     
     // MARK: - Happy Path
@@ -134,38 +134,44 @@ private extension RemoteGalleryLoaderTests {
     
     // MARK: - Assertions
     
+    /* NOTE Avoid makeSUT at the call site
+     
+     This is open to discussion however the goal here was to make the tests more redable
+     Because we need to stub everything upfront, we need to create the SUT with the predefined behavior.
+     
+     I thought that wrapping the SUT creation by not expliciting telling what is the client Result upfront but actually at the name of the assertion
+     (makeSUT(withClientFailure vs toThrow expectedError: _, whenClientReturnsError clientError: )
+     is a win in redability.
+     
+     But this is open as I write more tests a pattern could emerge.
+     
+     */
     func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
                     whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
         let sut = makeSUT(withClientFailure: clientError)
         
-        var capturedErrors: [RemoteGalleryLoader.Error] = []
-        do {
-            _ = try await sut.load()
-            XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
-        } catch let error as RemoteGalleryLoader.Error {
-            capturedErrors.append(error)
-        } catch {
-            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
-        }
-        
-        XCTAssertEqual(capturedErrors, [expectedError])
+        await assertLoadFrom(sut,
+                             toThrow: expectedError)
     }
     
     func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
-                    whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse) async {
+                    whenClientReturnsWithResponse clientResponse: HTTPClientSpy.SuccessResponse) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
-        var capturedResults: [HTTPClientSpy.Result] = []
+        await assertLoadFrom(sut,
+                             toThrow: expectedError)
+    }
+    
+    func assertLoadFrom(_ sut: RemoteGalleryLoader,
+                        toThrow expectedError: RemoteGalleryLoader.Error) async {
         do {
             _ = try await sut.load()
             XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
         } catch let error as RemoteGalleryLoader.Error {
-            capturedResults.append(.failure(error))
+            XCTAssertEqual(error, expectedError)
         } catch {
             XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
         }
-        
-        XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
     
     func assertLoadDelivers(_ expectedItems: [GalleryItem],
