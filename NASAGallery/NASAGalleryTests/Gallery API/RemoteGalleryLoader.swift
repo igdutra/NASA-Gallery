@@ -10,12 +10,11 @@ import NASAGallery
 
 /* TODOs
  
- 1- Refactor the makeSUT to not return client.
  2- Inoumeros refactors to make
-    - remove all references to results. case client is better to wrap in result, use helper methods
+ - remove all references to results. case client is better to wrap in result, use helper methods
  3- don't forget to create production mapper (without breaking testes! :) )
  4- crete 2 expectReturns: one when trowing func another on positive result
-    makes sense to create 2 expected returns because the do/catch assertions will be different!
+ makes sense to create 2 expected returns because the do/catch assertions will be different!
  5- enhance fixture methods to return at least 2 fixtures (and don't use only default values)
  6- the ideia is: remove all "RESULT" reference from tests, use and abuse of TEST DSLs (the result type lives in the test alone!)
  
@@ -56,14 +55,14 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     // MARK: - Error Cases
     
     func test_load_deliversErrorOnClientError() async {
-       
-       await expectSUTLoad(toThrow: .connectivity,
-                           whenClientReturns: .failure(.connectivity))
+        
+        await expectSUTLoadMethod(toThrow: .connectivity,
+                                  whenClientReturnsError: .connectivity)
     }
     
     func test_load_deliversErrorOnNon200HTTPResponse() async {
         let samples = [199, 201, 300, 400, 500]
-      
+        
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
             let expectedResult = clientSuccess(statusCode: code, data: Data())
@@ -75,7 +74,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
         let invalidJSON = invalidJSON()
         let expectedResult = clientSuccess(statusCode: 200, data: invalidJSON)
-     
+        
         await expectSUTLoad(toThrow: .invalidData,
                             whenClientReturns: .success(expectedResult))
     }
@@ -152,8 +151,32 @@ private extension RemoteGalleryLoaderTests {
         XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
     
+//    func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
+//                       whenClientReturns clientResult: HTTPClientSpy.Result) async {
+//    }
+    
     func clientSuccess(statusCode: Int, data: Data) -> HTTPClientSpy.SpyResponse {
         HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: statusCode), data: data)
+    }
+    
+    // MARK: - Assertions
+    
+    func expectSUTLoadMethod(toThrow expectedError: RemoteGalleryLoader.Error,
+                             whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
+        let clientResult: HTTPClientSpy.Result = .failure(clientError)
+        let sut = makeSUT(result: clientResult)
+        
+        var capturedErrors: [RemoteGalleryLoader.Error] = []
+        do {
+            _ = try await sut.load()
+            XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
+        } catch let error as RemoteGalleryLoader.Error {
+            capturedErrors.append(error)
+        } catch {
+            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedErrors, [expectedError])
     }
     
     // MARK: Factories
