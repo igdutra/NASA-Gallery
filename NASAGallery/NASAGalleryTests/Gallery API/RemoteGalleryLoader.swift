@@ -80,8 +80,6 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Happy Path
     
-    typealias LoaderResult = Result<[GalleryItem], RemoteGalleryLoader.Error>
-    
     func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() async {
         let emptyJSON = Data("[]".utf8)
         let expectedLoadReturn: [GalleryItem] = []
