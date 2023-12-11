@@ -86,16 +86,16 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: emptyJSON)
         
         
-        await expectSUTLoadMethod(toReturn: expectedLoadReturn,
-                                  whenClientReturnsSuccessfullyWith: clientResponse)
+        await assertLoadDelivers(expectedLoadReturn,
+                                 whenClientReturnsWithSuccess: clientResponse)
     }
     
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
         let (expectedItems, expectedJSONData) = makeItems()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: expectedJSONData)
         
-        await expectSUTLoadMethod(toReturn: expectedItems,
-                                  whenClientReturnsSuccessfullyWith: clientResponse)
+        await assertLoadDelivers(expectedItems,
+                                 whenClientReturnsWithSuccess: clientResponse)
     }
 }
 // MARK: - Helpers
@@ -168,8 +168,8 @@ private extension RemoteGalleryLoaderTests {
         XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
     
-    func expectSUTLoadMethod(toReturn expectedItems: [GalleryItem],
-                             whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
+    func assertLoadDelivers(_ expectedItems: [GalleryItem],
+                            whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
         do {
