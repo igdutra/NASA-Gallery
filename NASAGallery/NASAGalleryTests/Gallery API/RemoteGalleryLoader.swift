@@ -155,8 +155,8 @@ private extension RemoteGalleryLoaderTests {
 //                       whenClientReturns clientResult: HTTPClientSpy.Result) async {
 //    }
     
-    func clientSuccess(statusCode: Int, data: Data) -> HTTPClientSpy.SpyResponse {
-        HTTPClientSpy.SpyResponse(response: HTTPURLResponse(statusCode: statusCode), data: data)
+    func clientSuccess(statusCode: Int, data: Data) -> HTTPClientSpy.SuccessResponse {
+        HTTPClientSpy.SuccessResponse(response: HTTPURLResponse(statusCode: statusCode), data: data)
     }
     
     // MARK: - Assertions
@@ -203,12 +203,12 @@ private extension RemoteGalleryLoaderTests {
             case load(URL)
         }
         
-        struct SpyResponse: Equatable {
+        struct SuccessResponse: Equatable {
             let response: HTTPURLResponse
             let data: Data
         }
         
-        typealias Result = Swift.Result<SpyResponse, RemoteGalleryLoader.Error>
+        typealias Result = Swift.Result<SuccessResponse, RemoteGalleryLoader.Error>
         
         private(set) var receivedMessages = [ReceivedMessage]()
         private let result: Result
