@@ -9,7 +9,7 @@ import Foundation
 
 // TODO: remove codingKeys and decodable from model
 
-public struct GalleryItem: Equatable, Decodable {
+public struct GalleryItem: Equatable {
     public let title: String
     public let url: URL
     public let date: String
@@ -30,12 +30,5 @@ public struct GalleryItem: Equatable, Decodable {
         self.copyright = copyright
         self.hdurl = hdurl
         self.thumbnailUrl = thumbnailUrl
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case date, explanation, title, url, hdurl
-        case mediaType = "media_type"
-        case thumbnailUrl = "thumbnail_url"
-        case copyright
     }
 }
