@@ -58,6 +58,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
                                   whenClientReturnsError: .connectivity)
     }
     
+    // Note: Keep an eye for a bench test for this one, since it recreates for each run an SUT
     func test_load_deliversErrorOnNon200HTTPResponse() async {
         let samples = [199, 201, 300, 400, 500]
         
@@ -86,36 +87,17 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let expectedLoadReturn: [GalleryItem] = []
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: emptyJSON)
         
-        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
-        var capturedResults: [LoaderResult] = []
-        
-        do {
-            let items = try await sut.load()
-            capturedResults.append(.success(items))
-        } catch {
-            XCTFail("Expected Success but returned \(error) instead")
-        }
-        
-        XCTAssertEqual(capturedResults, [.success([])])
+        await expectSUTLoadMethod(toReturn: expectedLoadReturn,
+                                  whenClientReturnsSuccessfullyWith: clientResponse)
     }
     
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
         let (expectedItems, expectedJSONData) = makeItems()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: expectedJSONData)
         
-        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
-        
-        var capturedItems: [GalleryItem] = []
-        
-        do {
-            let items = try await sut.load()
-            capturedItems.append(contentsOf: items)
-        } catch {
-            XCTFail("Expected Success but returned \(error) instead")
-        }
-        
-        XCTAssertEqual(capturedItems, expectedItems)
+        await expectSUTLoadMethod(toReturn: expectedItems,
+                                  whenClientReturnsSuccessfullyWith: clientResponse)
     }
 }
 // MARK: - Helpers
@@ -152,9 +134,8 @@ private extension RemoteGalleryLoaderTests {
         return RemoteGalleryLoader(url: url, client: client)
     }
     
-    // Note: first implementation of the expect method.
-    // Wait for more testst to come, maybe just add a helper for the do/catch block and let the rest in the test scope.
-    // XCTAsyncAssertThrowingFunction(...)
+    // MARK: - Assertions
+    
     func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
                        whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
@@ -172,8 +153,6 @@ private extension RemoteGalleryLoaderTests {
         XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
     
-    // MARK: - Assertions
-    
     func expectSUTLoadMethod(toThrow expectedError: RemoteGalleryLoader.Error,
                              whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
         let sut = makeSUT(withClientFailure: clientError)
@@ -189,6 +168,18 @@ private extension RemoteGalleryLoaderTests {
         }
         
         XCTAssertEqual(capturedErrors, [expectedError])
+    }
+    
+    func expectSUTLoadMethod(toReturn expectedItems: [GalleryItem],
+                             whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
+        
+        do {
+            let items = try await sut.load()
+            XCTAssertEqual(items, expectedItems)
+        } catch {
+            XCTFail("Expected Success but returned \(error) instead")
+        }
     }
     
     // MARK: Factories
