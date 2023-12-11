@@ -54,8 +54,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     func test_load_deliversErrorOnClientError() async {
         
-        await expectSUTLoadMethod(toThrow: .connectivity,
-                                  whenClientReturnsError: .connectivity)
+        await assertLoad(toThrow: .connectivity,
+                         whenClientReturnsError: .connectivity)
     }
     
     // Note: Keep an eye for a bench test for this one, since it recreates for each run an SUT
@@ -134,8 +134,8 @@ private extension RemoteGalleryLoaderTests {
     
     // MARK: - Assertions
     
-    func expectSUTLoadMethod(toThrow expectedError: RemoteGalleryLoader.Error,
-                             whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
+    func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
+                    whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
         let sut = makeSUT(withClientFailure: clientError)
         
         var capturedErrors: [RemoteGalleryLoader.Error] = []
