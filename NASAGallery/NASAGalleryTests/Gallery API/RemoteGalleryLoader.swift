@@ -65,8 +65,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
             let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: code), data: Data())
-            await expectSUTLoad(toThrow: .invalidData,
-                                whenClientReturnsSuccessfullyWith: clientResponse)
+            await assertLoad(toThrow: .invalidData,
+                             whenClientReturnsWithSuccess: clientResponse)
         }
     }
     
@@ -74,8 +74,8 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         let invalidJSON = invalidJSON()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
         
-        await expectSUTLoad(toThrow: .invalidData,
-                            whenClientReturnsSuccessfullyWith: clientResponse)
+        await assertLoad(toThrow: .invalidData,
+                         whenClientReturnsWithSuccess: clientResponse)
     }
     
     // MARK: - Happy Path
@@ -151,8 +151,8 @@ private extension RemoteGalleryLoaderTests {
         XCTAssertEqual(capturedErrors, [expectedError])
     }
     
-    func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
-                       whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
+    func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
+                    whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
         
         var capturedResults: [HTTPClientSpy.Result] = []
