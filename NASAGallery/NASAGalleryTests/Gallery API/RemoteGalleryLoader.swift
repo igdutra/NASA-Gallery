@@ -134,23 +134,6 @@ private extension RemoteGalleryLoaderTests {
     
     // MARK: - Assertions
     
-    func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
-                       whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
-        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
-        
-        var capturedResults: [HTTPClientSpy.Result] = []
-        do {
-            _ = try await sut.load()
-            XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
-        } catch let error as RemoteGalleryLoader.Error {
-            capturedResults.append(.failure(error))
-        } catch {
-            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
-        }
-        
-        XCTAssertEqual(capturedResults, [.failure(expectedError)])
-    }
-    
     func expectSUTLoadMethod(toThrow expectedError: RemoteGalleryLoader.Error,
                              whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
         let sut = makeSUT(withClientFailure: clientError)
@@ -166,6 +149,23 @@ private extension RemoteGalleryLoaderTests {
         }
         
         XCTAssertEqual(capturedErrors, [expectedError])
+    }
+    
+    func expectSUTLoad(toThrow expectedError: RemoteGalleryLoader.Error,
+                       whenClientReturnsSuccessfullyWith clientResponse: HTTPClientSpy.SuccessResponse) async {
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
+        
+        var capturedResults: [HTTPClientSpy.Result] = []
+        do {
+            _ = try await sut.load()
+            XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
+        } catch let error as RemoteGalleryLoader.Error {
+            capturedResults.append(.failure(error))
+        } catch {
+            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
+        }
+        
+        XCTAssertEqual(capturedResults, [.failure(expectedError)])
     }
     
     func expectSUTLoadMethod(toReturn expectedItems: [GalleryItem],
