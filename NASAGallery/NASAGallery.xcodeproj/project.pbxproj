@@ -14,6 +14,7 @@
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737D2B2A141600C37E9E /* HTTPClient.swift */; };
+		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
 		92A2A4C72B0C23AE003F7B74 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +37,7 @@
 		925D36132B0804A900FE12DA /* GalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryLoader.swift; sourceTree = "<group>"; };
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		92A2737D2B2A141600C37E9E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryMapper.swift; sourceTree = "<group>"; };
 		92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +74,7 @@
 			children = (
 				92A2737D2B2A141600C37E9E /* HTTPClient.swift */,
 				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
+				92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */,
 			);
 			path = "Gallery API";
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */,
+				92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
