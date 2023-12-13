@@ -13,6 +13,7 @@
 		925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryItem.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
+		92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737D2B2A141600C37E9E /* HTTPClient.swift */; };
 		92A2A4C72B0C23AE003F7B74 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		925D36112B08037A00FE12DA /* GalleryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItem.swift; sourceTree = "<group>"; };
 		925D36132B0804A900FE12DA /* GalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryLoader.swift; sourceTree = "<group>"; };
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
+		92A2737D2B2A141600C37E9E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,6 +70,7 @@
 		922F11F82B17DBEC008B3FB8 /* Gallery API */ = {
 			isa = PBXGroup;
 			children = (
+				92A2737D2B2A141600C37E9E /* HTTPClient.swift */,
 				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
 			);
 			path = "Gallery API";
@@ -237,6 +240,7 @@
 			files = (
 				922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */,
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
+				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
