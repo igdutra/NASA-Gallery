@@ -11,7 +11,7 @@ enum RemoteGalleryMapper {
     
     private static let OK_200: Int = 200
     
-    private struct Root: Decodable {
+    private struct APODItem: Decodable {
         let title: String
         let url: URL
         let date: String
@@ -38,7 +38,7 @@ enum RemoteGalleryMapper {
             throw RemoteGalleryLoader.Error.invalidData
         }
         
-        let items = try JSONDecoder().decode([Root].self, from: data)
+        let items = try JSONDecoder().decode([APODItem].self, from: data)
         let galleryItems = items.map { $0.galleryItem }
         
         return galleryItems
