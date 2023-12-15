@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: remove codingKeys and decodable from model
-
 public struct GalleryItem: Equatable {
     public let title: String
     public let url: URL

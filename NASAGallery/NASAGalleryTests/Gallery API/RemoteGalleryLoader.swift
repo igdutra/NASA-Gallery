@@ -98,7 +98,8 @@ private extension RemoteGalleryLoaderTests {
     
     func makeSUT(url: URL = anyURL(),
                  withSuccessfulClientResponse response: SuccessResponse? = nil,
-                 withClientFailure error: RemoteGalleryLoader.Error? = nil) -> RemoteGalleryLoader {
+                 withClientFailure error: RemoteGalleryLoader.Error? = nil,
+                 file: StaticString = #filePath, line: UInt = #line) -> RemoteGalleryLoader {
 
         let successResult = response.map(HTTPClientSpy.Result.success)
         let failureResult = error.map(HTTPClientSpy.Result.failure)
@@ -121,7 +122,12 @@ private extension RemoteGalleryLoaderTests {
          */
 
         let client = HTTPClientSpy(result: result)
-        return RemoteGalleryLoader(url: url, client: client)
+        let sut = RemoteGalleryLoader(url: url, client: client)
+        
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
     }
     
     // MARK: - Assertions
@@ -139,16 +145,18 @@ private extension RemoteGalleryLoaderTests {
      
      */
     func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
-                    whenClientReturnsError clientError: RemoteGalleryLoader.Error) async {
-        let sut = makeSUT(withClientFailure: clientError)
+                    whenClientReturnsError clientError: RemoteGalleryLoader.Error,
+                    file: StaticString = #filePath, line: UInt = #line) async {
+        let sut = makeSUT(withClientFailure: clientError, file: file, line: line)
         
         await assertLoadFrom(sut,
                              toThrow: expectedError)
     }
     
     func assertLoad(toThrow expectedError: RemoteGalleryLoader.Error,
-                    whenClientReturnsWithResponse clientResponse: HTTPClientSpy.SuccessResponse) async {
-        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
+                    whenClientReturnsWithResponse clientResponse: HTTPClientSpy.SuccessResponse,
+                    file: StaticString = #filePath, line: UInt = #line) async {
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse, file: file, line: line)
         
         await assertLoadFrom(sut,
                              toThrow: expectedError)
@@ -167,8 +175,9 @@ private extension RemoteGalleryLoaderTests {
     }
     
     func assertLoadDelivers(_ expectedItems: [GalleryItem],
-                            whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse) async {
-        let sut = makeSUT(withSuccessfulClientResponse: clientResponse)
+                            whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse,
+                            file: StaticString = #filePath, line: UInt = #line) async {
+        let sut = makeSUT(withSuccessfulClientResponse: clientResponse, file: file, line: line)
         
         do {
             let items = try await sut.load()
