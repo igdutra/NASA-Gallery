@@ -129,8 +129,8 @@
 			isa = PBXGroup;
 			children = (
 				92032A7B2B213423008053C0 /* Fixtures.swift */,
-				9282C9392B1A932900D564DE /* SharedTestHelpers.swift */,
 				92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */,
+				9282C9392B1A932900D564DE /* SharedTestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";

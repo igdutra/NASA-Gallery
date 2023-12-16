@@ -89,6 +89,22 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         await assertLoadDelivers(expectedItems,
                                  whenClientReturnsWithSuccess: clientResponse)
     }
+    
+    /* NOTE test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated
+     
+     Caio and Mike always perform this test when testing async code.
+     This test is to asset that the classic guard self != nil else { return } was added
+     
+     however, due to the async await nature "transforming" the code into sync, this test is not needed.
+     
+     On the other hand, one test that SHOULD be introduced is to be aware of *Reentrancy*
+     
+     In this context of RemoteGalleryLoader is not needed, but when testing things in integration we should be aware of
+     
+     * Cache Scenarios
+     * UI Multiple Updates
+     
+     */
 }
 // MARK: - Helpers
 
