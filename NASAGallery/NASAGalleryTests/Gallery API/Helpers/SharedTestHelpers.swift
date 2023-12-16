@@ -16,9 +16,15 @@ func anyURL(_ host: String = "a-url.com") -> URL {
     return components.url!
 }
 
-func anyError() -> Error {
-    struct AnyError: Error { }
-    return AnyError()
+struct AnyError: Error, Equatable {
+    let message: String
+    init(message: String = .init()) {
+        self.message = message
+    }
+}
+
+func anyError(_ message: String = .init()) -> Error {
+    return AnyError(message: message)
 }
 
 func invalidJSON() -> Data {
