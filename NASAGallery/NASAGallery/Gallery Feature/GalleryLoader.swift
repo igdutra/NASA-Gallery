@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol GalleryLoader {
+public protocol GalleryLoader {
     func load() async throws -> [GalleryItem]
 }

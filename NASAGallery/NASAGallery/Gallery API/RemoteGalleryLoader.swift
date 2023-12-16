@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class RemoteGalleryLoader {
+public final class RemoteGalleryLoader: GalleryLoader {
     private let client: HTTPClient
     private let url: URL
     
