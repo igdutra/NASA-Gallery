@@ -36,7 +36,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     func test_getData_firesSessionDataFromURL() async {
         let url = anyURL()
         let sessionSpy = URLSessionSpy()
-        sessionSpy.stub(url: url, error: anyError())
+        sessionSpy.stub(url: url, error: AnyError())
         let sut = URLSessionHTTPClient(session: sessionSpy)
         
         try? await sut.getData(from: url)
@@ -46,7 +46,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_failsOnRequestError() async {
         let url = anyURL()
-        let expectedError = anyError("Expected Error")
+        let expectedError = AnyError(message: "Expected Error")
         let sessionSpy = URLSessionSpy()
         sessionSpy.stub(url: url, error: expectedError)
         let sut = URLSessionHTTPClient(session: sessionSpy)
@@ -55,7 +55,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             try await sut.getData(from: url)
             XCTFail("Expected Error but returned successfully instead")
         } catch {
-            XCTAssertEqual(error as? AnyError, expectedError as? AnyError)
+            XCTAssertEqual(error as? AnyError, expectedError)
         }
     }
 }

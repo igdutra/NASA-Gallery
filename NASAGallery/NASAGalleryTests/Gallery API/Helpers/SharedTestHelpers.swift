@@ -23,7 +23,7 @@ struct AnyError: Error, Equatable {
     }
 }
 
-func anyError(_ message: String = .init()) -> Error {
+func anyErrorErased(_ message: String = .init()) -> Error {
     return AnyError(message: message)
 }
 
