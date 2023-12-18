@@ -10,14 +10,15 @@ import XCTest
 /* NOTE Author Notes
  
  1- The first TDD approach was through subclassing URLSession.
- However the "data(from url: URL) async" is declared in a swift extension and Swift extensions cannot be overridden because they are not part of the original class declaration
+ However that was not possible because "Non @objc instance method 'data(from:)' is declared in extension of 'URLSession' and cannot be overridden"
+
+ 2- So the second approach was done throuh Protocol-Based Mocking. Which works! but the downside is that only because of the tests we had to add complexity and new protocols to the production code
  
  */
 
-/* NOTE TODOs
+/* TODOs
  
 */
-
 final class URLSessionHTTPClient {
     // Note how must be the protocol in production code and not the real URLSession
     let session: URLSessionProtocol
