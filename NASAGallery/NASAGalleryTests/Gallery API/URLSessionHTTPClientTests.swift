@@ -201,13 +201,14 @@ private extension URLSessionHTTPClientTests {
         static func isValidStub() -> Bool {
             // Represent the invalid cases here
             switch (stub?.data, stub?.response, stub?.error) {
-            case (nil, nil, nil):
+            case (nil, nil, nil),
+                 (.some(_), .some(_), .some(_)),
+                 (.some(_), nil, nil),
+                 (nil, .some(_), nil),
+                 (nil, .some(_), .some(_)),
+                 (.some(_), nil, .some(_)):
                 return false
-            case (.some(_), _, _):
-                return true
-            case (_, .some(_), _):
-                return true
-            case (_, _, .some(_)):
+            default:
                 return true
             }
         }
