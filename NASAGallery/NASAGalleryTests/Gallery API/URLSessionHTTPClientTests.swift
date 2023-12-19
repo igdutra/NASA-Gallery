@@ -17,6 +17,10 @@ import XCTest
 3- Return from URLProtocol stub is the expected error (client?.urlProtocol(self, didFailWithError: error), however wrapped into NSError.
    If expectedError is AnyError, casting returned error as? AnyError Fails.
  
+4- test_getFromURL_failsOnAllInvalidRepresentationCases
+Since this is using async/await, in production code, we will never have a Invalid Case!
+So this test was added only for documentation purposes, to assert that the stub handles that correctly!
+ 
 */
 
 /* TODOs
@@ -40,11 +44,13 @@ final class URLSessionHTTPClientTests: XCTestCase {
     // MARK: - SetUp & TearDown
     
     override func setUp() async throws {
+        try await super.setUp()
         URLProtocolStub.startInterceptingRequests()
     }
     
     override func tearDown() async throws {
         URLProtocolStub.stopInterceptingRequests()
+        try await super.tearDown()
     }
     
     // MARK: - Tests
@@ -84,6 +90,31 @@ final class URLSessionHTTPClientTests: XCTestCase {
         } catch {
             // Should never run due to URLProtocolStub returning NSError
             XCTFail("Should throw expectedError but threw \(error) instead")
+        }
+    }
+    
+    // Test as documentation: assert that Stub will not behave differenlty as it should
+    func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
+        let anyData = Data()
+        let anyResponse = URLResponse()
+        let anyError = anyErrorErased("Any Error")
+        
+        let expectedError: NSError = URLProtocolStub.invalidRepresentationError
+        
+        URLProtocolStub.stub(data: nil, response: nil, error: nil)
+//        URLProtocolStub.stub(data: anyData, response: anyResponse, error: anyError)
+//        URLProtocolStub.stub(data: anyData, response: nil, error: nil)
+//        URLProtocolStub.stub(data: nil, response: anyResponse, error: nil)
+//        URLProtocolStub.stub(data: nil, response: anyResponse, error: anyError)
+//        URLProtocolStub.stub(data: anyData, response: nil, error: anyError)
+        
+        let sut = URLSessionHTTPClient()
+        
+        do {
+            try await sut.getData(from: anyURL())
+        } catch let receivedError as NSError {
+            XCTAssertEqual(receivedError.code, expectedError.code)
+            XCTAssertEqual(receivedError.domain, expectedError.domain)
         }
     }
 }
@@ -136,7 +167,14 @@ private extension URLSessionHTTPClientTests {
         override func startLoading() {
             guard let stub = URLProtocolStub.stub else {
                 // XCTFail() was not being displayed correctly, better crash instead.
+                // Missing client didfinishloading
                 fatalError("Test needs a stubbed response")
+            }
+            
+            guard URLProtocolStub.isValidStub() else {
+                client?.urlProtocol(self, didFailWithError: URLProtocolStub.invalidRepresentationError)
+                client?.urlProtocolDidFinishLoading(self)
+                return
             }
             
             if let data = stub.data {
@@ -155,6 +193,24 @@ private extension URLSessionHTTPClientTests {
         }
         
         override func stopLoading() { }
+        
+        // MARK: - Helpers
+        
+        static let invalidRepresentationError = NSError(domain: "Invalid Representation Error", code: 1)
+        
+        static func isValidStub() -> Bool {
+            // Represent the invalid cases here
+            switch (stub?.data, stub?.response, stub?.error) {
+            case (nil, nil, nil):
+                return false
+            case (.some(_), _, _):
+                return true
+            case (_, .some(_), _):
+                return true
+            case (_, _, .some(_)):
+                return true
+            }
+        }
     }
 }
 
