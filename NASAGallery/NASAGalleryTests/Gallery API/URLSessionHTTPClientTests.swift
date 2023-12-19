@@ -20,6 +20,7 @@ import XCTest
 4- test_getFromURL_failsOnAllInvalidRepresentationCases
 Since this is using async/await, in production code, we will never have a Invalid Case!
 So this test was added only for documentation purposes, to assert that the stub handles that correctly!
+This was done more like an exercise, we could make the point that made the codebase more complicated.
  
 */
 
@@ -114,13 +115,13 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         for (data, response, error) in invalidStubs {
             URLProtocolStub.stub(data: data, response: response, error: error)
-            
+            let scenarioDescription = "data: \(data != nil), response: \(response != nil), error: \(error != nil)"
             do {
                 try await sut.getData(from: anyURL())
                 XCTFail("Expected failure, but got success for scenario: \(data != nil), \(response != nil), \(error != nil)")
             } catch let receivedError as NSError {
-                XCTAssertEqual(receivedError.code, expectedError.code)
-                XCTAssertEqual(receivedError.domain, expectedError.domain)
+                XCTAssertEqual(receivedError.code, expectedError.code, "Failed for scenario: \(scenarioDescription)")
+                XCTAssertEqual(receivedError.domain, expectedError.domain, "Failed for scenario: \(scenarioDescription)")
             }
         }
     }
