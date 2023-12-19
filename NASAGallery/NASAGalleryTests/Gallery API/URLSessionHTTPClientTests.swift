@@ -51,7 +51,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_performsGETRequestWithURL() async {
         let url = anyURL()
-        URLProtocolStub.stub(url: url, data: nil, response: nil, error: AnyError())
+        URLProtocolStub.stub(data: nil, response: nil, error: AnyError())
         
         var observedRequest: URLRequest?
         
@@ -72,7 +72,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let expectedError: NSError = anyErrorErased() as NSError
         let url = anyURL()
      
-        URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
+        URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
         let sut = URLSessionHTTPClient()
 
         do {
@@ -94,7 +94,7 @@ private extension URLSessionHTTPClientTests {
     private class URLProtocolStub: URLProtocol {
         // MARK: Properties and Helpers
         
-        private static var stubs: [URL: Stub] = .init()
+        private static var stub: Stub?
         
         private static var captureRequest: ((URLRequest) -> Void)?
         
@@ -108,8 +108,8 @@ private extension URLSessionHTTPClientTests {
             captureRequest = observer
         }
         
-        static func stub(url: URL, data: Data?, response: URLResponse?, error: Error?) {
-            stubs[url] = Stub(data: data, response: response, error: error)
+        static func stub(data: Data?, response: URLResponse?, error: Error?) {
+            stub = Stub(data: data, response: response, error: error)
         }
         
         static func startInterceptingRequests() {
@@ -118,7 +118,7 @@ private extension URLSessionHTTPClientTests {
         
         static func stopInterceptingRequests() {
             URLProtocol.unregisterClass(URLProtocolStub.self)
-            stubs = [:]
+            stub = nil
             captureRequest = nil
         }
         
@@ -134,7 +134,7 @@ private extension URLSessionHTTPClientTests {
         }
         
         override func startLoading() {
-            guard let url = request.url, let stub = URLProtocolStub.stubs[url] else {
+            guard let url = request.url, let stub = URLProtocolStub.stub else {
                 // XCTFail() was not being displayed correctly, better crash instead.
                 fatalError("Test needs a stubbed response")
             }
