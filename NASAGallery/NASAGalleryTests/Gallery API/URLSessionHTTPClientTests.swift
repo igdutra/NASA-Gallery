@@ -14,7 +14,10 @@ import XCTest
 
  2- So the second approach was done throuh Protocol-Based Mocking. Which works! but the downside is that only because of the tests we had to add complexity and new protocols to the production code
  
- */
+3- Return from URLProtocol stub is the expected error (client?.urlProtocol(self, didFailWithError: error), however wrapped into NSError.
+   If expectedError is AnyError, casting returned error as? AnyError Fails.
+ 
+*/
 
 /* TODOs
  
@@ -36,8 +39,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_failsOnRequestError() async {
         let url = anyURL()
-        // Return from URLprotocol stub is AnyError wrapped into NSError. casting error as? AnyError Fails.
-        let expectedError = NSError(domain: "any error", code: 13)
+        // Needs to be NSError
+        let expectedError: NSError = anyErrorErased() as NSError
         URLProtocolStub.startInterceptingRequests()
         
         URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
@@ -47,7 +50,11 @@ final class URLSessionHTTPClientTests: XCTestCase {
             try await sut.getData(from: url)
             XCTFail("Expected Error but returned successfully instead")
         } catch let nsError as NSError {
+            XCTAssertEqual(nsError.code, expectedError.code)
             XCTAssertEqual(nsError.domain, expectedError.domain)
+        } catch {
+            // Should never run due to URLProtocolStub returning NSError
+            XCTFail("Should throw expectedError but threw \(error) instead")
         }
         
         URLProtocolStub.stopInterceptingRequests()
