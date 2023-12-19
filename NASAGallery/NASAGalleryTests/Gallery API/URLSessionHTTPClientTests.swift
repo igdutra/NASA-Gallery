@@ -20,7 +20,7 @@ import XCTest
  
 */
 final class URLSessionHTTPClient {
-    // Note how must be the protocol in production code and not the real URLSession
+    
     let session: URLSession
     
     init(session: URLSession = .shared) {
@@ -34,33 +34,7 @@ final class URLSessionHTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
-//    func test_getData_firesSessionDataFromURL() async {
-//        let url = anyURL()
-//        let sessionSpy = URLSessionSpy()
-//        sessionSpy.stub(url: url, error: AnyError())
-//        let sut = URLSessionHTTPClient(session: sessionSpy)
-//        
-//        try? await sut.getData(from: url)
-//        
-//        XCTAssertEqual(sessionSpy.receivedMessages, [.data(url)])
-//    }
-    
-//    func test_getFromURL_failsOnRequestError() async {
-//        let url = anyURL()
-//        let expectedError = AnyError(message: "Expected Error")
-//        let sessionSpy = URLSessionSpy()
-//        sessionSpy.stub(url: url, error: expectedError)
-//        let sut = URLSessionHTTPClient(session: sessionSpy)
-//
-//        do {
-//            try await sut.getData(from: url)
-//            XCTFail("Expected Error but returned successfully instead")
-//        } catch {
-//            XCTAssertEqual(error as? AnyError, expectedError)
-//        }
-//    }
-    
-    func test_getFromURL_failsOnRequestError2() async {
+    func test_getFromURL_failsOnRequestError() async {
         let url = anyURL()
         // Return from URLprotocol stub is AnyError wrapped into NSError. casting error as? AnyError Fails.
         let expectedError = NSError(domain: "any error", code: 13)
@@ -108,6 +82,7 @@ private extension URLSessionHTTPClientTests {
         }
         
         // MARK: - URLProtocol
+        
         override class func canInit(with: URLRequest) -> Bool { true }
         
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
@@ -115,9 +90,9 @@ private extension URLSessionHTTPClientTests {
         }
         
         override func startLoading() {
-            guard let url = request.url, let stub = URLProtocolStub.stubs[url] else { XCTFail("Should mock"); return }
-            
-            
+            guard let url = request.url, let stub = URLProtocolStub.stubs[url] else {
+                fatalError("Test needs a stubbed response")
+            }
             
             if let data = stub.data {
                 client?.urlProtocol(self, didLoad: data)
