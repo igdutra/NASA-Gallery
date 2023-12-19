@@ -37,9 +37,20 @@ final class URLSessionHTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
+    // MARK: - SetUp & TearDown
+    
+    override func setUp() async throws {
+        URLProtocolStub.startInterceptingRequests()
+    }
+    
+    override func tearDown() async throws {
+        URLProtocolStub.stopInterceptingRequests()
+    }
+    
+    // MARK: - Tests
+    
     func test_getFromURL_performsGETRequestWithURL() async {
         let url = anyURL()
-        URLProtocolStub.startInterceptingRequests()
         URLProtocolStub.stub(url: url, data: nil, response: nil, error: AnyError())
         
         var observedRequest: URLRequest?
@@ -54,16 +65,13 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         XCTAssertNotNil(observedRequest)
         XCTAssertEqual(observedRequest?.url, url)
-        
-        URLProtocolStub.stopInterceptingRequests()
     }
     
     func test_getFromURL_failsOnRequestError() async {
-        let url = anyURL()
         // Needs to be NSError
         let expectedError: NSError = anyErrorErased() as NSError
-        URLProtocolStub.startInterceptingRequests()
-        
+        let url = anyURL()
+     
         URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
         let sut = URLSessionHTTPClient()
 
@@ -77,8 +85,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
             // Should never run due to URLProtocolStub returning NSError
             XCTFail("Should throw expectedError but threw \(error) instead")
         }
-        
-        URLProtocolStub.stopInterceptingRequests()
     }
 }
 
