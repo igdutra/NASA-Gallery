@@ -134,7 +134,7 @@ private extension URLSessionHTTPClientTests {
         }
         
         override func startLoading() {
-            guard let url = request.url, let stub = URLProtocolStub.stub else {
+            guard let stub = URLProtocolStub.stub else {
                 // XCTFail() was not being displayed correctly, better crash instead.
                 fatalError("Test needs a stubbed response")
             }
