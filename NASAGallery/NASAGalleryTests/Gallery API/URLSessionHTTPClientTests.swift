@@ -101,20 +101,27 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         let expectedError: NSError = URLProtocolStub.invalidRepresentationError
         
-        URLProtocolStub.stub(data: nil, response: nil, error: nil)
-//        URLProtocolStub.stub(data: anyData, response: anyResponse, error: anyError)
-//        URLProtocolStub.stub(data: anyData, response: nil, error: nil)
-//        URLProtocolStub.stub(data: nil, response: anyResponse, error: nil)
-//        URLProtocolStub.stub(data: nil, response: anyResponse, error: anyError)
-//        URLProtocolStub.stub(data: anyData, response: nil, error: anyError)
+        let invalidStubs: [(Data?, URLResponse?, Error?)] = [
+            (nil, nil, nil),
+            (anyData, anyResponse, anyError),
+            (anyData, nil, nil),
+            (nil, anyResponse, nil),
+            (nil, anyResponse, anyError),
+            (anyData, nil, anyError)
+        ]
         
         let sut = URLSessionHTTPClient()
         
-        do {
-            try await sut.getData(from: anyURL())
-        } catch let receivedError as NSError {
-            XCTAssertEqual(receivedError.code, expectedError.code)
-            XCTAssertEqual(receivedError.domain, expectedError.domain)
+        for (data, response, error) in invalidStubs {
+            URLProtocolStub.stub(data: data, response: response, error: error)
+            
+            do {
+                try await sut.getData(from: anyURL())
+                XCTFail("Expected failure, but got success for scenario: \(data != nil), \(response != nil), \(error != nil)")
+            } catch let receivedError as NSError {
+                XCTAssertEqual(receivedError.code, expectedError.code)
+                XCTAssertEqual(receivedError.domain, expectedError.domain)
+            }
         }
     }
 }
