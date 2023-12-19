@@ -37,6 +37,27 @@ final class URLSessionHTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
+    func test_getFromURL_performsGETRequestWithURL() async {
+        let url = anyURL()
+        URLProtocolStub.startInterceptingRequests()
+        URLProtocolStub.stub(url: url, data: nil, response: nil, error: AnyError())
+        
+        var observedRequest: URLRequest?
+        
+        URLProtocolStub.captureRequest { request in
+            observedRequest = request
+        }
+        
+        let sut = URLSessionHTTPClient()
+        
+        let _ = try? await sut.getData(from: url)
+        
+        XCTAssertNotNil(observedRequest)
+        XCTAssertEqual(observedRequest?.url, url)
+        
+        URLProtocolStub.stopInterceptingRequests()
+    }
+    
     func test_getFromURL_failsOnRequestError() async {
         let url = anyURL()
         // Needs to be NSError
@@ -44,7 +65,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.startInterceptingRequests()
         
         URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
-        let sut = URLSessionHTTPClient(session: .shared)
+        let sut = URLSessionHTTPClient()
 
         do {
             try await sut.getData(from: url)
@@ -69,10 +90,16 @@ private extension URLSessionHTTPClientTests {
         
         private static var stubs: [URL: Stub] = .init()
         
+        private static var captureRequest: ((URLRequest) -> Void)?
+        
         private struct Stub {
             let data: Data?
             let response: URLResponse?
             let error: Error?
+        }
+        
+        static func captureRequest(observer: @escaping (URLRequest) -> Void) {
+            captureRequest = observer
         }
         
         static func stub(url: URL, data: Data?, response: URLResponse?, error: Error?) {
@@ -86,11 +113,15 @@ private extension URLSessionHTTPClientTests {
         static func stopInterceptingRequests() {
             URLProtocol.unregisterClass(URLProtocolStub.self)
             stubs = [:]
+            captureRequest = nil
         }
         
         // MARK: - URLProtocol
         
-        override class func canInit(with: URLRequest) -> Bool { true }
+        override class func canInit(with request: URLRequest) -> Bool {
+            captureRequest?(request)
+            return true
+        }
         
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
             return request
@@ -98,6 +129,7 @@ private extension URLSessionHTTPClientTests {
         
         override func startLoading() {
             guard let url = request.url, let stub = URLProtocolStub.stubs[url] else {
+                // XCTFail() was not being displayed correctly, better crash instead.
                 fatalError("Test needs a stubbed response")
             }
             
