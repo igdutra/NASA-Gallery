@@ -22,6 +22,7 @@ Since this is using async/await, in production code, we will never have a Invali
 So this test was added only for documentation purposes, to assert that the stub handles that correctly!
 This was done more like an exercise, we could make the point that made the codebase more complicated.
  
+5- Added new testcase to assure that this client will only take HTTP responses
 */
 
 /* TODOs
@@ -76,7 +77,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             observedRequest = request
         }
         
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
         
         let _ = try? await sut.getData(from: url)
         
@@ -92,7 +93,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let url = anyURL()
      
         URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
 
         do {
             _ = try await sut.getData(from: url)
@@ -112,7 +113,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let nonHTTPResponse = URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
      
         URLProtocolStub.stub(data: validReturn, response: nonHTTPResponse, error: nil)
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
         
         do {
             _ = try await sut.getData(from: url)
@@ -133,7 +134,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
                                             statusCode: 200, httpVersion: nil, headerFields: nil)
      
         URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
         
         let receivedReturn = try await sut.getData(from: url)
         
@@ -147,7 +148,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
                                             statusCode: 200, httpVersion: nil, headerFields: nil)
      
         URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
         
         let receivedReturn = try await sut.getData(from: url)
         
@@ -173,7 +174,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             (anyData, nil, anyError)
         ]
         
-        let sut = URLSessionHTTPClient()
+        let sut = makeSUT()
         
         for (data, response, error) in invalidStubs {
             URLProtocolStub.stub(data: data, response: response, error: error)
@@ -187,6 +188,26 @@ final class URLSessionHTTPClientTests: XCTestCase {
             }
         }
     }
+}
+
+// MARK: - Helpers
+private extension URLSessionHTTPClientTests {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+        let sut = URLSessionHTTPClient()
+        
+        trackForMemoryLeaks(sut)
+        
+        return sut
+    }
+    
+//    func assertFailsWithError(_ expectedError: Error, action: () async throws -> Void, file: StaticString = #filePath, line: UInt = #line) async {
+//        do {
+//            try await action()
+//            XCTFail("Expected Error but returned successfully instead", file: file, line: line)
+//        } catch {
+//            XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription, "Unexpected error received: \(error)", file: file, line: line)
+//        }
+//    }
 }
 
 // MARK: - URLProtocolStub
