@@ -121,17 +121,18 @@ final class URLSessionHTTPClientTests: XCTestCase {
     // MARK: Success Cases
     
     func test_getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async throws {
-        let expectedReturn = Data()
+        let returnedNilData: Data? = nil
+        let expectedEmptyData = Data()
         let url = anyURL()
         let validResponse = HTTPURLResponse(url: url,
                                             statusCode: 200, httpVersion: nil, headerFields: nil)
      
-        URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
+        URLProtocolStub.stub(data: returnedNilData, response: validResponse, error: nil)
         let sut = makeSUT()
         
         let receivedReturn = try await sut.getData(from: url)
         
-        XCTAssertEqual(receivedReturn.data, expectedReturn)
+        XCTAssertEqual(receivedReturn.data, expectedEmptyData)
         XCTAssertEqual(receivedReturn.response.url, validResponse?.url)
         XCTAssertEqual(receivedReturn.response.statusCode, validResponse?.statusCode)
     }
@@ -166,7 +167,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             (nil, nil, nil),
             (anyData, anyResponse, anyError),
             (anyData, nil, nil),
-            (nil, anyResponse, nil),
+            // (nil, anyResponse, nil), nil data and response is valid scenario
             (nil, anyResponse, anyError),
             (anyData, nil, anyError)
         ]
@@ -309,7 +310,7 @@ private extension URLSessionHTTPClientTests {
             case (nil, nil, nil),
                  (.some(_), .some(_), .some(_)),
                  (.some(_), nil, nil),
-                 (nil, .some(_), nil),
+                // (nil, .some(_), nil), nil data and response is valid scenario
                  (nil, .some(_), .some(_)),
                  (.some(_), nil, .some(_)):
                 return false
