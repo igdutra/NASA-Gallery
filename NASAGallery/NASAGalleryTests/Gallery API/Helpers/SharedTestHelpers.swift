@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NASAGallery
 
 // MARK: - Free Funcs
 
@@ -29,6 +30,17 @@ func anyErrorErased(_ message: String = .init()) -> Error {
 
 func invalidJSON() -> Data {
     Data("Invalid JSON".utf8)
+}
+
+// MARK: - Models
+
+func makeItems() -> (model: [GalleryItem], data: Data) {
+    let item1 = makeGalleryItemFixture(title: "First Item")
+    let item2 = makeGalleryItemFixture(urlString: "image1", explanation: "This is the second Item")
+    let items = [item1, item2]
+    let data = makeGalleryJSONData(items)
+    
+    return (items, data)
 }
 
 // MARK: - HTTPURLResponse

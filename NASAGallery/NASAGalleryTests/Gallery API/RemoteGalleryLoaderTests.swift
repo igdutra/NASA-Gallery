@@ -196,17 +196,6 @@ private extension RemoteGalleryLoaderTests {
             XCTFail("Expected Success but returned \(error) instead")
         }
     }
-    
-    // MARK: Factories
-    
-    func makeItems() -> ([GalleryItem], Data) {
-        let item1 = makeGalleryItemFixture(title: "First Item")
-        let item2 = makeGalleryItemFixture(urlString: "image1", explanation: "This is the second Item")
-        let items = [item1, item2]
-        let data = makeGalleryJSONData(items)
-        
-        return (items, data)
-    }
 }
 
 // MARK: - Spy

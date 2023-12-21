@@ -139,6 +139,20 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         XCTAssertEqual(receivedReturn.data, expectedReturn)
     }
+    
+    func test_getFromURL_succeedsOnHTTPURLResponseWithData() async throws {
+        let expectedReturn = makeItems().data
+        let url = anyURL()
+        let validResponse = HTTPURLResponse(url: url,
+                                            statusCode: 200, httpVersion: nil, headerFields: nil)
+     
+        URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
+        let sut = URLSessionHTTPClient()
+        
+        let receivedReturn = try await sut.getData(from: url)
+        
+        XCTAssertEqual(receivedReturn.data, expectedReturn)
+    }
 }
 
 // MARK: - URLProtocolStub
@@ -237,7 +251,7 @@ private extension URLSessionHTTPClientTests {
     }
 }
 
-// MARK: - Alternative Approach: Protocol-based mocking
+// MARK: - Alternative Approach: Protocol-based mocking (not applied)
 
 protocol URLSessionProtocol {
     func data(from url: URL) async throws -> (Data, URLResponse)
