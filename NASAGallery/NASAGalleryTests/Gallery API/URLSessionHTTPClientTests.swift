@@ -108,13 +108,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.stub(data: validReturn, response: nonHTTPResponse, error: nil)
         let sut = makeSUT()
         
-        do {
+        await assertFailsWith(URLError(.cannotParseResponse)) {
             _ = try await sut.getData(from: url)
-            XCTFail("Expected Error but returned successfully instead")
-        } catch let error as URLError {
-            XCTAssertEqual(error, URLError(.cannotParseResponse))
-        } catch {
-            XCTFail("Should throw expectedError but threw \(error) instead")
         }
     }
     
@@ -215,7 +210,7 @@ private extension URLSessionHTTPClientTests {
         } catch let error as ErrorType {
             XCTAssertEqual(error, expectedError, file: file, line: line)
         } catch {
-            XCTFail("Should throw expectedError but threw \(error) instead")
+            XCTFail("Should throw expectedError but threw \(error) instead", file: file, line: line)
         }
     }
 }
