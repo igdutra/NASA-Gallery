@@ -27,6 +27,8 @@ This was done more like an exercise, we could make the point that made the codeb
 This was represented in the invalid scenarios testcase from them
  (.. } else if let data = data, let response = response as? HTTPURLResponse { )
  but in here we used guard syntax
+ 
+6- Note how EASILY the production URLSessionHTTPClient could be replaced by a simple URLSession extension, and all tests would pass.
 */
 
 final class URLSessionHTTPClientTests: XCTestCase {
