@@ -35,8 +35,18 @@ final class URLSessionHTTPClient {
         self.session = session
     }
     
-    func getData(from url: URL) async throws -> (data: Data, response: URLResponse) {
-        return try await session.data(from: url)
+    func getData(from url: URL) async throws -> (data: Data, response: HTTPURLResponse) {
+        do {
+            let (data, response) = try await session.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw URLError(.cannotParseResponse)
+            }
+            
+            return (data: data, response: httpResponse)
+        } catch {
+            throw error
+        }
     }
 }
 
@@ -73,6 +83,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(observedRequest)
         XCTAssertEqual(observedRequest?.url, url)
     }
+    
+    // MARK: Error Cases
     
     func test_getFromURL_failsOnRequestError() async {
         // Needs to be NSError
@@ -126,6 +138,26 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
+    func test_getFromURL_failsOnNonHTTPURLResponse() async {
+        let validReturn = Data()
+        let url = anyURL()
+        let nonHTTPResponse = URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+     
+        URLProtocolStub.stub(data: validReturn, response: nonHTTPResponse, error: nil)
+        let sut = URLSessionHTTPClient()
+        
+        do {
+            _ = try await sut.getData(from: url)
+            XCTFail("Expected Error but returned successfully instead")
+        } catch let error as URLError {
+            XCTAssertEqual(error, URLError(.cannotParseResponse))
+        } catch {
+            XCTFail("Should throw expectedError but threw \(error) instead")
+        }
+    }
+    
+    // MARK: Success Cases
+    
     func test_getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async throws {
         let expectedReturn = Data()
         let url = anyURL()
@@ -153,6 +185,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         XCTAssertEqual(receivedReturn.data, expectedReturn)
     }
+    
+    // MARK: Documentation
 }
 
 // MARK: - URLProtocolStub
