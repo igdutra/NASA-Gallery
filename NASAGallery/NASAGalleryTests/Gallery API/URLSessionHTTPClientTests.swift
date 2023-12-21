@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NASAGallery
 
 /* NOTE Author Notes
  
@@ -32,7 +33,7 @@ This was represented in the invalid scenarios testcase from them
  
  
 */
-final class URLSessionHTTPClient {
+final class URLSessionHTTPClient: HTTPClient {
     
     let session: URLSession
     
@@ -190,7 +191,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 
 // MARK: - Helpers
 private extension URLSessionHTTPClientTests {
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let sut = URLSessionHTTPClient()
         
         trackForMemoryLeaks(sut)

@@ -223,11 +223,11 @@ private extension RemoteGalleryLoaderTests {
         
         // MARK: - HTTPClient
         
-        func get(from url: URL) async throws -> (HTTPURLResponse, Data) {
+        func getData(from url: URL) async throws -> (data: Data, response: HTTPURLResponse) {
             receivedMessages.append(.load(url))
             switch result {
             case let .success(spyResponse):
-                return (spyResponse.response, spyResponse.data)
+                return (spyResponse.data, spyResponse.response)
             case let .failure(error):
                 throw error
             }
