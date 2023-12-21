@@ -22,10 +22,14 @@ Since this is using async/await, in production code, we will never have a Invali
 So this test was added only for documentation purposes, to assert that the stub handles that correctly!
 This was done more like an exercise, we could make the point that made the codebase more complicated.
  
-5- Added new testcase to assure that this client will only take HTTP responses
+5- Added new testcase to assure that this client will only take HTTP responses, it returns HTTPClientResult which expects HTTPURLResponse.
+This was represented in the invalid scenarios testcase from them
+ (.. } else if let data = data, let response = response as? HTTPURLResponse { )
+ but in here we used guard syntax
 */
 
 /* TODOs
+ 
  
 */
 final class URLSessionHTTPClient {
@@ -83,6 +87,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         XCTAssertNotNil(observedRequest)
         XCTAssertEqual(observedRequest?.url, url)
+        XCTAssertEqual(observedRequest?.httpMethod, "GET")
     }
     
     // MARK: Error Cases
@@ -147,7 +152,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     // Test as documentation: assert that Stub will not behave differenlty as it should
     func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
-        let anyData = Data()
+        let anyData = anyData()
         let anyResponse = URLResponse()
         let anyError = anyErrorErased("Any Error")
         

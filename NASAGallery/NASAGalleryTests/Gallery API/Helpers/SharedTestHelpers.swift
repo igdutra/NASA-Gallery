@@ -32,6 +32,10 @@ func invalidJSON() -> Data {
     Data("Invalid JSON".utf8)
 }
 
+func anyData() -> Data {
+    return Data("any data".utf8)
+}
+
 // MARK: - Models
 
 func makeItems() -> (model: [GalleryItem], data: Data) {
