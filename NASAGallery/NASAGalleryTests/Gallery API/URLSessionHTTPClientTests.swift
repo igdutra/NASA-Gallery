@@ -31,6 +31,14 @@ This was represented in the invalid scenarios testcase from them
 6- Note how EASILY the production URLSessionHTTPClient could be replaced by a simple URLSession extension, and all tests would pass.
 */
 
+/* TODOs
+ 
+ 1- get rid of the test_getFromURL_failsOnAllInvalidRepresentationCases. Add it as a comment in the end as footer notes
+ 2- add `assertThat.. willReturn expectedReturn for the both 2 valid cases
+ 3- compare these tests with RemoteGalleryLoader and try to find anything that can be possibly put into shared helpers
+ 
+ */
+
 final class URLSessionHTTPClientTests: XCTestCase {
     
     // MARK: - SetUp & TearDown
