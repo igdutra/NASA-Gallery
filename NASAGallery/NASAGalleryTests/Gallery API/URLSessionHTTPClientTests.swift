@@ -89,21 +89,14 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     func test_getFromURL_failsOnRequestError() async {
         // Needs to be NSError
-        let expectedError: NSError = anyErrorErased() as NSError
+        let expectedError = NSError(domain: "failsOnRequestError", code: 13)
         let url = anyURL()
      
         URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
         let sut = makeSUT()
-
-        do {
+        
+        await assertFailsWithNSError(expectedError) {
             _ = try await sut.getData(from: url)
-            XCTFail("Expected Error but returned successfully instead")
-        } catch let nsError as NSError {
-            XCTAssertEqual(nsError.code, expectedError.code)
-            XCTAssertEqual(nsError.domain, expectedError.domain)
-        } catch {
-            // Should never run due to URLProtocolStub returning NSError
-            XCTFail("Should throw expectedError but threw \(error) instead")
         }
     }
     
@@ -200,14 +193,31 @@ private extension URLSessionHTTPClientTests {
         return sut
     }
     
-//    func assertFailsWithError(_ expectedError: Error, action: () async throws -> Void, file: StaticString = #filePath, line: UInt = #line) async {
-//        do {
-//            try await action()
-//            XCTFail("Expected Error but returned successfully instead", file: file, line: line)
-//        } catch {
-//            XCTAssertEqual(error.localizedDescription, expectedError.localizedDescription, "Unexpected error received: \(error)", file: file, line: line)
-//        }
-//    }
+    func assertFailsWithNSError(_ expectedNSError: NSError,
+                                action: () async throws -> Void, file: StaticString = #filePath, line: UInt = #line) async {
+        do {
+            try await action()
+            XCTFail("Expected Error but returned successfully instead", file: file, line: line)
+        } catch let error as NSError {
+            XCTAssertEqual(error.code, expectedNSError.code, file: file, line: line)
+            XCTAssertEqual(error.domain, expectedNSError.domain, file: file, line: line)
+        } catch {
+            XCTFail("Should throw expectedError but threw \(error) instead")
+        }
+    }
+    
+    func assertFailsWith<ErrorType: Error>(_ expectedError: ErrorType,
+                                           action: () async throws -> Void,
+                                           file: StaticString = #filePath, line: UInt = #line) async where ErrorType: Equatable {
+        do {
+            try await action()
+            XCTFail("Expected Error but returned successfully instead", file: file, line: line)
+        } catch let error as ErrorType {
+            XCTAssertEqual(error, expectedError, file: file, line: line)
+        } catch {
+            XCTFail("Should throw expectedError but threw \(error) instead")
+        }
+    }
 }
 
 // MARK: - URLProtocolStub
