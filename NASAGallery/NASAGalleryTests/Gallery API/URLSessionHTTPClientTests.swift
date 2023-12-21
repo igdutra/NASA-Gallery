@@ -35,8 +35,8 @@ final class URLSessionHTTPClient {
         self.session = session
     }
     
-    func getData(from url: URL) async throws {
-        _ = try await session.data(from: url)
+    func getData(from url: URL) async throws -> (data: Data, response: URLResponse) {
+        return try await session.data(from: url)
     }
 }
 
@@ -83,7 +83,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let sut = URLSessionHTTPClient()
 
         do {
-            try await sut.getData(from: url)
+            _ = try await sut.getData(from: url)
             XCTFail("Expected Error but returned successfully instead")
         } catch let nsError as NSError {
             XCTAssertEqual(nsError.code, expectedError.code)
@@ -117,13 +117,27 @@ final class URLSessionHTTPClientTests: XCTestCase {
             URLProtocolStub.stub(data: data, response: response, error: error)
             let scenarioDescription = "data: \(data != nil), response: \(response != nil), error: \(error != nil)"
             do {
-                try await sut.getData(from: anyURL())
+                _ = try await sut.getData(from: anyURL())
                 XCTFail("Expected failure, but got success for scenario: \(data != nil), \(response != nil), \(error != nil)")
             } catch let receivedError as NSError {
                 XCTAssertEqual(receivedError.code, expectedError.code, "Failed for scenario: \(scenarioDescription)")
                 XCTAssertEqual(receivedError.domain, expectedError.domain, "Failed for scenario: \(scenarioDescription)")
             }
         }
+    }
+    
+    func test_getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async throws {
+        let expectedReturn = Data()
+        let url = anyURL()
+        let validResponse = HTTPURLResponse(url: url,
+                                            statusCode: 200, httpVersion: nil, headerFields: nil)
+     
+        URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
+        let sut = URLSessionHTTPClient()
+        
+        let receivedReturn = try await sut.getData(from: url)
+        
+        XCTAssertEqual(receivedReturn.data, expectedReturn)
     }
 }
 
