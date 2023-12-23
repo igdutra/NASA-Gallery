@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "BECB2E2C-1B93-4552-B345-B71F31020166",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "92CFC41D2B372C8E00DEECF1",
+        "name" : "NASAGalleryEndToEndTests"
+      }
+    }
+  ],
+  "version" : 1
+}
