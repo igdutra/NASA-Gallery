@@ -14,31 +14,29 @@ final class NASAGalleryEndToEndTests: XCTestCase {
         let url = getAPODURL()
         let client = URLSessionHTTPClient()
         let loader = RemoteGalleryLoader(url: url, client: client)
+        // Note: expectation is used for timeout purposes
         let expectation = XCTestExpectation(description: "Wait for load to complete")
         
-        Task {
-            do {
-                let items = try await loader.load()
-                
-                let firstItem = try XCTUnwrap(items.first)
-                let secondItem = try XCTUnwrap(items[1])
-                
-                assert(firstItem, matches: expectedItemOn10Dec2023())
-                assert(secondItem, matches: expectedItemOn11Dec2023())
-                
-                expectation.fulfill()
-            } catch {
-                XCTFail("Test failed with error: \(error)")
-                expectation.fulfill()
-            }
+        do {
+            let items = try await loader.load()
+            
+            let firstItem = try XCTUnwrap(items.first)
+            let secondItem = try XCTUnwrap(items[1])
+            
+            assert(firstItem, matches: expectedItemOn10Dec2023())
+            assert(secondItem, matches: expectedItemOn11Dec2023())
+            
+            expectation.fulfill()
+        } catch {
+            XCTFail("Test failed with error: \(error)")
+            expectation.fulfill()
         }
         
         await fulfillment(of: [expectation], timeout: 5.0)
     }
-    
-    // MARK: - Helpers
-
 }
+
+// MARK: - Helpers
 
 private extension NASAGalleryEndToEndTests {
     
