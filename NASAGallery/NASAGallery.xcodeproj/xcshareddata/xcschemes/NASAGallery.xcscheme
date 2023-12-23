@@ -32,6 +32,9 @@
             reference = "container:NASAGalleryTests/NASAGallery.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:CI/CI.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
