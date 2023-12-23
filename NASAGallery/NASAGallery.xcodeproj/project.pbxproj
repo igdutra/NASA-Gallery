@@ -43,6 +43,7 @@
 /* Begin PBXFileReference section */
 		92032A7B2B213423008053C0 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
 		921D2A832B3768AE0047B4B7 /* NASAGalleryEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryEndToEndTests.xctestplan; sourceTree = "<group>"; };
+		921D2A842B3769C20047B4B7 /* NASAGallery.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGallery.xctestplan; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +90,7 @@
 		922F11F72B17DBDF008B3FB8 /* Gallery API */ = {
 			isa = PBXGroup;
 			children = (
+				921D2A842B3769C20047B4B7 /* NASAGallery.xctestplan */,
 				9282C9382B1A931D00D564DE /* Helpers */,
 				92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift */,
 				92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */,

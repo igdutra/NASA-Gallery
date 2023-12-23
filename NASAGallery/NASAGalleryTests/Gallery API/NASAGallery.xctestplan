@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "E8196C1A-7E24-43F4-B42E-3D08CC11BEFA",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "IDEPreferLogStreaming",
+        "value" : "YES"
+      }
+    ],
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "925D36002B08037000FE12DA",
+        "name" : "NASAGalleryTests"
+      }
+    }
+  ],
+  "version" : 1
+}
