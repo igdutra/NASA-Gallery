@@ -29,11 +29,12 @@ This was represented in the invalid scenarios testcase from them
  but in here we used guard syntax
  
 6- Note how EASILY the production URLSessionHTTPClient could be replaced by a simple URLSession extension, and all tests would pass.
+ 
+ 7- Footer Notes on Invalid Cases
 */
 
 /* TODOs
  
- 1- get rid of the test_getFromURL_failsOnAllInvalidRepresentationCases. Add it as a comment in the end as footer notes
  2- add `assertThat.. willReturn expectedReturn for the both 2 valid cases
  3- compare these tests with RemoteGalleryLoader and try to find anything that can be possibly put into shared helpers
  
@@ -136,40 +137,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedReturn.response.url, validResponse?.url)
         XCTAssertEqual(receivedReturn.response.statusCode, validResponse?.statusCode)
     }
-    
-    // MARK: Documentation
-    
-    // Test as documentation: assert that Stub will not behave differenlty as it should
-    func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
-        let anyData = anyData()
-        let anyResponse = URLResponse()
-        let anyError = anyErrorErased("Any Error")
-        
-        let expectedError: NSError = URLProtocolStub.invalidRepresentationError
-        
-        let invalidStubs: [(Data?, URLResponse?, Error?)] = [
-            (nil, nil, nil),
-            (anyData, anyResponse, anyError),
-            (anyData, nil, nil),
-            // (nil, anyResponse, nil), nil data and response is valid scenario
-            (nil, anyResponse, anyError),
-            (anyData, nil, anyError)
-        ]
-        
-        let sut = makeSUT()
-        
-        for (data, response, error) in invalidStubs {
-            URLProtocolStub.stub(data: data, response: response, error: error)
-            let scenarioDescription = "data: \(data != nil), response: \(response != nil), error: \(error != nil)"
-            do {
-                _ = try await sut.getData(from: anyURL())
-                XCTFail("Expected failure, but got success for scenario: \(data != nil), \(response != nil), \(error != nil)")
-            } catch let receivedError as NSError {
-                XCTAssertEqual(receivedError.code, expectedError.code, "Failed for scenario: \(scenarioDescription)")
-                XCTAssertEqual(receivedError.domain, expectedError.domain, "Failed for scenario: \(scenarioDescription)")
-            }
-        }
-    }
 }
 
 // MARK: - Helpers
@@ -183,7 +150,8 @@ private extension URLSessionHTTPClientTests {
     }
     
     func assertFailsWithNSError(_ expectedNSError: NSError,
-                                action: () async throws -> Void, file: StaticString = #filePath, line: UInt = #line) async {
+                                action: () async throws -> Void,
+                                file: StaticString = #filePath, line: UInt = #line) async {
         do {
             try await action()
             XCTFail("Expected Error but returned successfully instead", file: file, line: line)
@@ -261,12 +229,6 @@ private extension URLSessionHTTPClientTests {
                 fatalError("Test needs a stubbed response")
             }
             
-            guard URLProtocolStub.isValidStub() else {
-                client?.urlProtocol(self, didFailWithError: URLProtocolStub.invalidRepresentationError)
-                client?.urlProtocolDidFinishLoading(self)
-                return
-            }
-            
             if let data = stub.data {
                 client?.urlProtocol(self, didLoad: data)
             }
@@ -283,25 +245,6 @@ private extension URLSessionHTTPClientTests {
         }
         
         override func stopLoading() { }
-        
-        // MARK: - Helpers
-        
-        static let invalidRepresentationError = NSError(domain: "Invalid Representation Error", code: 1)
-        
-        static func isValidStub() -> Bool {
-            // Represent the invalid cases here
-            switch (stub?.data, stub?.response, stub?.error) {
-            case (nil, nil, nil),
-                 (.some(_), .some(_), .some(_)),
-                 (.some(_), nil, nil),
-                // (nil, .some(_), nil), nil data and response is valid scenario
-                 (nil, .some(_), .some(_)),
-                 (.some(_), nil, .some(_)):
-                return false
-            default:
-                return true
-            }
-        }
     }
 }
 
@@ -352,3 +295,70 @@ private final class URLSessionSpy: URLSessionProtocol {
         return (data, response)
     }
 }
+
+/* FOOTER NOTES - Testing invalid cases
+ 
+ When using completion, because the own return of dataTask contains 3 optionals (Data?, URLReponse?, Error?) we need to validate assumptions to understand how this framework works. That's why was mada a test to avoid all invalid case scenarios (while also asserting that the return will be HTTPURLResponse instead of URLResponse).
+ 
+ Due to the nature of the Async/Await that is no longer needded since these invalid scenarios are not possible to be represented, only through the Stub.
+ The following test was done as an exersise and the HTTPURLResponse was done in a separate test.
+ 
+ 
+ 
+ 
+ // MARK: Documentation
+ 
+ // Test as documentation: assert that Stub will not behave differenlty as it should
+ func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
+     let anyData = anyData()
+     let anyResponse = URLResponse()
+     let anyError = anyErrorErased("Any Error")
+     
+     let expectedError: NSError = URLProtocolStub.invalidRepresentationError
+     
+     let invalidStubs: [(Data?, URLResponse?, Error?)] = [
+         (nil, nil, nil),
+         (anyData, anyResponse, anyError),
+         (anyData, nil, nil),
+         // (nil, anyResponse, nil), nil data and response is valid scenario
+         (nil, anyResponse, anyError),
+         (anyData, nil, anyError)
+     ]
+     
+     let sut = makeSUT()
+     
+     for (data, response, error) in invalidStubs {
+         URLProtocolStub.stub(data: data, response: response, error: error)
+         let scenarioDescription = "data: \(data != nil), response: \(response != nil), error: \(error != nil)"
+         do {
+             _ = try await sut.getData(from: anyURL())
+             XCTFail("Expected failure, but got success for scenario: \(data != nil), \(response != nil), \(error != nil)")
+         } catch let receivedError as NSError {
+             XCTAssertEqual(receivedError.code, expectedError.code, "Failed for scenario: \(scenarioDescription)")
+             XCTAssertEqual(receivedError.domain, expectedError.domain, "Failed for scenario: \(scenarioDescription)")
+         }
+     }
+ }
+ 
+ // MARK: - In the URLProtocolStub -> could have made a helper to represent all these scenarios
+ 
+ // MARK: - Helpers
+ 
+ static let invalidRepresentationError = NSError(domain: "Invalid Representation Error", code: 1)
+ 
+ static func isValidStub() -> Bool {
+     // Represent the invalid cases here
+     switch (stub?.data, stub?.response, stub?.error) {
+     case (nil, nil, nil),
+          (.some(_), .some(_), .some(_)),
+          (.some(_), nil, nil),
+         // (nil, .some(_), nil), nil data and response is valid scenario
+          (nil, .some(_), .some(_)),
+          (.some(_), nil, .some(_)):
+         return false
+     default:
+         return true
+     }
+ }
+ 
+ */
