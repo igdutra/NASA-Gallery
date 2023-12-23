@@ -17,12 +17,21 @@
 		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
 		92A2A4C72B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift */; };
 		92B6056B2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */; };
+		92CFC4212B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */; };
+		92CFC4222B372C8E00DEECF1 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */; };
 		92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		925D36032B08037000FE12DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 925D35F02B08037000FE12DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 925D35F82B08037000FE12DA;
+			remoteInfo = NASAGallery;
+		};
+		92CFC4232B372C8E00DEECF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 925D35F02B08037000FE12DA /* Project object */;
 			proxyType = 1;
@@ -43,6 +52,8 @@
 		92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryMapper.swift; sourceTree = "<group>"; };
 		92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoaderTests.swift; sourceTree = "<group>"; };
 		92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
+		92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryEndToEndTests.swift; sourceTree = "<group>"; };
 		92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeak.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -60,6 +71,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92CFC41B2B372C8E00DEECF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92CFC4222B372C8E00DEECF1 /* NASAGallery.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +111,7 @@
 			children = (
 				925D35FB2B08037000FE12DA /* NASAGallery */,
 				925D36052B08037000FE12DA /* NASAGalleryTests */,
+				92CFC41F2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */,
 				925D35FA2B08037000FE12DA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,6 +121,7 @@
 			children = (
 				925D35F92B08037000FE12DA /* NASAGallery.framework */,
 				925D36012B08037000FE12DA /* NASAGalleryTests.xctest */,
+				92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,6 +160,14 @@
 				9282C9392B1A932900D564DE /* SharedTestHelpers.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		92CFC41F2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */ = {
+			isa = PBXGroup;
+			children = (
+				92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */,
+			);
+			path = NASAGalleryEndToEndTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,6 +219,24 @@
 			productReference = 925D36012B08037000FE12DA /* NASAGalleryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		92CFC41D2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryEndToEndTests" */;
+			buildPhases = (
+				92CFC41A2B372C8E00DEECF1 /* Sources */,
+				92CFC41B2B372C8E00DEECF1 /* Frameworks */,
+				92CFC41C2B372C8E00DEECF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				92CFC4242B372C8E00DEECF1 /* PBXTargetDependency */,
+			);
+			name = NASAGalleryEndToEndTests;
+			productName = NASAGalleryEndToEndTests;
+			productReference = 92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -197,7 +244,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					925D35F82B08037000FE12DA = {
@@ -206,6 +253,9 @@
 					};
 					925D36002B08037000FE12DA = {
 						CreatedOnToolsVersion = 15.0.1;
+					};
+					92CFC41D2B372C8E00DEECF1 = {
+						CreatedOnToolsVersion = 15.1;
 					};
 				};
 			};
@@ -224,6 +274,7 @@
 			targets = (
 				925D35F82B08037000FE12DA /* NASAGallery */,
 				925D36002B08037000FE12DA /* NASAGalleryTests */,
+				92CFC41D2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */,
 			);
 		};
 /* End PBXProject section */
@@ -237,6 +288,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		925D35FF2B08037000FE12DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92CFC41C2B372C8E00DEECF1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,6 +329,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		92CFC41A2B372C8E00DEECF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92CFC4212B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -278,6 +344,11 @@
 			isa = PBXTargetDependency;
 			target = 925D35F82B08037000FE12DA /* NASAGallery */;
 			targetProxy = 925D36032B08037000FE12DA /* PBXContainerItemProxy */;
+		};
+		92CFC4242B372C8E00DEECF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 925D35F82B08037000FE12DA /* NASAGallery */;
+			targetProxy = 92CFC4232B372C8E00DEECF1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -503,6 +574,38 @@
 			};
 			name = Release;
 		};
+		92CFC4252B372C8E00DEECF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8C3NFSJWVT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ivo.NASAGalleryEndToEndTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		92CFC4262B372C8E00DEECF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8C3NFSJWVT;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ivo.NASAGalleryEndToEndTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -529,6 +632,15 @@
 			buildConfigurations = (
 				925D360F2B08037000FE12DA /* Debug */,
 				925D36102B08037000FE12DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryEndToEndTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92CFC4252B372C8E00DEECF1 /* Debug */,
+				92CFC4262B372C8E00DEECF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

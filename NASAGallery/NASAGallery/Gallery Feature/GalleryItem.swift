@@ -7,6 +7,18 @@
 
 import Foundation
 
+/* NOTE Possible Idea for UI Module
+ 
+ This is the raw Model
+ when dealing with UI, there are some variations
+ for example, hdurl will not happen when on video type
+ 
+ Suggestions:
+ - create some child types from these
+ - or create enum (careful Open closed principal!) for mediaType
+ 
+*/
+
 public struct GalleryItem: Equatable {
     public let title: String
     public let url: URL
