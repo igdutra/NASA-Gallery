@@ -142,7 +142,7 @@ private extension URLSessionHTTPClientTests {
             XCTAssertEqual(error.code, expectedNSError.code, file: file, line: line)
             XCTAssertEqual(error.domain, expectedNSError.domain, file: file, line: line)
         } catch {
-            XCTFail("Should throw expectedError but threw \(error) instead")
+            XCTFail("Should throw expectedError but threw \(error) instead", file: file, line: line)
         }
     }
     
@@ -247,7 +247,7 @@ private extension URLSessionHTTPClientTests {
     }
 }
 
-// MARK: - Alternative Approach: Protocol-based mocking (not applied)
+/* Alternative Approach - Protocol-based mocking (not applied)
 
 protocol URLSessionProtocol {
     func data(from url: URL) async throws -> (Data, URLResponse)
@@ -294,6 +294,8 @@ private final class URLSessionSpy: URLSessionProtocol {
         return (data, response)
     }
 }
+ 
+*/
 
 /* FOOTER NOTES - Testing invalid cases
  
