@@ -33,13 +33,6 @@ This was represented in the invalid scenarios testcase from them
  7- Footer Notes on Invalid Cases
 */
 
-/* TODOs
- 
- 2- add `assertThat.. willReturn expectedReturn for the both 2 valid cases
- 3- compare these tests with RemoteGalleryLoader and try to find anything that can be possibly put into shared helpers
- 
- */
-
 final class URLSessionHTTPClientTests: XCTestCase {
     
     // MARK: - SetUp & TearDown
