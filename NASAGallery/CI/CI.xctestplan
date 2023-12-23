@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "F2629D9E-441F-44A3-A346-6ADE5064A26D",
+      "name" : "Default Config",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "defaultTestExecutionTimeAllowance" : 60,
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "92CFC41D2B372C8E00DEECF1",
+        "name" : "NASAGalleryEndToEndTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "925D36002B08037000FE12DA",
+        "name" : "NASAGalleryTests"
+      }
+    }
+  ],
+  "version" : 1
+}
