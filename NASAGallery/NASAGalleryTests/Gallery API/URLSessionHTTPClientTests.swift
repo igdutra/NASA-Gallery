@@ -110,32 +110,22 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let expectedEmptyData = Data()
         let url = anyURL()
         let validResponse = HTTPURLResponse(url: url,
-                                            statusCode: 200, httpVersion: nil, headerFields: nil)
+                                            statusCode: 200, httpVersion: nil, headerFields: nil)!
      
         URLProtocolStub.stub(data: returnedNilData, response: validResponse, error: nil)
-        let sut = makeSUT()
-        
-        let receivedReturn = try await sut.getData(from: url)
-        
-        XCTAssertEqual(receivedReturn.data, expectedEmptyData)
-        XCTAssertEqual(receivedReturn.response.url, validResponse?.url)
-        XCTAssertEqual(receivedReturn.response.statusCode, validResponse?.statusCode)
+       
+        try await assertGetData(willReturn: (data: expectedEmptyData, response: validResponse))
     }
     
     func test_getFromURL_succeedsOnHTTPURLResponseWithData() async throws {
         let expectedReturn = makeItems().data
         let url = anyURL()
         let validResponse = HTTPURLResponse(url: url,
-                                            statusCode: 200, httpVersion: nil, headerFields: nil)
+                                            statusCode: 200, httpVersion: nil, headerFields: nil)!
      
         URLProtocolStub.stub(data: expectedReturn, response: validResponse, error: nil)
-        let sut = makeSUT()
         
-        let receivedReturn = try await sut.getData(from: url)
-        
-        XCTAssertEqual(receivedReturn.data, expectedReturn)
-        XCTAssertEqual(receivedReturn.response.url, validResponse?.url)
-        XCTAssertEqual(receivedReturn.response.statusCode, validResponse?.statusCode)
+        try await assertGetData(willReturn: (data: expectedReturn, response: validResponse))
     }
 }
 
@@ -173,6 +163,22 @@ private extension URLSessionHTTPClientTests {
             XCTAssertEqual(error, expectedError, file: file, line: line)
         } catch {
             XCTFail("Should throw expectedError but threw \(error) instead", file: file, line: line)
+        }
+    }
+    
+    func assertGetData(willReturn expectedReturn: (data: Data, response: HTTPURLResponse),
+                       file: StaticString = #filePath, line: UInt = #line) async throws {
+        let url = anyURL()
+        let sut = makeSUT()
+
+        do {
+            let receivedReturn = try await sut.getData(from: url)
+            
+            XCTAssertEqual(receivedReturn.data, expectedReturn.data, file: file, line: line)
+            XCTAssertEqual(receivedReturn.response.url, expectedReturn.response.url, file: file, line: line)
+            XCTAssertEqual(receivedReturn.response.statusCode, expectedReturn.response.statusCode, file: file, line: line)
+        } catch {
+            XCTFail("Should succeed but threw \(error) instead", file: file, line: line)
         }
     }
 }
@@ -302,9 +308,6 @@ private final class URLSessionSpy: URLSessionProtocol {
  
  Due to the nature of the Async/Await that is no longer needded since these invalid scenarios are not possible to be represented, only through the Stub.
  The following test was done as an exersise and the HTTPURLResponse was done in a separate test.
- 
- 
- 
  
  // MARK: Documentation
  
