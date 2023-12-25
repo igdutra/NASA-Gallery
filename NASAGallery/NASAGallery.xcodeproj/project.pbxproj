@@ -12,6 +12,7 @@
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryItem.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
+		9274D9562B3A36000090005A /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737D2B2A141600C37E9E /* HTTPClient.swift */; };
 		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
@@ -347,6 +348,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9274D9562B3A36000090005A /* XCTestCase+MemoryLeak.swift in Sources */,
 				92CFC4212B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

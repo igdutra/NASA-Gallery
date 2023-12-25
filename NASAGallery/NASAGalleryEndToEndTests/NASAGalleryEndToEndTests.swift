@@ -12,8 +12,8 @@ final class NASAGalleryEndToEndTests: XCTestCase {
     
     func test_remoteGalleryLoader_loadPreciseItems() async throws {
         let url = getAPODURL()
-        let client = URLSessionHTTPClient()
-        let loader = RemoteGalleryLoader(url: url, client: client)
+        let loader = makeSUT(url: url)
+        
         // Note: expectation is used for timeout purposes
         let expectation = XCTestExpectation(description: "Wait for load to complete")
         
@@ -39,6 +39,16 @@ final class NASAGalleryEndToEndTests: XCTestCase {
 // MARK: - Helpers
 
 private extension NASAGalleryEndToEndTests {
+    
+    func makeSUT(url: URL) -> RemoteGalleryLoader {
+        let client = URLSessionHTTPClient()
+        let loader = RemoteGalleryLoader(url: url, client: client)
+        
+        trackForMemoryLeaks(client)
+        trackForMemoryLeaks(loader)
+        
+        return loader
+    }
     
     func assert(_ item1: GalleryItem, matches item2: GalleryItem, file: StaticString = #file, line: UInt = #line) {
         XCTAssertEqual(item1.title, item2.title, "Expected title to match", file: file, line: line)
