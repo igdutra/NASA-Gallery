@@ -22,9 +22,17 @@ jobs:
   build-and-test:
 
     runs-on: macos-13-arm64
+    
+    timeout-minutes: 10
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Fix Xcode 15 slowness issues
+      run: |
+       wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
+       sudo installer -pkg yeetd-normal.pkg -target /
+       yeetd &
 
     - name: Select Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.1.app
