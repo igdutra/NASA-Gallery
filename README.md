@@ -2,6 +2,8 @@
 
 ![](PossibleAppIcon.png)
 
+[![CI-macOS](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml/badge.svg)](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml)
+
 ## BDD Specs
 
 ### Story: Daily Access to NASA's Picture of the Day
