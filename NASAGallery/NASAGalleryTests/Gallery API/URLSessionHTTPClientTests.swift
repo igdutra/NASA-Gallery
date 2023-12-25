@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-/* NOTE Author Notes
+/* Author Notes on URLSessionHTTPClientTests
  
  1- The first TDD approach was through subclassing URLSession.
  However that was not possible because "Non @objc instance method 'data(from:)' is declared in extension of 'URLSession' and cannot be overridden"
