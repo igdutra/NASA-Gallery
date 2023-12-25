@@ -1,6 +1,8 @@
 # NASA Gallery App – APOD Feature
 
-![](Resources/ReadMe-logo.png)
+<p align="center">
+  <img src="Resources/ReadMe-logo.png" alt="NASA Gallery logo">
+</p>
 
 [![CI-macOS](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml/badge.svg)](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml)
 
