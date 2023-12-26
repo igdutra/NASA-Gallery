@@ -74,7 +74,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     // MARK: Error Cases
     
-    func test_getFromURL_failsOnRequestError() async {
+    func test_getFromURL_onRequestError_fails() async {
         // Needs to be NSError
         let expectedError = NSError(domain: "failsOnRequestError", code: 13)
         let url = anyURL()
@@ -87,7 +87,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
     }
     
-    func test_getFromURL_failsOnNonHTTPURLResponse() async {
+    func test_getFromURL_onNonHTTPURLResponse_failsWithURLError() async {
         let validReturn = Data()
         let url = anyURL()
         let nonHTTPResponse = URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
@@ -102,7 +102,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     // MARK: Success Cases
     
-    func test_getFromURL_succeedsWithEmptyDataOnHTTPURLResponseWithNilData() async throws {
+    func test_getFromURL_withNilDataOnHTTPURLResponse_succeedsWithEmptyData() async throws {
         let returnedNilData: Data? = nil
         let expectedEmptyData = Data()
         let url = anyURL()
@@ -114,7 +114,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         try await assertGetData(willReturn: (data: expectedEmptyData, response: validResponse))
     }
     
-    func test_getFromURL_succeedsOnHTTPURLResponseWithData() async throws {
+    func test_getFromURL_withDataOnHTTPURLResponse_succeeds() async throws {
         let expectedReturn = makeItems().data
         let url = anyURL()
         let validResponse = HTTPURLResponse(url: url,

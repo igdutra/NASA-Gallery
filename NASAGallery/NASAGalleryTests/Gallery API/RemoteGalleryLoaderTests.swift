@@ -83,13 +83,13 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Error Cases
     
-    func test_load_deliversErrorOnClientError() async {
+    func test_load_onClientError_failsWithConnectivityError() async {
         
         await assertLoad(toThrow: .connectivity,
                          whenClientReturnsError: .connectivity)
     }
     
-    func test_load_deliversErrorOnNon200HTTPResponse() async {
+    func test_load_onNon200HTTPResponse_failsWithConnectivityError() async {
         let samples = [199, 201, 300, 400, 500]
         
         // Note: .forEach() method expects a synchronous closure
@@ -100,7 +100,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
         }
     }
     
-    func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() async {
+    func test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError() async {
         let invalidJSON = invalidJSON()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
         
@@ -110,7 +110,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
     
     // MARK: - Happy Path
     
-    func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() async {
+    func test_load_on200HTTPResponseWithEmptyJSONList_succeedsWithNoItems() async {
         let emptyJSON = Data("[]".utf8)
         let expectedLoadReturn: [GalleryItem] = []
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: emptyJSON)
@@ -120,7 +120,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
                                  whenClientReturnsWithSuccess: clientResponse)
     }
     
-    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() async {
+    func test_load_on200HTTPResponseWithJSONItems_succeedsWithItems() async {
         let (expectedItems, expectedJSONData) = makeItems()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: expectedJSONData)
         
