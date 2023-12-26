@@ -154,3 +154,15 @@ GET *url* (TBD)
     }
 ]
 ```
+
+### Test Name Convention
+
+#### Tests with Condition
+```test_[MethodName]_[ConditionOrScenario]_[Success-Failure-ExpectedOutcome]```   
+* test_getFromURL_withDataOnHTTPURLResponse_succeeds
+* test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError
+
+#### Tests without Condition
+```test_[Functionality]_[BehaviorOrOutcome]```
+* test_apiEndToEndTests_matchesFixedTestData
+* test_init_doesNotRequestDataFromURL
