@@ -10,7 +10,7 @@ import NASAGallery
 
 final class NASAGalleryEndToEndTests: XCTestCase {
     
-    func test_remoteGalleryLoader_loadPreciseItems() async throws {
+    func test_apiEndToEndTests_matchesFixedTestData() async throws {
         let url = getAPODURL()
         let loader = makeSUT(url: url)
         
