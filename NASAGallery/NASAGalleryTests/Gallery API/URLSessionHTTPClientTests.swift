@@ -10,6 +10,10 @@ import NASAGallery
 
 /* Author Notes on URLSessionHTTPClientTests
  
+ * Possible DataRace on test_getFromURL_performsGETRequestWithURL
+ In the program, a data race was detected in this test because the result was not needed for this test to work.
+ Note that because we are using async/await, the data race WILL NOT occour on this test because right from the start we await for the return in order to make our assertions!
+ 
  1- The first TDD approach was through subclassing URLSession.
  However that was not possible because "Non @objc instance method 'data(from:)' is declared in extension of 'URLSession' and cannot be overridden"
 
@@ -30,7 +34,7 @@ This was represented in the invalid scenarios testcase from them
  
 6- Note how EASILY the production URLSessionHTTPClient could be replaced by a simple URLSession extension, and all tests would pass.
  
- 7- Footer Notes on Invalid Cases
+7- Footer Notes on Invalid Cases
 */
 
 final class URLSessionHTTPClientTests: XCTestCase {
