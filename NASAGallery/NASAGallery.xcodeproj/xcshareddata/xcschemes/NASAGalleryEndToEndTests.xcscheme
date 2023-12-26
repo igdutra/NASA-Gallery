@@ -23,8 +23,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "92CFC41D2B372C8E00DEECF1"
-               BuildableName = "NASAGalleryEndToEndTests.xctest"
-               BlueprintName = "NASAGalleryEndToEndTests"
+               BuildableName = "NASAGalleryAPIEndToEndTests.xctest"
+               BlueprintName = "NASAGalleryAPIEndToEndTests"
                ReferencedContainer = "container:NASAGallery.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -19,7 +19,7 @@
 		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
 		92A2A4C72B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift */; };
 		92B6056B2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */; };
-		92CFC4212B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */; };
+		92CFC4212B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */; };
 		92CFC4222B372C8E00DEECF1 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */; };
 		92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
@@ -44,7 +44,7 @@
 
 /* Begin PBXFileReference section */
 		92032A7B2B213423008053C0 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
-		921D2A832B3768AE0047B4B7 /* NASAGalleryEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryEndToEndTests.xctestplan; sourceTree = "<group>"; };
+		921D2A832B3768AE0047B4B7 /* NASAGalleryAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		921D2A842B3769C20047B4B7 /* NASAGallery.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGallery.xctestplan; sourceTree = "<group>"; };
 		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
@@ -58,8 +58,8 @@
 		92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryMapper.swift; sourceTree = "<group>"; };
 		92A2A4C62B0C23AE003F7B74 /* RemoteGalleryLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoaderTests.swift; sourceTree = "<group>"; };
 		92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
-		92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryEndToEndTests.swift; sourceTree = "<group>"; };
+		92CFC41E2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeak.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,7 +126,7 @@
 			children = (
 				925D35FB2B08037000FE12DA /* NASAGallery */,
 				925D36052B08037000FE12DA /* NASAGalleryTests */,
-				92CFC41F2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */,
+				92CFC41F2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */,
 				921D2A852B376A5A0047B4B7 /* CI */,
 				925D35FA2B08037000FE12DA /* Products */,
 			);
@@ -137,7 +137,7 @@
 			children = (
 				925D35F92B08037000FE12DA /* NASAGallery.framework */,
 				925D36012B08037000FE12DA /* NASAGalleryTests.xctest */,
-				92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */,
+				92CFC41E2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -179,13 +179,13 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		92CFC41F2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */ = {
+		92CFC41F2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */ = {
 			isa = PBXGroup;
 			children = (
-				921D2A832B3768AE0047B4B7 /* NASAGalleryEndToEndTests.xctestplan */,
-				92CFC4202B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift */,
+				921D2A832B3768AE0047B4B7 /* NASAGalleryAPIEndToEndTests.xctestplan */,
+				92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */,
 			);
-			path = NASAGalleryEndToEndTests;
+			path = NASAGalleryAPIEndToEndTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,9 +237,9 @@
 			productReference = 925D36012B08037000FE12DA /* NASAGalleryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		92CFC41D2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */ = {
+		92CFC41D2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryEndToEndTests" */;
+			buildConfigurationList = 92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryAPIEndToEndTests" */;
 			buildPhases = (
 				92CFC41A2B372C8E00DEECF1 /* Sources */,
 				92CFC41B2B372C8E00DEECF1 /* Frameworks */,
@@ -250,9 +250,9 @@
 			dependencies = (
 				92CFC4242B372C8E00DEECF1 /* PBXTargetDependency */,
 			);
-			name = NASAGalleryEndToEndTests;
+			name = NASAGalleryAPIEndToEndTests;
 			productName = NASAGalleryEndToEndTests;
-			productReference = 92CFC41E2B372C8E00DEECF1 /* NASAGalleryEndToEndTests.xctest */;
+			productReference = 92CFC41E2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -292,7 +292,7 @@
 			targets = (
 				925D35F82B08037000FE12DA /* NASAGallery */,
 				925D36002B08037000FE12DA /* NASAGalleryTests */,
-				92CFC41D2B372C8E00DEECF1 /* NASAGalleryEndToEndTests */,
+				92CFC41D2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */,
 			);
 		};
 /* End PBXProject section */
@@ -353,7 +353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9274D9562B3A36000090005A /* XCTestCase+MemoryLeak.swift in Sources */,
-				92CFC4212B372C8E00DEECF1 /* NASAGalleryEndToEndTests.swift in Sources */,
+				92CFC4212B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,7 +670,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryEndToEndTests" */ = {
+		92CFC4272B372C8E00DEECF1 /* Build configuration list for PBXNativeTarget "NASAGalleryAPIEndToEndTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				92CFC4252B372C8E00DEECF1 /* Debug */,
