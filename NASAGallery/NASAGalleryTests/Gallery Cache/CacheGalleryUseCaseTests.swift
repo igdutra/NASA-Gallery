@@ -14,8 +14,9 @@ final class LocalGalleryLoader {
         self.store = store
     }
     
-    func save() {
-        store.deleteCachedGallery()
+    func save() throws {
+        try store.deleteCachedGallery()
+        store.insertCache()
     }
 }
 
@@ -27,12 +28,32 @@ final class GalleryStore {
     
     private(set) var receivedMessages = [ReceivedMessage]()
     
-    func deleteCachedGallery() {
-        receivedMessages.append(.delete)
+    private struct Stub {
+        let error: Error?
     }
-
+    
+    private var stub: Stub?
+    
+    func stub(error: Error?) {
+        stub = Stub(error: error)
+    }
+    
+    // MARK: - Methods
+    
+    func deleteCachedGallery() throws {
+        receivedMessages.append(.delete)
+        
+        if let error = stub?.error {
+            throw error
+        }
+    }
+    
+    func insertCache() {
+        receivedMessages.append(.insert)
+    }
 }
 
+// Cache Use Case is the Local Store Save command.
 final class CacheGalleryUseCaseTests: XCTestCase {
 
     func test_init_doesNotDeleteCacheUponCreation() {
@@ -44,12 +65,20 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
         
-        sut.save()
+        try? sut.save()
+        
+        XCTAssert(store.receivedMessages.contains(.delete))
+    }
+
+    func test_save_onDeletionError_shouldNotInsertCache() {
+        let (sut, store) = makeSUT()
+        let deletionError = AnyError(message: "Deletion Error")
+        store.stub(error: deletionError)
+        
+        try? sut.save()
         
         XCTAssertEqual(store.receivedMessages, [.delete])
     }
-
-    
    
 }
 
