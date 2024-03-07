@@ -36,18 +36,34 @@ final class GalleryStore {
 final class CacheGalleryUseCaseTests: XCTestCase {
 
     func test_init_doesNotDeleteCacheUponCreation() {
-        let store = GalleryStore()
-        let sut = LocalGalleryLoader(store: store)
+        let (sut, store) = makeSUT()
         
         XCTAssertEqual(store.receivedMessages, [])
     }
     
     func test_save_requestsCacheDeletion() {
-        let store = GalleryStore()
-        let sut = LocalGalleryLoader(store: store)
+        let (sut, store) = makeSUT()
         
         sut.save()
         
         XCTAssertEqual(store.receivedMessages, [.delete])
     }
+
+    
+   
 }
+
+// MARK: - Helpers
+
+private extension CacheGalleryUseCaseTests {
+    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStore) {
+        let store = GalleryStore()
+        let sut = LocalGalleryLoader(store: store)
+        
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(store)
+        
+        return (sut, store)
+    }
+}
+ 
