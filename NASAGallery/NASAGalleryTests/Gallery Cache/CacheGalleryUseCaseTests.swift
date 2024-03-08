@@ -87,6 +87,28 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.delete])
     }
     
+    // MARK: - Error Cases
+    
+    func test_save_onDeletionError_fails() {
+        let (sut, store) = makeSUT()
+        let deletionError = AnyError(message: "Deletion Error")
+        store.stub(deletionError: deletionError, insertionError: nil)
+        
+        assertSaveThrowsError(sut: sut,
+                              expectedError: deletionError)
+    }
+    
+    func test_save_onInsertionError_fails() {
+        let (sut, store) = makeSUT()
+        let insertionError = AnyError(message: "Insertion Error")
+        store.stub(deletionError: nil, insertionError: insertionError)
+        
+        assertSaveThrowsError(sut: sut,
+                              expectedError: insertionError)
+    }
+    
+    // MARK: - Success Case
+    
     func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
         let (sut, store) = makeSUT()
         let gallery: [GalleryItem] = makeItems().model
@@ -97,38 +119,6 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         
         XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery, timestamp)])
     }
-    
-    func test_save_onDeletionError_fails() {
-        let (sut, store) = makeSUT()
-        let deletionError = AnyError(message: "Deletion Error")
-        store.stub(deletionError: deletionError, insertionError: nil)
-        
-        do {
-            try sut.save(gallery: [], timestamp: Date())
-        } catch let error as AnyError {
-            XCTAssertEqual(error, deletionError)
-        } catch {
-            XCTFail("Expected error to be AnyError, got \(error) instead")
-        }
-    }
-    
-    func test_save_onInsertionError_fails() {
-        let (sut, store) = makeSUT()
-        let insertionError = AnyError(message: "Insertion Error")
-        store.stub(deletionError: nil, insertionError: insertionError)
-        
-        do {
-            try sut.save(gallery: [], timestamp: Date())
-        } catch let error as AnyError {
-            XCTAssertEqual(error, insertionError)
-        } catch {
-            XCTFail("Expected error to be AnyError, got \(error) instead")
-        }
-    }
-    
-    // MARK: - Error Cases
-    
-    // MARK: - Success Case
     
     func test_save_onSuccessfulCacheInsertion_succeeds() {
         let (sut, store) = makeSUT()
@@ -156,5 +146,20 @@ private extension CacheGalleryUseCaseTests {
         
         return (sut, store)
     }
+    
+    // MARK: - Assertions
+    
+    func assertSaveThrowsError<ErrorType: Error & Equatable>(sut: LocalGalleryLoader,
+                                                             expectedError: ErrorType,
+                                                             gallery: [GalleryItem] = [], timestamp: Date = Date(),
+                                                             file: StaticString = #filePath, line: UInt = #line) {
+        do {
+            try sut.save(gallery: gallery, timestamp: timestamp)
+            XCTFail("Expected save to throw \(expectedError), but it succeeded")
+        } catch let error as ErrorType {
+            XCTAssertEqual(error, expectedError, "Expected \(expectedError), got \(error) instead", file: file, line: line)
+        } catch {
+            XCTFail("Expected error to be AnyError, got \(error) instead", file: file, line: line)
+        }
+    }    
 }
- 
