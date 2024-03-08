@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NASAGallery
 
 final class LocalGalleryLoader {
     let store: GalleryStore
@@ -14,16 +15,17 @@ final class LocalGalleryLoader {
         self.store = store
     }
     
-    func save() throws {
+    // TODO: Verify about injecting closure as date
+    func save(gallery: [GalleryItem], timestamp: Date) throws {
         try store.deleteCachedGallery()
-        store.insertCache()
+        store.insertCache(gallery: gallery, timestamp: timestamp)
     }
 }
 
 final class GalleryStore {
     enum ReceivedMessage: Equatable {
         case delete
-        case insert
+        case insert([GalleryItem], Date)
     }
     
     private(set) var receivedMessages = [ReceivedMessage]()
@@ -48,8 +50,8 @@ final class GalleryStore {
         }
     }
     
-    func insertCache() {
-        receivedMessages.append(.insert)
+    func insertCache(gallery: [GalleryItem], timestamp: Date) {
+        receivedMessages.append(.insert(gallery, timestamp))
     }
 }
 
@@ -65,7 +67,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
         
-        try? sut.save()
+        try? sut.save(gallery: [], timestamp: Date())
         
         XCTAssert(store.receivedMessages.contains(.delete))
     }
@@ -75,9 +77,21 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         let deletionError = AnyError(message: "Deletion Error")
         store.stub(error: deletionError)
         
-        try? sut.save()
+        try? sut.save(gallery: [], timestamp: Date())
         
         XCTAssertEqual(store.receivedMessages, [.delete])
+    }
+    
+    func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
+        let (sut, store) = makeSUT()
+        let gallery: [GalleryItem] = makeItems().model
+        let timestamp = Date()
+        
+        store.stub(error: nil) // Making test explicit that deletion error is nil
+        
+        try? sut.save(gallery: gallery, timestamp: timestamp)
+        
+        XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery, timestamp)])
     }
    
 }
