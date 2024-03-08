@@ -93,6 +93,20 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         
         XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery, timestamp)])
     }
+    
+    func test_save_onDeletionError_fails() {
+        let (sut, store) = makeSUT()
+        let deletionError = AnyError(message: "Deletion Error")
+        store.stub(error: deletionError)
+        
+        do {
+            try sut.save(gallery: [], timestamp: Date())
+        } catch let error as AnyError {
+            XCTAssertEqual(error, deletionError)
+        } catch {
+            XCTFail("Expected error to be AnyError, got \(error) instead")
+        }
+    }
    
 }
 
