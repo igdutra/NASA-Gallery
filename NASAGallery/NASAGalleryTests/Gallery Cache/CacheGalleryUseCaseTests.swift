@@ -125,7 +125,23 @@ final class CacheGalleryUseCaseTests: XCTestCase {
             XCTFail("Expected error to be AnyError, got \(error) instead")
         }
     }
-   
+    
+    // MARK: - Error Cases
+    
+    // MARK: - Success Case
+    
+    func test_save_onSuccessfulCacheInsertion_succeeds() {
+        let (sut, store) = makeSUT()
+        let gallery: [GalleryItem] = makeItems().model
+        let timestamp = Date()
+        store.stub(deletionError: nil, insertionError: nil)
+        
+        do {
+            try sut.save(gallery: gallery, timestamp: timestamp)
+        } catch {
+            XCTFail("Expected command to succeed, got \(error) instead")
+        }
+    }
 }
 
 // MARK: - Helpers
