@@ -60,7 +60,29 @@ final class GalleryStore {
     }
 }
 
-// Cache Use Case is the Local Store Save command.
+/* Author Notes on RemoteGalleryLoaderTests
+ - Cache Use Case is the Local Store Save command.
+ - The idea was to test drive this implementation, following the use case definition as guideline to name the tests!
+ 
+ ### Cache APOD Use Case
+
+ #### Data:
+ - APOD gallery
+
+ #### Primary course (happy path):
+ 1. Execute "Save APOD gallery" command with the given APOD gallery.
+ 2. System deletes old cache data.
+ 3. System encodes APOD gallery for caching. (infrastructure)
+ 4. System timestamps the new cache.
+ 5. System saves the cache with new data.
+ 6. System delivers success message.
+
+ #### Deleting error course (sad path):
+ 1. System delivers error.
+
+ #### Empty cache course (sad path):
+ 1. System delivers error.
+*/
 final class CacheGalleryUseCaseTests: XCTestCase {
 
     func test_init_doesNotDeleteCacheUponCreation() {
@@ -76,6 +98,8 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         
         XCTAssert(store.receivedMessages.contains(.delete))
     }
+    
+    // MARK: - Error Cases
 
     func test_save_onDeletionError_shouldNotInsertCache() {
         let (sut, store) = makeSUT()
@@ -86,8 +110,6 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         
         XCTAssertEqual(store.receivedMessages, [.delete])
     }
-    
-    // MARK: - Error Cases
     
     func test_save_onDeletionError_fails() {
         let (sut, store) = makeSUT()

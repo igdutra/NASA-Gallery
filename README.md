@@ -102,7 +102,7 @@ Then the app should display an error message.
 2. System deletes old cache data.
 3. System encodes APOD gallery for caching.
 4. System timestamps the new cache.
-5. System replaces the cache with new data.
+5. System saves the cache with new data.
 6. System delivers success message.
 
 #### Deleting error course (sad path): 
