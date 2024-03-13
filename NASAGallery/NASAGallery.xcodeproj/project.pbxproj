@@ -25,6 +25,7 @@
 		92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */; };
 		92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
 		92E9DE142BA25DF40073DEFE /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE132BA25DF40073DEFE /* GalleryStore.swift */; };
+		92E9DE162BA25E170073DEFE /* LocalGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE152BA25E170073DEFE /* LocalGalleryLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeak.swift"; sourceTree = "<group>"; };
 		92E9DE132BA25DF40073DEFE /* GalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
+		92E9DE152BA25E170073DEFE /* LocalGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGalleryLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				92E9DE132BA25DF40073DEFE /* GalleryStore.swift */,
+				92E9DE152BA25E170073DEFE /* LocalGalleryLoader.swift */,
 			);
 			path = "Gallery Cache";
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryItem.swift in Sources */,
 				92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */,
+				92E9DE162BA25E170073DEFE /* LocalGalleryLoader.swift in Sources */,
 				92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */,
 				92E9DE142BA25DF40073DEFE /* GalleryStore.swift in Sources */,
 			);

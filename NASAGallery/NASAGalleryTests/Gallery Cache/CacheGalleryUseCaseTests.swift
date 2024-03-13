@@ -8,20 +8,6 @@
 import XCTest
 import NASAGallery
 
-final class LocalGalleryLoader {
-    let store: GalleryStore
-    
-    init(store: GalleryStore) {
-        self.store = store
-    }
-    
-    // TODO: Verify about injecting closure as date
-    func save(gallery: [GalleryItem], timestamp: Date) throws {
-        try store.deleteCachedGallery()
-        try store.insertCache(gallery: gallery, timestamp: timestamp)
-    }
-}
-
 /* Author Notes on RemoteGalleryLoaderTests
  - Cache Use Case is the Local Store Save command.
  - The idea was to test drive this implementation, following the use case definition as guideline to name the tests!
