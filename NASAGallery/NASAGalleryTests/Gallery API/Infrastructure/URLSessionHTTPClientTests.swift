@@ -115,7 +115,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_getFromURL_withDataOnHTTPURLResponse_succeeds() async throws {
-        let expectedReturn = makeItems().data
+        let expectedReturn = makeImages().data
         let url = anyURL()
         let validResponse = HTTPURLResponse(url: url,
                                             statusCode: 200, httpVersion: nil, headerFields: nil)!

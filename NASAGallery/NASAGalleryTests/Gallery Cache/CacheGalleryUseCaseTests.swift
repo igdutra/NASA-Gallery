@@ -81,23 +81,23 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
         let (sut, store) = makeSUT()
-        let gallery: [GalleryImage] = makeItems().model
+        let gallery = uniqueLocalImages()
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil) // Making test explicit that deletion error is nil
         
-        try? sut.save(gallery: gallery, timestamp: timestamp)
+        try? sut.save(gallery: gallery.images, timestamp: timestamp)
         
-        XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery.local, timestamp)])
     }
     
     func test_save_onSuccessfulCacheInsertion_succeeds() {
         let (sut, store) = makeSUT()
-        let gallery: [GalleryImage] = makeItems().model
+        let gallery = uniqueLocalImages()
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil)
         
         do {
-            try sut.save(gallery: gallery, timestamp: timestamp)
+            try sut.save(gallery: gallery.images, timestamp: timestamp)
         } catch {
             XCTFail("Expected command to succeed, got \(error) instead")
         }
@@ -115,6 +115,14 @@ private extension CacheGalleryUseCaseTests {
         trackForMemoryLeaks(store)
         
         return (sut, store)
+    }
+    
+    func uniqueLocalImages() -> (local: [LocalGalleryImage], images: [GalleryImage]) {
+        let images = makeImages()
+        let local = images.model.map {
+            LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
+        }
+        return (local, images.model)
     }
     
     // MARK: - Assertions
@@ -139,7 +147,7 @@ private extension CacheGalleryUseCaseTests {
     final class GalleryStoreSpy: GalleryStore {
         enum ReceivedMessage: Equatable {
             case delete
-            case insert([GalleryImage], Date)
+            case insert([LocalGalleryImage], Date)
         }
         
         private(set) var receivedMessages = [ReceivedMessage]()
@@ -165,7 +173,7 @@ private extension CacheGalleryUseCaseTests {
             }
         }
         
-        func insertCache(gallery: [GalleryImage], timestamp: Date) throws {
+        func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
             receivedMessages.append(.insert(gallery, timestamp))
             
             if let error = stub?.insertionError {

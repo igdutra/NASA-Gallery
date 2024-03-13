@@ -121,7 +121,7 @@ final class LoadGalleryFromRemoteUseCaseTests: XCTestCase {
     }
     
     func test_load_on200HTTPResponseWithJSONItems_succeedsWithItems() async {
-        let (expectedItems, expectedJSONData) = makeItems()
+        let (expectedItems, expectedJSONData) = makeImages()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: expectedJSONData)
         
         await assertLoadDelivers(expectedItems,
