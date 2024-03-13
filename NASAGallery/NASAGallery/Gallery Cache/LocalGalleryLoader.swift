@@ -15,8 +15,16 @@ public final class LocalGalleryLoader {
     }
     
     // TODO: Verify about injecting closure as date
-    public func save(gallery: [GalleryItem], timestamp: Date) throws {
+    public func save(gallery: [GalleryImage], timestamp: Date) throws {
         try store.deleteCachedGallery()
-        try store.insertCache(gallery: gallery, timestamp: timestamp)
+        try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
+    }
+}
+
+// MARK: - Array Extension
+// Moving the mapping logic from RemoteAPODItem -> GalleryImage to RemoteGalleryLoader reduces the pointing arrows to GalleryImage!
+private extension Array where Element == GalleryImage {
+    func toLocal() -> [LocalGalleryImage] {
+        return map { LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl) }
     }
 }

@@ -9,5 +9,5 @@ import Foundation
 
 public protocol GalleryStore {
     func deleteCachedGallery() throws
-    func insertCache(gallery: [GalleryItem], timestamp: Date) throws
+    func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws
 }
