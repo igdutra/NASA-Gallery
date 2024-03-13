@@ -8,11 +8,6 @@
 import XCTest
 import NASAGallery
 
-protocol GalleryStore {
-    func deleteCachedGallery() throws
-    func insertCache(gallery: [GalleryItem], timestamp: Date) throws
-}
-
 final class LocalGalleryLoader {
     let store: GalleryStore
     
