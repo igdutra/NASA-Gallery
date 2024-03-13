@@ -119,8 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				9274D9572B3A4EB50090005A /* API Diagram.png */,
-				92A2737D2B2A141600C37E9E /* HTTPClient.swift */,
-				92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */,
+				92E9DE172BA2648B0073DEFE /* Infrastructure */,
 				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
 				92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */,
 			);
@@ -235,6 +234,15 @@
 				92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */,
 			);
 			path = NASAGalleryAPIEndToEndTests;
+			sourceTree = "<group>";
+		};
+		92E9DE172BA2648B0073DEFE /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				92A2737D2B2A141600C37E9E /* HTTPClient.swift */,
+				92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */,
+			);
+			path = Infrastructure;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
