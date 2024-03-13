@@ -16,7 +16,7 @@ public final class RemoteGalleryLoader: GalleryLoader {
         self.client = client
     }
     
-    public func load() async throws -> [GalleryItem] {
+    public func load() async throws -> [GalleryImage] {
         guard let (data, response) = try? await client.getData(from: url) else {
             throw Error.connectivity
         }

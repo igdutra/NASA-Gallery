@@ -81,7 +81,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
         let (sut, store) = makeSUT()
-        let gallery: [GalleryItem] = makeItems().model
+        let gallery: [GalleryImage] = makeItems().model
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil) // Making test explicit that deletion error is nil
         
@@ -92,7 +92,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     func test_save_onSuccessfulCacheInsertion_succeeds() {
         let (sut, store) = makeSUT()
-        let gallery: [GalleryItem] = makeItems().model
+        let gallery: [GalleryImage] = makeItems().model
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil)
         
@@ -121,7 +121,7 @@ private extension CacheGalleryUseCaseTests {
     
     func assertSaveThrowsError<ErrorType: Error & Equatable>(sut: LocalGalleryLoader,
                                                              expectedError: ErrorType,
-                                                             gallery: [GalleryItem] = [], timestamp: Date = Date(),
+                                                             gallery: [GalleryImage] = [], timestamp: Date = Date(),
                                                              file: StaticString = #filePath, line: UInt = #line) {
         do {
             try sut.save(gallery: gallery, timestamp: timestamp)
@@ -139,7 +139,7 @@ private extension CacheGalleryUseCaseTests {
     final class GalleryStoreSpy: GalleryStore {
         enum ReceivedMessage: Equatable {
             case delete
-            case insert([GalleryItem], Date)
+            case insert([GalleryImage], Date)
         }
         
         private(set) var receivedMessages = [ReceivedMessage]()
@@ -165,7 +165,7 @@ private extension CacheGalleryUseCaseTests {
             }
         }
         
-        func insertCache(gallery: [GalleryItem], timestamp: Date) throws {
+        func insertCache(gallery: [GalleryImage], timestamp: Date) throws {
             receivedMessages.append(.insert(gallery, timestamp))
             
             if let error = stub?.insertionError {

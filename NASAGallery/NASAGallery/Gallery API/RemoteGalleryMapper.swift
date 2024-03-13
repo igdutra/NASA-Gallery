@@ -28,19 +28,19 @@ enum RemoteGalleryMapper {
             case copyright
         }
         
-        var galleryItem: GalleryItem {
-            GalleryItem(title: title, url: url, date: date, explanation: explanation, mediaType: mediaType, copyright: copyright, hdurl: hdurl, thumbnailUrl: thumbnailUrl)
+        var galleryImage: GalleryImage {
+            GalleryImage(title: title, url: url, date: date, explanation: explanation, mediaType: mediaType, copyright: copyright, hdurl: hdurl, thumbnailUrl: thumbnailUrl)
         }
     }
-
-    public static func map(_ data: Data, response: HTTPURLResponse) throws -> [GalleryItem] {
+    
+    public static func map(_ data: Data, response: HTTPURLResponse) throws -> [GalleryImage] {
         guard response.statusCode == OK_200 else {
             throw RemoteGalleryLoader.Error.invalidData
         }
         
         let items = try JSONDecoder().decode([APODItem].self, from: data)
-        let galleryItems = items.map { $0.galleryItem }
+        let galleryImages = items.map { $0.galleryImage }
         
-        return galleryItems
+        return galleryImages
     }
 }

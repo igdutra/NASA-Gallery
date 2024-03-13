@@ -112,7 +112,7 @@ final class LoadGalleryFromRemoteUseCaseTests: XCTestCase {
     
     func test_load_on200HTTPResponseWithEmptyJSONList_succeedsWithNoItems() async {
         let emptyJSON = Data("[]".utf8)
-        let expectedLoadReturn: [GalleryItem] = []
+        let expectedLoadReturn: [GalleryImage] = []
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: emptyJSON)
         
         
@@ -184,14 +184,14 @@ private extension LoadGalleryFromRemoteUseCaseTests {
         }
     }
     
-    func assertLoadDelivers(_ expectedItems: [GalleryItem],
+    func assertLoadDelivers(_ expectedImages: [GalleryImage],
                             whenClientReturnsWithSuccess clientResponse: HTTPClientSpy.SuccessResponse,
                             file: StaticString = #filePath, line: UInt = #line) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse, file: file, line: line)
         
         do {
-            let items = try await sut.load()
-            XCTAssertEqual(items, expectedItems)
+            let images = try await sut.load()
+            XCTAssertEqual(images, expectedImages)
         } catch {
             XCTFail("Expected Success but returned \(error) instead")
         }

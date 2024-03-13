@@ -1,5 +1,5 @@
 //
-//  GalleryItem.swift
+//  GalleryImage.swift
 //  NASAGallery
 //
 //  Created by Ivo on 17/11/23.
@@ -19,7 +19,7 @@ import Foundation
  
 */
 
-public struct GalleryItem: Equatable {
+public struct GalleryImage: Equatable {
     public let title: String
     public let url: URL
     public let date: String
