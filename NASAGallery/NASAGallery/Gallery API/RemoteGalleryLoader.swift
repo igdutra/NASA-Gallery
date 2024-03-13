@@ -23,7 +23,7 @@ public final class RemoteGalleryLoader: GalleryLoader {
         
         do {
             let items = try RemoteGalleryMapper.map(data, response: response)
-            return items
+            return items.toModels()
         } catch {
             throw Error.invalidData
         }
@@ -34,5 +34,13 @@ public final class RemoteGalleryLoader: GalleryLoader {
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
+    }
+}
+
+// MARK: - Array Extension
+// Moving the mapping logic from RemoteAPODItem -> GalleryImage to RemoteGalleryLoader reduces the pointing arrows to GalleryImage!
+private extension Array where Element == RemoteAPODItem {
+    func toModels() -> [GalleryImage] {
+        return map { GalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl) }
     }
 }
