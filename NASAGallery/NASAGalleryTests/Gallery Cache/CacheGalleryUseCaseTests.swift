@@ -8,6 +8,11 @@
 import XCTest
 import NASAGallery
 
+protocol GalleryStore {
+    func deleteCachedGallery() throws
+    func insertCache(gallery: [GalleryItem], timestamp: Date) throws
+}
+
 final class LocalGalleryLoader {
     let store: GalleryStore
     
@@ -19,44 +24,6 @@ final class LocalGalleryLoader {
     func save(gallery: [GalleryItem], timestamp: Date) throws {
         try store.deleteCachedGallery()
         try store.insertCache(gallery: gallery, timestamp: timestamp)
-    }
-}
-
-final class GalleryStore {
-    enum ReceivedMessage: Equatable {
-        case delete
-        case insert([GalleryItem], Date)
-    }
-    
-    private(set) var receivedMessages = [ReceivedMessage]()
-    
-    private struct Stub {
-        let deletionError: Error?
-        let insertionError: Error?
-    }
-    
-    private var stub: Stub?
-    
-    func stub(deletionError: Error?, insertionError: Error?) {
-        stub = Stub(deletionError: deletionError, insertionError: insertionError)
-    }
-    
-    // MARK: - Methods
-    
-    func deleteCachedGallery() throws {
-        receivedMessages.append(.delete)
-        
-        if let error = stub?.deletionError {
-            throw error
-        }
-    }
-    
-    func insertCache(gallery: [GalleryItem], timestamp: Date) throws {
-        receivedMessages.append(.insert(gallery, timestamp))
-        
-        if let error = stub?.insertionError {
-            throw error
-        }
     }
 }
 
@@ -86,7 +53,7 @@ final class GalleryStore {
 final class CacheGalleryUseCaseTests: XCTestCase {
 
     func test_init_doesNotDeleteCacheUponCreation() {
-        let (sut, store) = makeSUT()
+        let (_, store) = makeSUT()
         
         XCTAssertEqual(store.receivedMessages, [])
     }
@@ -159,8 +126,8 @@ final class CacheGalleryUseCaseTests: XCTestCase {
 // MARK: - Helpers
 
 private extension CacheGalleryUseCaseTests {
-    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStore) {
-        let store = GalleryStore()
+    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+        let store = GalleryStoreSpy()
         let sut = LocalGalleryLoader(store: store)
         
         trackForMemoryLeaks(sut)
@@ -183,5 +150,46 @@ private extension CacheGalleryUseCaseTests {
         } catch {
             XCTFail("Expected error to be AnyError, got \(error) instead", file: file, line: line)
         }
-    }    
+    }
+}
+
+// MARK: - Spy
+private extension CacheGalleryUseCaseTests {
+    final class GalleryStoreSpy: GalleryStore {
+        enum ReceivedMessage: Equatable {
+            case delete
+            case insert([GalleryItem], Date)
+        }
+        
+        private(set) var receivedMessages = [ReceivedMessage]()
+        
+        private struct Stub {
+            let deletionError: Error?
+            let insertionError: Error?
+        }
+        
+        private var stub: Stub?
+        
+        func stub(deletionError: Error?, insertionError: Error?) {
+            stub = Stub(deletionError: deletionError, insertionError: insertionError)
+        }
+        
+        // MARK: - GalleryStore
+        
+        func deleteCachedGallery() throws {
+            receivedMessages.append(.delete)
+            
+            if let error = stub?.deletionError {
+                throw error
+            }
+        }
+        
+        func insertCache(gallery: [GalleryItem], timestamp: Date) throws {
+            receivedMessages.append(.insert(gallery, timestamp))
+            
+            if let error = stub?.insertionError {
+                throw error
+            }
+        }
+    }
 }
