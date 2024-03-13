@@ -12,16 +12,16 @@
 
 ### Narrative #1: Seamless Access to Latest Images
 
-> "As a user interested in space,  
-I want the app to automatically load the latest NASA Picture of the Day,  
+> "As a user interested in space and online,  
+I want the app to automatically load the latest NASA Picture of the Day Gallery,  
 So I can easily view the newest images of the universe."
 
-#### Scenarios
+#### Scenarios (Acceptance criteria)
 
 ```
 Given the user has internet connectivity,
 When they request to view the APOD images,
-Then the app should display the latest images from NASA's remote API,
+Then the app should display the latest Gallery from NASA's remote API,
   And update the cache with this new content.
 ```
 
@@ -31,71 +31,86 @@ Then the app should display the latest images from NASA's remote API,
 I want the app to show the most recently saved images,  
 So I can enjoy images of the universe even when I'm offline."
 
-#### Scenarios
+#### Scenarios (Acceptance criteria)
 
 ```
 Given the user lacks internet connectivity,
-And there is a cache of images available,
-When they request to view APOD images,
+  And there is a cache of images available,
+  And the cache is less than two days old,
+When they request to view APOD Gallery,
 Then the app should display the most recent images from the cache.
 
+Given the user lacks internet connectivity,
+  And there is a cache of images available,
+  And the cache is more two days old or more,
+When they request to view APOD Gallery,
+Then the app should display an error message.
+
 Given the user is offline,
-And the cache is empty,
-When they request to view APOD images,
+  And the cache is empty,
+When they request to view APOD Gallery,
 Then the app should display an error message.
 ```
 
 
 ## Use Cases
 
-### Load APOD Items Use Case
+### Load APOD Gallery from Remote Use Case
 
 #### Data:
 - APOD API URL
 
 #### Primary course (happy path):
-1. Execute "Load APOD Items" command with the specified API URL.
+1. Execute "Load APOD Gallery" command with the specified API URL.
 2. System retrieves data from the provided APOD API URL.
 3. System validates downloaded data.
-4. System creates APOD items from valid data.
-5. System delivers the processed APOD items for user access.
+4. System creates APOD Gallery from valid data.
+5. System delivers the processed APOD Gallery for user access.
 
 #### Invalid data – error course (sad path):
-1. System delivers error.
+1. System delivers invalid data error.
 
 #### No connectivity – error course (sad path):
-1. System delivers error.
+1. System delivers connectivity error.
 
-### Load APOD Items Fallback (Cache) Use Case
-
-#### Data:
-- Maximum acceptable age of cached data
+### Load APOD Gallery from Cache Use Case 
 
 #### Primary course:
-1. Execute "Retrieve Cached APOD Items" command with the maximum cache age parameter.
-2. System fetches APOD Items data from cache.
-3. System validates cache age against the specified age criteria.
-4. System creates APOD items from valid cached data.
-5. System delivers APOD items.
+1. Execute "Retrieve Cached APOD Gallery" command with the maximum cache age parameter - two days.
+2. System fetches APOD Gallery data from cache.
+3. System validates cache age is less than 2 days.
+4. System creates APOD Gallery from valid cached data.
+5. System delivers APOD Gallery.
+
+#### Error course (sad path):
+1. System delivers no APOD Gallery.
 
 #### Expired cache course (sad path): 
-1. System delivers no APOD items.
+1. System deletes cache.
+2. System delivers no gallery.
 
 #### Empty cache course (sad path): 
-1. System delivers no APOD items.
+1. System delivers no APOD gallery.
 
-
-### Save Feed Items Use Case
+### Cache APOD Use Case
 
 #### Data:
 - APOD items
 
 #### Primary course (happy path):
-1. Execute "Save APOD Items" command with the given APOD items.
-2. System encodes APOD items for caching.
-3. System timestamps the new cache.
-4. System replaces the cache with new data.
-5. System delivers success message.
+1. Execute "Save APOD gallery" command with the given APOD gallery.
+2. System deletes old cache data.
+3. System encodes APOD gallery for caching.
+4. System timestamps the new cache.
+5. System saves the cache with new data.
+6. System delivers success message.
+
+#### Deleting error course (sad path): 
+1. System delivers error.
+
+#### Empty cache course (sad path): 
+1. System delivers error.
+
 
 ## Architecture
 

@@ -1,5 +1,5 @@
 //
-//  RemoteGalleryLoaderTests.swift
+//  LoadGalleryFromRemoteUseCaseTests.swift
 //  NASAGalleryTests
 //
 //  Created by Ivo on 20/11/23.
@@ -51,7 +51,7 @@ Must be this way due to Async/Await nature, we can't capture values and use them
 
 */
 
-final class RemoteGalleryLoaderTests: XCTestCase {
+final class LoadGalleryFromRemoteUseCaseTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
         let client = HTTPClientSpy(result: .failure(.connectivity))
@@ -130,7 +130,7 @@ final class RemoteGalleryLoaderTests: XCTestCase {
 }
 // MARK: - Helpers
 
-private extension RemoteGalleryLoaderTests {
+private extension LoadGalleryFromRemoteUseCaseTests {
     
     typealias SuccessResponse = HTTPClientSpy.SuccessResponse
     
@@ -200,7 +200,7 @@ private extension RemoteGalleryLoaderTests {
 
 // MARK: - Spy
 
-private extension RemoteGalleryLoaderTests {
+private extension LoadGalleryFromRemoteUseCaseTests {
     class HTTPClientSpy: HTTPClient {
         // Note: ReceivedMessage is the method signature
         enum ReceivedMessage: Equatable {

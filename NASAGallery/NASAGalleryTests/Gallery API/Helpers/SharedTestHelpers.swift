@@ -14,7 +14,7 @@ func anyURL(_ host: String = "a-url.com") -> URL {
     var components = URLComponents()
     components.scheme = "https"
     components.host = host
-    return components.url!
+    return components.url ?? URL(string: "https://default-url.com")!
 }
 
 struct AnyError: Error, Equatable {

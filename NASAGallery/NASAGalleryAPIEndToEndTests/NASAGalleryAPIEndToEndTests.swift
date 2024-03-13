@@ -41,7 +41,7 @@ final class NASAGalleryEndToEndTests: XCTestCase {
 private extension NASAGalleryEndToEndTests {
     
     func makeSUT(url: URL) -> RemoteGalleryLoader {
-        let client = URLSessionHTTPClient()
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteGalleryLoader(url: url, client: client)
         
         trackForMemoryLeaks(client)
