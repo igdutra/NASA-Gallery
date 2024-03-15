@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-/* Author Notes on RemoteGalleryLoaderTests
+/* Author Notes on CacheGalleryUseCaseTests
  - Cache Use Case is the Local Store Save command.
  - The idea was to test drive this implementation, following the use case definition as guideline to name the tests!
  

@@ -22,7 +22,7 @@
 		92CFC4222B372C8E00DEECF1 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */; };
 		92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
-		92DC023D2BA4842B00515BF5 /* LoadFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DC023C2BA4842B00515BF5 /* LoadFromCacheUseCaseTests.swift */; };
+		92DC023D2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DC023C2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift */; };
 		92E9DE142BA25DF40073DEFE /* GalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE132BA25DF40073DEFE /* GalleryStore.swift */; };
 		92E9DE162BA25E170073DEFE /* LocalGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE152BA25E170073DEFE /* LocalGalleryLoader.swift */; };
 		92E9DE192BA264C10073DEFE /* RemoteAPODItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */; };
@@ -67,7 +67,7 @@
 		92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		92DABC012B34769A009B1763 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeak.swift"; sourceTree = "<group>"; };
-		92DC023C2BA4842B00515BF5 /* LoadFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
+		92DC023C2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadGalleryFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		92E9DE132BA25DF40073DEFE /* GalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStore.swift; sourceTree = "<group>"; };
 		92E9DE152BA25E170073DEFE /* LocalGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGalleryLoader.swift; sourceTree = "<group>"; };
 		92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAPODItem.swift; sourceTree = "<group>"; };
@@ -219,8 +219,9 @@
 		92AA3D5A2B9938DA00674814 /* Gallery Cache */ = {
 			isa = PBXGroup;
 			children = (
+				92EF7CD82BA4BC8200F19C34 /* Helpers */,
 				9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */,
-				92DC023C2BA4842B00515BF5 /* LoadFromCacheUseCaseTests.swift */,
+				92DC023C2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift */,
 			);
 			path = "Gallery Cache";
 			sourceTree = "<group>";
@@ -259,6 +260,13 @@
 				92E9DE132BA25DF40073DEFE /* GalleryStore.swift */,
 			);
 			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		92EF7CD82BA4BC8200F19C34 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -419,7 +427,7 @@
 			files = (
 				92032A7C2B213423008053C0 /* Fixtures.swift in Sources */,
 				92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */,
-				92DC023D2BA4842B00515BF5 /* LoadFromCacheUseCaseTests.swift in Sources */,
+				92DC023D2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift in Sources */,
 				92B6056B2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift in Sources */,
 				9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */,
 				92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */,
