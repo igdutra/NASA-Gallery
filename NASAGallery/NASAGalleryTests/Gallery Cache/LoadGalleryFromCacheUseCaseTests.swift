@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NASAGallery
 
 /* Author Notes on RemoteGalleryLoaderTests
  - Load Galley from Cache Use Case is the LocalStore load command, which will conform to `GalleryLoader` protocol
@@ -15,7 +16,7 @@ import XCTest
  ### Load APOD Gallery from Cache Use Case
 
  #### Primary course:
- 1. Execute "Retrieve Cached APOD Gallery" command with the maximum cache age parameter - two days.
+ 1. Execute "Load Cached APOD Gallery" command with the maximum cache age parameter - two days.
  2. System fetches APOD Gallery data from cache.
  3. System validates cache age is less than 2 days.
  4. System creates APOD Gallery from valid cached data.
@@ -34,7 +35,22 @@ import XCTest
 
 final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
 
-    func test() {
-        XCTFail("Initial failing test.")
+    func test_init_doesNotMessageStoreUponCreation() {
+        let (_, spy) = makeSUT()
+        
+        XCTAssertEqual(spy.receivedMessages, [])
+    }
+}
+
+// MARK: - Helpers
+private extension LoadGalleryFromCacheUseCaseTests {
+    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+        let store = GalleryStoreSpy()
+        let sut = LocalGalleryLoader(store: store)
+        
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(store)
+        
+        return (sut, store)
     }
 }
