@@ -58,9 +58,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertThrowsError(try sut.load())
     }
     
-    // MARK: - Success Cases
-    
-    func test_load_onEmptyCache_succeedsWithNoImages() throws {
+    func test_load_onEmptyCache_failsWithNoImages() throws {
         let (sut, spy) = makeSUT()
         let expectedCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)
@@ -70,8 +68,9 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(cache, expectedCache.gallery)
     }
     
-    // MARK: - Validating
+    // MARK: - Validating and Triangulation
     
+    // Succeess case
     func test_load_OnLessThanMaxOldAgeCache_succesdsWithCachedImages() throws {
         let (sut, spy) = makeSUT()
         let oneDay = DateComponents(day: -1)
@@ -82,6 +81,16 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         let cache = try sut.load()
         
         XCTAssertEqual(cache, expectedCache.gallery)
+    }
+    
+    func test_load_OnMaxOldAgeCache_failsWithNoImages() throws {
+        let (sut, spy) = makeSUT()
+        let oneDay = DateComponents(day: -2)
+        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        spy.stub(retrivalReturn: expiredCache)
+        
+        XCTAssertThrowsError(try sut.load())
     }
 }
 

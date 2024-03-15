@@ -46,7 +46,7 @@ public final class LocalGalleryLoader {
         let dateComponents = calendar.dateComponents([.day], from: date1, to: date2)
         
         // Check if the difference in days is exactly 2
-        if let dayDifference = dateComponents.day, abs(dayDifference) <= LocalGalleryLoader.MAX_DAYS_CACHE {
+        if let dayDifference = dateComponents.day, abs(dayDifference) < LocalGalleryLoader.MAX_DAYS_CACHE {
             return true
         } else {
             return false
