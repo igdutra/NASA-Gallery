@@ -8,7 +8,7 @@
 import Foundation
 
 public final class LocalGalleryLoader {
-    private static let MAX_DAYS_CACHE: Int = 2
+    private let maxCacheAgeInDays: Int = 2
     
     private let store: GalleryStore
     
@@ -46,7 +46,7 @@ public final class LocalGalleryLoader {
         let dateComponents = calendar.dateComponents([.day], from: date1, to: date2)
         
         // Check if the difference in days is exactly 2
-        if let dayDifference = dateComponents.day, abs(dayDifference) < LocalGalleryLoader.MAX_DAYS_CACHE {
+        if let dayDifference = dateComponents.day, abs(dayDifference) < maxCacheAgeInDays {
             return true
         } else {
             return false
