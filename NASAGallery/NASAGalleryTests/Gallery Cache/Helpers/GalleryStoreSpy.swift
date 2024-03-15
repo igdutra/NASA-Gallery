@@ -13,6 +13,7 @@ final class GalleryStoreSpy: GalleryStore {
     enum ReceivedMessage: Equatable {
         case delete
         case insert([LocalGalleryImage], Date)
+        case retrieve
     }
     
     private(set) var receivedMessages = [ReceivedMessage]()
@@ -30,7 +31,7 @@ final class GalleryStoreSpy: GalleryStore {
     
     // MARK: - GalleryStore
     
-    func deleteCachedGallery() throws {
+    public func deleteCachedGallery() throws {
         receivedMessages.append(.delete)
         
         if let error = stub?.deletionError {
@@ -38,11 +39,15 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
+    public func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
         receivedMessages.append(.insert(gallery, timestamp))
         
         if let error = stub?.insertionError {
             throw error
         }
+    }
+    
+    public func retrieve() {
+        receivedMessages.append(.retrieve)
     }
 }

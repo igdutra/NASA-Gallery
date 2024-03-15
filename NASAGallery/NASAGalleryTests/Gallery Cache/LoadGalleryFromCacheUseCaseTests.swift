@@ -40,6 +40,14 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertEqual(spy.receivedMessages, [])
     }
+    
+    func test_load_requestsCacheRetrival() {
+        let (sut, spy) = makeSUT()
+        
+        sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
 }
 
 // MARK: - Helpers

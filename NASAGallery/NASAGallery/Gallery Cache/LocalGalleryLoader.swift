@@ -19,6 +19,10 @@ public final class LocalGalleryLoader {
         try store.deleteCachedGallery()
         try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
     }
+    
+    public func load() {
+        store.retrieve()
+    }
 }
 
 // MARK: - Array Extension
