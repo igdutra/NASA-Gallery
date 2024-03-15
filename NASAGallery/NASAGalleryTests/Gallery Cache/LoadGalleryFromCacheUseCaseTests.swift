@@ -92,6 +92,16 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertThrowsError(try sut.load())
     }
+    
+    func test_load_OnMoreThanMaxOldAgeCache_failsWithNoImages() throws {
+        let (sut, spy) = makeSUT()
+        let oneDay = DateComponents(day: -4)
+        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        spy.stub(retrivalReturn: expiredCache)
+        
+        XCTAssertThrowsError(try sut.load())
+    }
 }
 
 // MARK: - Helpers
