@@ -107,12 +107,12 @@ final class CacheGalleryUseCaseTests: XCTestCase {
 // MARK: - Helpers
 
 private extension CacheGalleryUseCaseTests {
-    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
         let store = GalleryStoreSpy()
         let sut = LocalGalleryLoader(store: store)
         
-        trackForMemoryLeaks(sut)
-        trackForMemoryLeaks(store)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, store)
     }
