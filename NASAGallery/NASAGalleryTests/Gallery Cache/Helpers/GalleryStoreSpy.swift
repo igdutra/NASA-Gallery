@@ -21,12 +21,20 @@ final class GalleryStoreSpy: GalleryStore {
     private struct Stub {
         let deletionError: Error?
         let insertionError: Error?
+        let retrivalError: Error?
+        let retrivalReturn: [LocalGalleryImage]?
     }
     
     private var stub: Stub?
     
-    func stub(deletionError: Error?, insertionError: Error?) {
-        stub = Stub(deletionError: deletionError, insertionError: insertionError)
+    func stub(deletionError: Error? = nil,
+              insertionError: Error? = nil,
+              retrivalError: Error? = nil,
+              retrivalReturn: [LocalGalleryImage]? = []) {
+        stub = Stub(deletionError: deletionError,
+                    insertionError: insertionError,
+                    retrivalError: retrivalError,
+                    retrivalReturn: retrivalReturn)
     }
     
     // MARK: - GalleryStore
@@ -47,7 +55,15 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func retrieve() {
+    public func retrieve() throws -> [LocalGalleryImage] {
         receivedMessages.append(.retrieve)
+        
+        if let error = stub?.retrivalError {
+            throw error
+        } else if let expectedReturn = stub?.retrivalReturn {
+            return expectedReturn
+        }
+        
+        throw AnyError(message: "Should stub retrival")
     }
 }

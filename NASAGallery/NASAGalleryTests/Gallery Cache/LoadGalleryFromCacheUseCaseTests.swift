@@ -44,20 +44,41 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     func test_load_requestsCacheRetrival() {
         let (sut, spy) = makeSUT()
         
-        sut.load()
+        _ = try? sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
+    // MARK: - Error Cases
+    
+    func test_load_onRetrivalError_fails() {
+        let (sut, spy) = makeSUT()
+        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
+        
+        XCTAssertThrowsError(try sut.load())
+    }
+    
+    // MARK: - Success Cases
+    
+    func test_load_onEmptyCache_succeedsWithNoImages() throws {
+        let (sut, spy) = makeSUT()
+        let expectedCache: [LocalGalleryImage] = []
+        spy.stub(retrivalReturn: expectedCache)
+        
+        let cache = try sut.load()
+        
+        XCTAssertEqual(cache, expectedCache)
     }
 }
 
 // MARK: - Helpers
 private extension LoadGalleryFromCacheUseCaseTests {
-    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
         let store = GalleryStoreSpy()
         let sut = LocalGalleryLoader(store: store)
         
-        trackForMemoryLeaks(sut)
-        trackForMemoryLeaks(store)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, store)
     }

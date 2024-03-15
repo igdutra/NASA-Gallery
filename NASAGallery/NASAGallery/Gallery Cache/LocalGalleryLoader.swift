@@ -20,8 +20,8 @@ public final class LocalGalleryLoader {
         try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
     }
     
-    public func load() {
-        store.retrieve()
+    public func load() throws -> [LocalGalleryImage] {
+       return try store.retrieve()
     }
 }
 
