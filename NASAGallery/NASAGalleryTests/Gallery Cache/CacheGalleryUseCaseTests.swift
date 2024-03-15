@@ -117,14 +117,6 @@ private extension CacheGalleryUseCaseTests {
         return (sut, store)
     }
     
-    func uniqueLocalImages() -> (local: [LocalGalleryImage], images: [GalleryImage]) {
-        let images = makeImages()
-        let local = images.model.map {
-            LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
-        }
-        return (local, images.model)
-    }
-    
     // MARK: - Assertions
     
     func assertSaveThrowsError<ErrorType: Error & Equatable>(sut: LocalGalleryLoader,
@@ -138,47 +130,6 @@ private extension CacheGalleryUseCaseTests {
             XCTAssertEqual(error, expectedError, "Expected \(expectedError), got \(error) instead", file: file, line: line)
         } catch {
             XCTFail("Expected error to be AnyError, got \(error) instead", file: file, line: line)
-        }
-    }
-}
-
-// MARK: - Spy
-private extension CacheGalleryUseCaseTests {
-    final class GalleryStoreSpy: GalleryStore {
-        enum ReceivedMessage: Equatable {
-            case delete
-            case insert([LocalGalleryImage], Date)
-        }
-        
-        private(set) var receivedMessages = [ReceivedMessage]()
-        
-        private struct Stub {
-            let deletionError: Error?
-            let insertionError: Error?
-        }
-        
-        private var stub: Stub?
-        
-        func stub(deletionError: Error?, insertionError: Error?) {
-            stub = Stub(deletionError: deletionError, insertionError: insertionError)
-        }
-        
-        // MARK: - GalleryStore
-        
-        func deleteCachedGallery() throws {
-            receivedMessages.append(.delete)
-            
-            if let error = stub?.deletionError {
-                throw error
-            }
-        }
-        
-        func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
-            receivedMessages.append(.insert(gallery, timestamp))
-            
-            if let error = stub?.insertionError {
-                throw error
-            }
         }
     }
 }
