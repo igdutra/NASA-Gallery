@@ -73,8 +73,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     // Succeess case
     func test_load_OnLessThanMaxOldAgeCache_succesdsWithCachedImages() throws {
         let (sut, spy) = makeSUT()
-        let fixedCurrentDate = Date()
-        let lessThanMaxOldTimestamp = fixedCurrentDate.adding(days: -2).adding(seconds: 1)
+        let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
@@ -85,9 +84,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_OnMaxOldAgeCache_failsWithEmptyImages() throws {
         let (sut, spy) = makeSUT()
-        let fixedCurrentDate = Date()
-        let maxOldTimestamp = fixedCurrentDate.adding(days: -2)
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: maxOldTimestamp)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         let cache = try sut.load()
@@ -97,9 +94,8 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_OnMoreThanMaxOldAgeCache_failsWithEmptyImages() throws {
         let (sut, spy) = makeSUT()
-        let fixedCurrentDate = Date()
-        let moreThanMaxOldTimestamp = fixedCurrentDate.adding(days: -2).adding(seconds: -1)
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
+        let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         let cache = try sut.load()
@@ -118,5 +114,10 @@ private extension LoadGalleryFromCacheUseCaseTests {
         trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, store)
+    }
+    
+    var cacheMaxAgeLimitTimestamp: Date {
+        let currentDate = Date()
+        return currentDate.adding(days: -2)
     }
 }
