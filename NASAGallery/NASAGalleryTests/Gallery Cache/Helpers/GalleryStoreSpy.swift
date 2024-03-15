@@ -22,7 +22,7 @@ final class GalleryStoreSpy: GalleryStore {
         let deletionError: Error?
         let insertionError: Error?
         let retrivalError: Error?
-        let retrivalReturn: [LocalGalleryImage]?
+        let retrivalReturn: LocalCache?
     }
     
     private var stub: Stub?
@@ -30,7 +30,7 @@ final class GalleryStoreSpy: GalleryStore {
     func stub(deletionError: Error? = nil,
               insertionError: Error? = nil,
               retrivalError: Error? = nil,
-              retrivalReturn: [LocalGalleryImage]? = []) {
+              retrivalReturn: LocalCache? = nil) {
         stub = Stub(deletionError: deletionError,
                     insertionError: insertionError,
                     retrivalError: retrivalError,
@@ -55,7 +55,7 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func retrieve() throws -> [LocalGalleryImage] {
+    public func retrieve() throws -> LocalCache {
         receivedMessages.append(.retrieve)
         
         if let error = stub?.retrivalError {

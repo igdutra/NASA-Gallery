@@ -76,9 +76,9 @@ Then the app should display an error message.
 ### Load APOD Gallery from Cache Use Case 
 
 #### Primary course:
-1. Execute "Retrieve Cached APOD Gallery" command with the maximum cache age parameter - two days.
+1. Execute "Retrieve Cached APOD Gallery" command.
 2. System fetches APOD Gallery data from cache.
-3. System validates cache age is less than 2 days.
+3. System validates cache age againts maximum age: verify if it is less than 2 days old.
 4. System creates APOD Gallery from valid cached data.
 5. System delivers APOD Gallery.
 

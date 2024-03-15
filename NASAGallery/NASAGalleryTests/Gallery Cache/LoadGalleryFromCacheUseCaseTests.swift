@@ -16,9 +16,9 @@ import NASAGallery
  ### Load APOD Gallery from Cache Use Case
 
  #### Primary course:
- 1. Execute "Load Cached APOD Gallery" command with the maximum cache age parameter - two days.
+ 1. Execute "Retrieve Cached APOD Gallery" command.
  2. System fetches APOD Gallery data from cache.
- 3. System validates cache age is less than 2 days.
+ 3. System validates cache age againts maximum age: verify if it is less than 2 days old.
  4. System creates APOD Gallery from valid cached data.
  5. System delivers APOD Gallery.
 
@@ -62,12 +62,26 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_onEmptyCache_succeedsWithNoImages() throws {
         let (sut, spy) = makeSUT()
-        let expectedCache: [LocalGalleryImage] = []
+        let expectedCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)
         
         let cache = try sut.load()
         
-        XCTAssertEqual(cache, expectedCache)
+        XCTAssertEqual(cache, expectedCache.gallery)
+    }
+    
+    // MARK: - Validating
+    
+    func test_load_OnLessThanMaxOldAgeCache_succesdsWithCachedImages() throws {
+        let (sut, spy) = makeSUT()
+        let oneDay = DateComponents(day: -1)
+        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        spy.stub(retrivalReturn: expectedCache)
+        
+        let cache = try sut.load()
+        
+        XCTAssertEqual(cache, expectedCache.gallery)
     }
 }
 

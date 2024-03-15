@@ -8,8 +8,8 @@
 import Foundation
 
 public class LocalCache {
-    let gallery: [LocalGalleryImage]
-    let timestamp: Date
+    public let gallery: [LocalGalleryImage]
+    public let timestamp: Date
     
     public init(gallery: [LocalGalleryImage], timestamp: Date) {
         self.gallery = gallery
