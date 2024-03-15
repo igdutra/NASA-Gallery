@@ -73,9 +73,9 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     // Succeess case
     func test_load_OnLessThanMaxOldAgeCache_succesdsWithCachedImages() throws {
         let (sut, spy) = makeSUT()
-        let oneDay = DateComponents(day: -1)
-        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        let fixedCurrentDate = Date()
+        let lessThanMaxOldTimestamp = fixedCurrentDate.adding(days: -2).adding(seconds: 1)
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
         let cache = try sut.load()
@@ -85,9 +85,9 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_OnMaxOldAgeCache_failsWithEmptyImages() throws {
         let (sut, spy) = makeSUT()
-        let oneDay = DateComponents(day: -2)
-        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        let fixedCurrentDate = Date()
+        let maxOldTimestamp = fixedCurrentDate.adding(days: -2)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: maxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         let cache = try sut.load()
@@ -97,9 +97,9 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_OnMoreThanMaxOldAgeCache_failsWithEmptyImages() throws {
         let (sut, spy) = makeSUT()
-        let oneDay = DateComponents(day: -4)
-        let previousDay = Calendar.current.date(byAdding: oneDay, to: Date())!
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: previousDay)
+        let fixedCurrentDate = Date()
+        let moreThanMaxOldTimestamp = fixedCurrentDate.adding(days: -2).adding(seconds: -1)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         let cache = try sut.load()
