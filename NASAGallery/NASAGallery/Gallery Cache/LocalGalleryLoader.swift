@@ -9,6 +9,7 @@ import Foundation
 
 public final class LocalGalleryLoader {
     private let maxCacheAgeInDays: Int = 2
+    private let calendar = Calendar(identifier: .gregorian)
     
     private let store: GalleryStore
     
@@ -27,30 +28,19 @@ public final class LocalGalleryLoader {
     public func load() throws -> [LocalGalleryImage] {
         let cache = try store.retrieve()
         
-        if validate(date1: cache.timestamp, date2: Date()) {
+        if validate(cache.timestamp) {
             return cache.gallery
         } else {
-            throw NSError(domain: "NotFound", code: 0)
+            return []
         }
     }
     
-// vou ANOTA
-// pra isso da certo, eu tenho que pega a DATE atual (de novo compara com a closure)
-// e na verdade o RETRIEVE TEM QUE ME RETORNA UM COMBO, OU CHAMEMOS ISSO DE CAHCE: o role + timestamp! E AI pegando isso do retrieve eu vejo isso! hehehhe
-    
-    private func validate(date1: Date, date2: Date) -> Bool {
-        // Get the current calendar
-        let calendar = Calendar.current
-        
-        // Calculate the difference in days between the two dates
-        let dateComponents = calendar.dateComponents([.day], from: date1, to: date2)
-        
-        // Check if the difference in days is exactly 2
-        if let dayDifference = dateComponents.day, abs(dayDifference) < maxCacheAgeInDays {
-            return true
-        } else {
+    // TODO: verify again Date() against currentDate() closure
+    private func validate(_ timestamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
+        return Date() < maxCacheAge
     }
 }
 
