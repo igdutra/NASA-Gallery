@@ -49,7 +49,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     // MARK: - Error Cases
 
-    func test_save_onDeletionError_shouldNotInsertCache() {
+    func test_save_onDeletionError_failsToRequestCacheInsertion() {
         let (sut, store) = makeSUT()
         let deletionError = AnyError(message: "Deletion Error")
         store.stub(deletionError: deletionError, insertionError: nil)
@@ -79,7 +79,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     // MARK: - Success Case
     
-    func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
+    func test_save_onSuccessfulDeletion_succeedsToRequestNewCacheInsertionWithTimestamp() {
         let (sut, store) = makeSUT()
         let gallery = uniqueLocalImages()
         let timestamp = Date()
