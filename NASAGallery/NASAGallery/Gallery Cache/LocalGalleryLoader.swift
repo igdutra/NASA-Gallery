@@ -26,12 +26,17 @@ public final class LocalGalleryLoader {
     }
     
     public func load() throws -> [LocalGalleryImage] {
-        let cache = try store.retrieve()
-        
-        if validate(cache.timestamp) {
-            return cache.gallery
-        } else {
-            return []
+        do {
+            let cache = try store.retrieve()
+            
+            if validate(cache.timestamp) {
+                return cache.gallery
+            } else {
+                return []
+            }
+        } catch {
+            try store.deleteCachedGallery()
+            throw error
         }
     }
     

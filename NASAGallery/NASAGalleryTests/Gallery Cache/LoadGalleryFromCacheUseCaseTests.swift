@@ -49,6 +49,15 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
+    func test_load_deletesCacheOnRetrievalError() {
+        let (sut, spy) = makeSUT()
+        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
+    }
+    
     // MARK: - Error Cases
     
     func test_load_onRetrivalError_fails() {

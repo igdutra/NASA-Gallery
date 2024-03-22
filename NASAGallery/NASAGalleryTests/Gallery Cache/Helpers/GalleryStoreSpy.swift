@@ -64,6 +64,6 @@ final class GalleryStoreSpy: GalleryStore {
             return expectedReturn
         }
         
-        throw AnyError(message: "Should stub retrival")
+        return LocalCache(gallery: uniqueLocalImages(title: "Unique retrieve title").local, timestamp: Date())
     }
 }

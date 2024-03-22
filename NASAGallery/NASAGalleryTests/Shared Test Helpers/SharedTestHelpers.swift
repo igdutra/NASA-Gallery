@@ -38,8 +38,8 @@ func anyData() -> Data {
 
 // MARK: - Models
 
-func makeImages() -> (model: [GalleryImage], data: Data) {
-    let image1 = makeGalleryImageFixture(title: "First Item")
+func makeImages(title: String = "First Item") -> (model: [GalleryImage], data: Data) {
+    let image1 = makeGalleryImageFixture(title: title)
     let image2 = makeGalleryImageFixture(urlString: "image1", explanation: "This is the second Item")
     let images = [image1, image2]
     let data = makeGalleryJSONData(images)
