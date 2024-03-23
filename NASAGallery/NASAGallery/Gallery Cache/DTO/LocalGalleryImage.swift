@@ -7,7 +7,6 @@
 
 import Foundation
 
-// Internal type!
 public struct LocalGalleryImage: Equatable {
     let title: String
     let url: URL

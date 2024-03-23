@@ -76,14 +76,15 @@ Then the app should display an error message.
 ### Load APOD Gallery from Cache Use Case 
 
 #### Primary course:
-1. Execute "Retrieve Cached APOD Gallery" command with the maximum cache age parameter - two days.
-2. System fetches APOD Gallery data from cache.
-3. System validates cache age is less than 2 days.
+1. Execute "Retrieve Cached APOD Gallery" command.
+2. System retrieves APOD Gallery data from cache.
+3. System validates cache age againts maximum age: verify if it is less than 2 days old.
 4. System creates APOD Gallery from valid cached data.
 5. System delivers APOD Gallery.
 
-#### Error course (sad path):
-1. System delivers no APOD Gallery.
+#### Retrieval error course (sad path):
+1. System deletes cache.
+2. System delivers error.
 
 #### Expired cache course (sad path): 
 1. System deletes cache.
@@ -177,7 +178,8 @@ GET *url* (TBD)
 * test_getFromURL_withDataOnHTTPURLResponse_succeeds
 * test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError
 
-#### Tests without Condition
+#### Testing simple outcome
 ```test_[Functionality]_[BehaviorOrOutcome]```
 * test_apiEndToEndTests_matchesFixedTestData
 * test_init_doesNotRequestDataFromURL
+* test_load_deletesCacheOnRetrievalError 

@@ -8,16 +8,45 @@
 import Foundation
 
 public final class LocalGalleryLoader {
+    private let maxCacheAgeInDays: Int = 2
+    private let calendar = Calendar(identifier: .gregorian)
+    
     private let store: GalleryStore
     
     public init(store: GalleryStore) {
         self.store = store
     }
     
+    // MARK: - Public methods
+    
     // TODO: Verify about injecting closure as date
     public func save(gallery: [GalleryImage], timestamp: Date) throws {
         try store.deleteCachedGallery()
         try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
+    }
+    
+    public func load() throws -> [LocalGalleryImage] {
+        do {
+            let cache = try store.retrieve()
+            
+            guard validate(cache.timestamp) else { 
+                try store.deleteCachedGallery()
+                return []
+            }
+            
+            return cache.gallery
+        } catch {
+            try store.deleteCachedGallery()
+            throw error
+        }
+    }
+    
+    // TODO: verify again Date() against currentDate() closure
+    private func validate(_ timestamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
+            return false
+        }
+        return Date() < maxCacheAge
     }
 }
 

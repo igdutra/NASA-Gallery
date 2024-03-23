@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-/* Author Notes on RemoteGalleryLoaderTests
+/* Author Notes on CacheGalleryUseCaseTests
  - Cache Use Case is the Local Store Save command.
  - The idea was to test drive this implementation, following the use case definition as guideline to name the tests!
  
@@ -49,7 +49,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     // MARK: - Error Cases
 
-    func test_save_onDeletionError_shouldNotInsertCache() {
+    func test_save_onDeletionError_failsToRequestCacheInsertion() {
         let (sut, store) = makeSUT()
         let deletionError = AnyError(message: "Deletion Error")
         store.stub(deletionError: deletionError, insertionError: nil)
@@ -79,7 +79,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
     
     // MARK: - Success Case
     
-    func test_save_onSuccessfulDeletion_requestsNewCacheInsertionWithTimestamp() {
+    func test_save_onSuccessfulDeletion_succeedsToRequestNewCacheInsertionWithTimestamp() {
         let (sut, store) = makeSUT()
         let gallery = uniqueLocalImages()
         let timestamp = Date()
@@ -107,22 +107,14 @@ final class CacheGalleryUseCaseTests: XCTestCase {
 // MARK: - Helpers
 
 private extension CacheGalleryUseCaseTests {
-    func makeSUT() -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
         let store = GalleryStoreSpy()
         let sut = LocalGalleryLoader(store: store)
         
-        trackForMemoryLeaks(sut)
-        trackForMemoryLeaks(store)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         
         return (sut, store)
-    }
-    
-    func uniqueLocalImages() -> (local: [LocalGalleryImage], images: [GalleryImage]) {
-        let images = makeImages()
-        let local = images.model.map {
-            LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
-        }
-        return (local, images.model)
     }
     
     // MARK: - Assertions
@@ -138,47 +130,6 @@ private extension CacheGalleryUseCaseTests {
             XCTAssertEqual(error, expectedError, "Expected \(expectedError), got \(error) instead", file: file, line: line)
         } catch {
             XCTFail("Expected error to be AnyError, got \(error) instead", file: file, line: line)
-        }
-    }
-}
-
-// MARK: - Spy
-private extension CacheGalleryUseCaseTests {
-    final class GalleryStoreSpy: GalleryStore {
-        enum ReceivedMessage: Equatable {
-            case delete
-            case insert([LocalGalleryImage], Date)
-        }
-        
-        private(set) var receivedMessages = [ReceivedMessage]()
-        
-        private struct Stub {
-            let deletionError: Error?
-            let insertionError: Error?
-        }
-        
-        private var stub: Stub?
-        
-        func stub(deletionError: Error?, insertionError: Error?) {
-            stub = Stub(deletionError: deletionError, insertionError: insertionError)
-        }
-        
-        // MARK: - GalleryStore
-        
-        func deleteCachedGallery() throws {
-            receivedMessages.append(.delete)
-            
-            if let error = stub?.deletionError {
-                throw error
-            }
-        }
-        
-        func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
-            receivedMessages.append(.insert(gallery, timestamp))
-            
-            if let error = stub?.insertionError {
-                throw error
-            }
         }
     }
 }
