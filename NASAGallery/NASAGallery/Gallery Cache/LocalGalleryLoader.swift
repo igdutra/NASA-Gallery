@@ -11,6 +11,8 @@ public final class LocalGalleryLoader {
     private let maxCacheAgeInDays: Int = 2
     private let calendar = Calendar(identifier: .gregorian)
     
+    // TODO: add private struct InvalidCache: Error {}
+
     private let store: GalleryStore
     
     public init(store: GalleryStore) {
