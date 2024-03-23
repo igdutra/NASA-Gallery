@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import NASAGallery
 
 /* Author Notes on ValidateGalleryFromCacheUseCaseTests
  
@@ -24,7 +25,23 @@ import XCTest
 */
 final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
 
-//    func test() {
-//        XCTFail("Initial failing test.")
-//    }
+    func test_init_doesNotMessageStoreUponCreation() {
+        let (_, spy) = makeSUT()
+        
+        XCTAssertEqual(spy.receivedMessages, [])
+    }
 }
+
+// MARK: - Helpers
+private extension ValidateGalleryFromCacheUseCaseTests {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalGalleryLoader, store: GalleryStoreSpy) {
+        let store = GalleryStoreSpy()
+        let sut = LocalGalleryLoader(store: store)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
+        
+        return (sut, store)
+    }
+}
+
