@@ -91,7 +91,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     // MARK: - Validating and Triangulation
     
     // Succeess case
-    func test_load_OnLessThanMaxOldAgeCache_succesdsWithCachedImages() throws {
+    func test_load_OnLessThanMaxOldAgeCache_succeesdsWithCachedImages() throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
@@ -115,12 +115,25 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     func test_load_OnMoreThanMaxOldAgeCache_failsWithEmptyImages() throws {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         let cache = try sut.load()
         
         XCTAssertEqual(cache, [])
+    }
+    
+    // MARK: Cache Deletion
+    
+    func test_load_doesNotDeleteCacheOnLessThanMaxOldAgeCache() throws {
+        let (sut, spy) = makeSUT()
+        let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
+        spy.stub(retrivalReturn: expectedCache)
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
 }
 
