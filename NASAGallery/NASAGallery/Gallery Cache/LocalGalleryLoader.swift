@@ -38,7 +38,6 @@ public final class LocalGalleryLoader {
             
             return cache.gallery
         } catch {
-            try store.deleteCachedGallery()
             throw error
         }
     }
