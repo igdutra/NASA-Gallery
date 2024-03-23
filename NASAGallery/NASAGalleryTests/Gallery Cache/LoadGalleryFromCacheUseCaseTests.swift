@@ -78,7 +78,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertThrowsError(try sut.load())
     }
     
-    func test_load_onEmptyCache_failsWithNoImages() throws {
+    func test_load_onEmptyCache_deliversNoImages() throws {
         let (sut, spy) = makeSUT()
         let expectedCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)

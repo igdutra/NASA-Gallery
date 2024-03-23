@@ -30,10 +30,6 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertEqual(spy.receivedMessages, [])
     }
-    
-    // Rename Load tests!
-    // And load function!
-    // PODE SER CONDITION_SIDEEFFECT!
 
     func test_validateCache_onRetrievalError_deletesCache() {
         let (sut, spy) = makeSUT()

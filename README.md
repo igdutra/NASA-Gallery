@@ -184,12 +184,12 @@ GET *url* (TBD)
 ### Test Name Convention
 
 #### Tests with Condition
-```test_[MethodName]_[ConditionOrScenario]_[Success-Failure-ExpectedOutcome]```   
+```test_[MethodName]_[ConditionOrScenario]_[Success/Failure-SideEffect]```   
 * test_getFromURL_withDataOnHTTPURLResponse_succeeds
 * test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError
+* test_validateCache_onExpiredCache_deletesCache
 
 #### Testing simple outcome
 ```test_[Functionality]_[BehaviorOrOutcome]```
 * test_apiEndToEndTests_matchesFixedTestData
 * test_init_doesNotRequestDataFromURL
-* test_load_deletesCacheOnRetrievalError 
