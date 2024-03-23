@@ -15,3 +15,9 @@ func uniqueLocalImages(title: String = "") -> (local: [LocalGalleryImage], image
     }
     return (local, images.model)
 }
+
+// Cache DSL, domain Language
+var cacheMaxAgeLimitTimestamp: Date {
+    let currentDate = Date()
+    return currentDate.adding(days: -2)
+}

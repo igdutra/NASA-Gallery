@@ -55,7 +55,7 @@ Then the app should display an error message.
 
 ## Use Cases
 
-### Load APOD Gallery from Remote Use Case
+### 1. Load APOD Gallery from Remote Use Case
 
 #### Data:
 - APOD API URL
@@ -73,27 +73,37 @@ Then the app should display an error message.
 #### No connectivity – error course (sad path):
 1. System delivers connectivity error.
 
-### Load APOD Gallery from Cache Use Case 
+### 2. Load APOD Gallery from Cache Use Case 
 
 #### Primary course:
 1. Execute "Retrieve Cached APOD Gallery" command.
 2. System retrieves APOD Gallery data from cache.
-3. System validates cache age againts maximum age: verify if it is less than 2 days old.
 4. System creates APOD Gallery from valid cached data.
 5. System delivers APOD Gallery.
 
 #### Retrieval error course (sad path):
-1. System deletes cache.
-2. System delivers error.
+1. System delivers error.
 
 #### Expired cache course (sad path): 
-1. System deletes cache.
-2. System delivers no gallery.
+1. System delivers no gallery.
 
 #### Empty cache course (sad path): 
 1. System delivers no APOD gallery.
 
-### Cache APOD Use Case
+### 3. Validate Gallery Cache Use Case
+
+#### Primary course:
+1. Execute "Validate Cached APOD Gallery" command.
+2. System retrieves gallery data from cache.
+3. System validates cache age againts maximum age: verify if it is less than 2 days old.
+
+#### Retrieval error course (sad path):
+1. System deletes cache.
+
+#### Expired cache course (sad path): 
+1. System deletes cache.
+
+### 4. Cache APOD Use Case
 
 #### Data:
 - APOD items
@@ -174,12 +184,12 @@ GET *url* (TBD)
 ### Test Name Convention
 
 #### Tests with Condition
-```test_[MethodName]_[ConditionOrScenario]_[Success-Failure-ExpectedOutcome]```   
+```test_[MethodName]_[ConditionOrScenario]_[Success/Failure-SideEffect]```   
 * test_getFromURL_withDataOnHTTPURLResponse_succeeds
 * test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError
+* test_validateCache_onExpiredCache_deletesCache
 
 #### Testing simple outcome
 ```test_[Functionality]_[BehaviorOrOutcome]```
 * test_apiEndToEndTests_matchesFixedTestData
 * test_init_doesNotRequestDataFromURL
-* test_load_deletesCacheOnRetrievalError 

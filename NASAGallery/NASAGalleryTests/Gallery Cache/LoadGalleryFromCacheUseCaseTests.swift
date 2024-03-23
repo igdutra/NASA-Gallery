@@ -50,25 +50,6 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_deletesCacheOnRetrievalError() {
-        let (sut, spy) = makeSUT()
-        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
-        
-        _ = try? sut.load()
-        
-        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
-    }
-    
-    func test_load_doesNotDeleteCacheOnEmptyCache() {
-        let (sut, spy) = makeSUT()
-        let emptyCache = LocalCache(gallery: [], timestamp: Date())
-        spy.stub(retrivalReturn: emptyCache)
-        
-        _ = try? sut.load()
-        
-        XCTAssertEqual(spy.receivedMessages, [.retrieve])
-    }
-    
     // MARK: - Error Cases
     
     func test_load_onRetrivalError_fails() {
@@ -78,7 +59,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertThrowsError(try sut.load())
     }
     
-    func test_load_onEmptyCache_failsWithNoImages() throws {
+    func test_load_onEmptyCache_deliversNoImages() throws {
         let (sut, spy) = makeSUT()
         let expectedCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)
@@ -123,9 +104,28 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(cache, [])
     }
     
-    // MARK: Cache Deletion
+    // MARK: - Side Effects Free
     
-    func test_load_doesNotDeleteCacheOnNonExpiredCache() {
+    func test_load_onRetrievalError_hasNoSideEffects() {
+        let (sut, spy) = makeSUT()
+        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
+    func test_load_onEmptyCache_hasNoSideEffects() {
+        let (sut, spy) = makeSUT()
+        let emptyCache = LocalCache(gallery: [], timestamp: Date())
+        spy.stub(retrivalReturn: emptyCache)
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
+    func test_load_onNonExpiredCache_hasNoSideEffects() {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
@@ -136,17 +136,17 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_deletesCacheOnCacheExpiration() {
+    func test_load_onCacheExpiration_hasNoSideEffects() {
         let (sut, spy) = makeSUT()
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
-        spy.stub(retrivalReturn: expiredCache)
+        let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        spy.stub(retrivalReturn: onExpirationCache)
         
         _ = try? sut.load()
         
-        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_deletesCacheOnMoreOnExpiredCache() {
+    func test_load_onExpiredCache_hasNoSideEffects() {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
         let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
@@ -154,7 +154,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         
         _ = try? sut.load()
         
-        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
 }
 
