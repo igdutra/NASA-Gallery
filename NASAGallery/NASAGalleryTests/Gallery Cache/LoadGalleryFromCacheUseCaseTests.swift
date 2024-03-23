@@ -125,7 +125,7 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     // MARK: Cache Deletion
     
-    func test_load_doesNotDeleteCacheOnLessThanMaxOldAgeCache() throws {
+    func test_load_doesNotDeleteCacheOnLessThanMaxOldAgeCache() {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
@@ -134,6 +134,16 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         _ = try? sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
+    func test_load_deletesCacheOnMaxOldAgeCache() {
+        let (sut, spy) = makeSUT()
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        spy.stub(retrivalReturn: expiredCache)
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
 }
 
