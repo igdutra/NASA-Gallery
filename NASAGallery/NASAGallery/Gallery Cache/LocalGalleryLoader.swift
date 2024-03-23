@@ -28,18 +28,11 @@ public final class LocalGalleryLoader {
     }
     
     public func load() throws -> [LocalGalleryImage] {
-        do {
-            let cache = try store.retrieve()
-            
-            guard validate(cache.timestamp) else {
-                try store.deleteCachedGallery()
-                return []
-            }
-            
-            return cache.gallery
-        } catch {
-            throw error
-        }
+        let cache = try store.retrieve()
+        
+        guard validate(cache.timestamp) else { return [] }
+        
+        return cache.gallery
     }
     
     // TODO: verify again Date() against currentDate() closure
