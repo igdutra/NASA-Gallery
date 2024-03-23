@@ -29,11 +29,9 @@ public final class LocalGalleryLoader {
         do {
             let cache = try store.retrieve()
             
-            if validate(cache.timestamp) {
-                return cache.gallery
-            } else {
-                return []
-            }
+            guard validate(cache.timestamp) else { return [] }
+            
+            return cache.gallery
         } catch {
             try store.deleteCachedGallery()
             throw error
