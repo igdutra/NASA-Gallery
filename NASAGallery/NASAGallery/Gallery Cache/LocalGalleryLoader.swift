@@ -55,6 +55,10 @@ public final class LocalGalleryLoader {
     public func validateCache() throws {
         do {
             let cache = try store.retrieve()
+            
+            if !validate(cache.timestamp) {
+                try store.deleteCachedGallery()
+            }
         } catch {
             try store.deleteCachedGallery()
             throw error

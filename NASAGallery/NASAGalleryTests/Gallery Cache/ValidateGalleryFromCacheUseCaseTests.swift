@@ -31,7 +31,6 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [])
     }
     
-//    - `test_validateCache_doesNotDeleteLessThanSevenDaysOldCache`
 //    - `test_validateCache_deletesSevenDaysOldCache`
 //    - `test_validateCache_deletesMoreThanSevenDaysOldCache`
 //    - `test_validateCache_doesNotDeleteInvalidCacheAfterSUTInstanceHasBeenDeallocated`
@@ -43,20 +42,30 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
         let (sut, spy) = makeSUT()
         spy.stub(retrivalError: AnyError(message: "Retrival Error"))
         
-        _ = try? sut.validateCache()
+        try? sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
     
-    func test_validateCache_onNonExpiredCache_doesNotDeleteCache() {
+    func test_validateCache_onNonExpiredCache_doesNotDeleteCache() throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
-        _ = try? sut.validateCache()
+        try sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
+    func test_validadeCache_onCacheExpiration_deletesCache() throws {
+        let (sut, spy) = makeSUT()
+        let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        spy.stub(retrivalReturn: onExpirationCache)
+        
+        try sut.validateCache()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
 }
 

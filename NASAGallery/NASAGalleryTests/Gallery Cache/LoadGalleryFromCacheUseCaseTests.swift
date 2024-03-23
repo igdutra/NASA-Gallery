@@ -138,8 +138,8 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_deletesCacheOnCacheExpiration() {
         let (sut, spy) = makeSUT()
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
-        spy.stub(retrivalReturn: expiredCache)
+        let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        spy.stub(retrivalReturn: onExpirationCache)
         
         _ = try? sut.load()
         
