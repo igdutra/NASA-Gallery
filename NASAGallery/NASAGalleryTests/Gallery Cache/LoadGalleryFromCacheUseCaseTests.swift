@@ -59,6 +59,16 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
     
+    func test_load_doesNotDeleteCacheOnEmptyCache() {
+        let (sut, spy) = makeSUT()
+        let emptyCache = LocalCache(gallery: [], timestamp: Date())
+        spy.stub(retrivalReturn: emptyCache)
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve])
+    }
+    
     // MARK: - Error Cases
     
     func test_load_onRetrivalError_fails() {
