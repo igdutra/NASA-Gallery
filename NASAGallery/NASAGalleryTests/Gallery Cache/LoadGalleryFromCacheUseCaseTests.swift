@@ -145,6 +145,18 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
+    
+    // Todo: rename to OnNonExpiredCache
+    func test_load_deletesCacheOnMoreOnMoreThanMaxOldAgeCache() throws {
+        let (sut, spy) = makeSUT()
+        let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
+        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
+        spy.stub(retrivalReturn: expiredCache)
+        
+        _ = try? sut.load()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
+    }
 }
 
 // MARK: - Helpers
