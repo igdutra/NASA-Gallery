@@ -30,6 +30,21 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertEqual(spy.receivedMessages, [])
     }
+    
+//    - `test_validateCache_doesNotDeleteCacheOnEmptyCache`
+//    - `test_validateCache_doesNotDeleteLessThanSevenDaysOldCache`
+//    - `test_validateCache_deletesSevenDaysOldCache`
+//    - `test_validateCache_deletesMoreThanSevenDaysOldCache`
+//    - `test_validateCache_doesNotDeleteInvalidCacheAfterSUTInstanceHasBeenDeallocated`
+
+    func test_validateCache_onRetrievalError_succeedsToDeleteCache() {
+        let (sut, spy) = makeSUT()
+        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
+        
+        _ = try? sut.validateCache()
+        
+        XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
+    }
 }
 
 // MARK: - Helpers

@@ -29,7 +29,7 @@ public final class LocalGalleryLoader {
         do {
             let cache = try store.retrieve()
             
-            guard validate(cache.timestamp) else { 
+            guard validate(cache.timestamp) else {
                 try store.deleteCachedGallery()
                 return []
             }
@@ -47,6 +47,16 @@ public final class LocalGalleryLoader {
             return false
         }
         return Date() < maxCacheAge
+    }
+    
+    // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
+    public func validateCache() throws {
+        do {
+            let cache = try store.retrieve()
+        } catch {
+            try store.deleteCachedGallery()
+            throw error
+        }
     }
 }
 
