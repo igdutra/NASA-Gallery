@@ -64,6 +64,7 @@ final class GalleryStoreSpy: GalleryStore {
             return expectedReturn
         }
         
-        return LocalCache(gallery: uniqueLocalImages(title: "Unique retrieve title").local, timestamp: Date())
+        // If there's no return or error, cache is empty!
+        return LocalCache(gallery: [], timestamp: Date())
     }
 }
