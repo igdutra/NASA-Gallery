@@ -7,16 +7,27 @@
 
 import Foundation
 
-public final class LocalGalleryLoader {
+public struct GalleryCachePolicy {
     private let maxCacheAgeInDays: Int = 2
     private let calendar = Calendar(identifier: .gregorian)
     
-    // TODO: add private struct InvalidCache: Error {}
+    #warning("Verify against Date injection: should it be a closure?")
+    public func validate(_ timestamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
+            return false
+        }
+        return Date() < maxCacheAge
+    }
+}
 
+public final class LocalGalleryLoader {
+    // TODO: add private struct InvalidCache: Error {}
+    private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
     
     public init(store: GalleryStore) {
         self.store = store
+        self.cachePolicy = GalleryCachePolicy()
     }
     
     // MARK: - Public methods
@@ -30,25 +41,16 @@ public final class LocalGalleryLoader {
     public func load() throws -> [LocalGalleryImage] {
         let cache = try store.retrieve()
         
-        guard validate(cache.timestamp) else { return [] }
+        guard cachePolicy.validate(cache.timestamp) else { return [] }
         
         return cache.gallery
     }
-    
-    // TODO: verify again Date() against currentDate() closure
-    private func validate(_ timestamp: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        return Date() < maxCacheAge
-    }
-    
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
     public func validateCache() throws {
         do {
             let cache = try store.retrieve()
             
-            if !validate(cache.timestamp) {
+            if !cachePolicy.validate(cache.timestamp) {
                 try store.deleteCachedGallery()
             }
         } catch {
