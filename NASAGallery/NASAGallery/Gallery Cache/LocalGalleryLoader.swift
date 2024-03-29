@@ -7,18 +7,6 @@
 
 import Foundation
 
-public struct GalleryCachePolicy {
-    private let maxCacheAgeInDays: Int = 2
-    private let calendar = Calendar(identifier: .gregorian)
-    
-    public func validate(_ timestamp: Date, against date: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        return date < maxCacheAge
-    }
-}
-
 public final class LocalGalleryLoader {
     // TODO: add private struct InvalidCache: Error {}
     private let cachePolicy: GalleryCachePolicy
@@ -45,6 +33,7 @@ public final class LocalGalleryLoader {
         
         return cache.gallery
     }
+    
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
     public func validateCache() throws {
         do {
