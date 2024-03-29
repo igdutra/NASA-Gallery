@@ -11,12 +11,11 @@ public struct GalleryCachePolicy {
     private let maxCacheAgeInDays: Int = 2
     private let calendar = Calendar(identifier: .gregorian)
     
-    #warning("Verify against Date injection: should it be a closure?")
-    public func validate(_ timestamp: Date) -> Bool {
+    public func validate(_ timestamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
-        return Date() < maxCacheAge
+        return date < maxCacheAge
     }
 }
 
@@ -25,6 +24,7 @@ public final class LocalGalleryLoader {
     private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
     
+    #warning("Verify against Date injection: should it be a closure?")
     public init(store: GalleryStore) {
         self.store = store
         self.cachePolicy = GalleryCachePolicy()
@@ -41,7 +41,7 @@ public final class LocalGalleryLoader {
     public func load() throws -> [LocalGalleryImage] {
         let cache = try store.retrieve()
         
-        guard cachePolicy.validate(cache.timestamp) else { return [] }
+        guard cachePolicy.validate(cache.timestamp, against: Date()) else { return [] }
         
         return cache.gallery
     }
@@ -50,7 +50,7 @@ public final class LocalGalleryLoader {
         do {
             let cache = try store.retrieve()
             
-            if !cachePolicy.validate(cache.timestamp) {
+            if !cachePolicy.validate(cache.timestamp, against: Date()) {
                 try store.deleteCachedGallery()
             }
         } catch {
