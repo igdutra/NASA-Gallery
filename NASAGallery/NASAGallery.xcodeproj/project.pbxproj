@@ -240,9 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				92EF7CD82BA4BC8200F19C34 /* Helpers */,
-				9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */,
-				92DC023C2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift */,
-				9269EEB72BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift */,
+				92E2F7C82C2D7C9A002145F8 /* Use Cases */,
 			);
 			path = "Gallery Cache";
 			sourceTree = "<group>";
@@ -281,6 +279,16 @@
 				92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */,
 			);
 			path = "Shared Test Helpers";
+			sourceTree = "<group>";
+		};
+		92E2F7C82C2D7C9A002145F8 /* Use Cases */ = {
+			isa = PBXGroup;
+			children = (
+				92DC023C2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift */,
+				9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */,
+				9269EEB72BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift */,
+			);
+			path = "Use Cases";
 			sourceTree = "<group>";
 		};
 		92E9DE172BA2648B0073DEFE /* Infrastructure */ = {
