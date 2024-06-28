@@ -55,7 +55,7 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func retrieve() throws -> LocalCache {
+    public func retrieve() throws -> LocalCache? {
         receivedMessages.append(.retrieve)
         
         if let error = stub?.retrivalError {

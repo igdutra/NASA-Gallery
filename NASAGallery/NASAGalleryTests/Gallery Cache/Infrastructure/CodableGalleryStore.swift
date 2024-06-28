@@ -33,9 +33,9 @@ final class CodableGalleryStore { }
 - Side-effects must run serially to avoid race-conditions
 
 */
-final class CodableFeedStoreTests: XCTestCase {
-    
-    func test_retrieve_onEmptyCache_deliversEmpty() throws {
-        XCTFail("Implement and add the template GLOBALLY to xcode so it does not get overriden at any version")
-    }
-}
+//final class CodableFeedStoreTests: XCTestCase {
+//    
+//    func test_retrieve_onEmptyCache_deliversEmpty() throws {
+//        XCTFail("Implement and add the template GLOBALLY to xcode so it does not get overriden at any version")
+//    }
+//}

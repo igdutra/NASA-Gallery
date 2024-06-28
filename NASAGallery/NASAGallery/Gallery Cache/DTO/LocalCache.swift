@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Note: could also be a simple 
+// public typealias LocalCache = (gallery: [LocalGalleryImage], timestamp: Date)
 public class LocalCache {
     public let gallery: [LocalGalleryImage]
     public let timestamp: Date

@@ -27,9 +27,9 @@ public final class LocalGalleryLoader {
     }
     
     public func load() throws -> [LocalGalleryImage] {
-        let cache = try store.retrieve()
-        
-        guard cachePolicy.validate(cache.timestamp, against: Date()) else { return [] }
+        guard let cache = try store.retrieve(),
+              cachePolicy.validate(cache.timestamp, against: Date())
+        else { return [] }
         
         return cache.gallery
     }
@@ -37,11 +37,11 @@ public final class LocalGalleryLoader {
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
     public func validateCache() throws {
         do {
-            let cache = try store.retrieve()
-            
-            if !cachePolicy.validate(cache.timestamp, against: Date()) {
-                try store.deleteCachedGallery()
-            }
+            guard let cache = try store.retrieve(),
+                  !cachePolicy.validate(cache.timestamp, against: Date())
+            else { return }
+           
+            try store.deleteCachedGallery()
         } catch {
             try store.deleteCachedGallery()
             throw error
