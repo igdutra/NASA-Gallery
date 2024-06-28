@@ -6,8 +6,8 @@
 //
 
 import XCTest
+import NASAGallery
 
-final class CodableGalleryStore { }
 /* Author Notes on CodableGalleryStore
  Codable implementation of the GalleryStore
  
@@ -33,9 +33,21 @@ final class CodableGalleryStore { }
 - Side-effects must run serially to avoid race-conditions
 
 */
-//final class CodableFeedStoreTests: XCTestCase {
-//    
-//    func test_retrieve_onEmptyCache_deliversEmpty() throws {
-//        XCTFail("Implement and add the template GLOBALLY to xcode so it does not get overriden at any version")
-//    }
-//}
+
+final class CodableGalleryStore {
+    func retrieve() throws -> LocalCache? {
+        return nil
+    }
+
+}
+final class CodableFeedStoreTests: XCTestCase {
+    
+    func test_retrieve_onEmptyCache_deliversEmpty() throws {
+        // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
+        let sut = CodableGalleryStore()
+        
+        let result = try sut.retrieve()
+        
+        XCTAssertNil(result)
+    }
+}
