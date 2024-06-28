@@ -37,11 +37,11 @@ public final class LocalGalleryLoader {
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
     public func validateCache() throws {
         do {
-            guard let cache = try store.retrieve(),
-                  !cachePolicy.validate(cache.timestamp, against: Date())
-            else { return }
-           
-            try store.deleteCachedGallery()
+            guard let cache = try store.retrieve() else { return }
+            let isCacheExpired = !cachePolicy.validate(cache.timestamp, against: Date())
+            if isCacheExpired {
+                try store.deleteCachedGallery()
+            }
         } catch {
             try store.deleteCachedGallery()
             throw error
