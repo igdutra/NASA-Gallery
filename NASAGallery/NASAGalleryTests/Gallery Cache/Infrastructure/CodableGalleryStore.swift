@@ -54,7 +54,19 @@ final class CodableGalleryStore {
 
 final class CodableFeedStoreTests: XCTestCase {
     
-    // TODO: setup and tear down methods
+    // MARK: - SetUp & TearDown
+    
+    override func setUp() async throws {
+        try await super.setUp()
+        Stub.clearTestArtifacts()
+    }
+    
+    override func tearDown() async throws {
+        Stub.clearTestArtifacts()
+        try await super.tearDown()
+    }
+    
+    // MARK: - Test Methods
     
     func test_retrieve_onEmptyCache_deliversEmpty() throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
@@ -87,8 +99,6 @@ final class CodableFeedStoreTests: XCTestCase {
         
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
-        
-        Stub.clearTestArtifacts()
     }
 }
 
