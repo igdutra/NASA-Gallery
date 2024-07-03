@@ -50,4 +50,15 @@ final class CodableFeedStoreTests: XCTestCase {
         
         XCTAssertNil(result)
     }
+    
+    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() throws {
+        // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
+        let sut = CodableGalleryStore()
+        
+        let result = try sut.retrieve()
+        let result2 = try sut.retrieve()
+        
+        XCTAssertNil(result)
+        XCTAssertNil(result2)
+    }
 }
