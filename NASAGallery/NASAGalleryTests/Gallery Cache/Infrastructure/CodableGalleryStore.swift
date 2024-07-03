@@ -35,11 +35,17 @@ import NASAGallery
 */
 
 final class CodableGalleryStore {
+    let url: URL?
+    
+    init(url: URL?) {
+        self.url = url
+    }
+    
     func retrieve() throws -> LocalCache? {
         return nil
     }
-
 }
+
 final class CodableFeedStoreTests: XCTestCase {
     
     // setup and tear down methods
@@ -69,6 +75,10 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     func makeSUT() -> CodableGalleryStore {
-        CodableGalleryStore()
+        CodableGalleryStore(url: testSpecificURL())
+    }
+    
+    func testSpecificURL() -> URL? {
+        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first
     }
 }
