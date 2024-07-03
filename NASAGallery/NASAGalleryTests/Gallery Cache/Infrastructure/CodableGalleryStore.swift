@@ -42,9 +42,11 @@ final class CodableGalleryStore {
 }
 final class CodableFeedStoreTests: XCTestCase {
     
+    // setup and tear down methods
+    
     func test_retrieve_onEmptyCache_deliversEmpty() throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
-        let sut = CodableGalleryStore()
+        let sut = makeSUT()
         
         let result = try sut.retrieve()
         
@@ -53,12 +55,20 @@ final class CodableFeedStoreTests: XCTestCase {
     
     func test_retrieveTwice_onEmptyCache_hasNoSideEffects() throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
-        let sut = CodableGalleryStore()
+        let sut = makeSUT()
         
         let result = try sut.retrieve()
         let result2 = try sut.retrieve()
         
         XCTAssertNil(result)
         XCTAssertNil(result2)
+    }
+}
+
+// MARK: - Helpers
+
+private extension CodableFeedStoreTests {
+    func makeSUT() -> CodableGalleryStore {
+        CodableGalleryStore()
     }
 }
