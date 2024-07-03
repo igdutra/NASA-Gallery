@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LocalGalleryImage: Equatable {
+public struct LocalGalleryImage: Equatable, Codable {
     let title: String
     let url: URL
     let date: String

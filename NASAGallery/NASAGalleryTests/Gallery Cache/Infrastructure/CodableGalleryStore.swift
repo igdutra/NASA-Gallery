@@ -42,13 +42,19 @@ final class CodableGalleryStore {
     }
     
     func retrieve() throws -> LocalCache? {
-        return nil
+        guard let storeURL = url,
+              FileManager.default.fileExists(atPath: storeURL.path())
+        else { return nil }
+        
+        let data = try Data(contentsOf: storeURL)
+        let jsonData = try JSONDecoder().decode(LocalCache.self, from: data)
+        return jsonData
     }
 }
 
 final class CodableFeedStoreTests: XCTestCase {
     
-    // setup and tear down methods
+    // TODO: setup and tear down methods
     
     func test_retrieve_onEmptyCache_deliversEmpty() throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
@@ -69,16 +75,44 @@ final class CodableFeedStoreTests: XCTestCase {
         XCTAssertNil(result)
         XCTAssertNil(result2)
     }
+    
+    func test_retrieve_onNonEmptyCache_succeedsWithCache() throws {
+        let sut = makeSUT()
+        // TODO: move that to a helper
+        let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
+        try Stub.add(expectedCache)
+        
+        let result = try sut.retrieve()
+        
+        XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
+        XCTAssertEqual(expectedCache.gallery, result?.gallery)
+        
+        Stub.clearTestArtifacts()
+    }
 }
 
 // MARK: - Helpers
 
 private extension CodableFeedStoreTests {
     func makeSUT() -> CodableGalleryStore {
-        CodableGalleryStore(url: testSpecificURL())
+        CodableGalleryStore(url: Self.testSpecificURL())
     }
     
-    func testSpecificURL() -> URL? {
-        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first
+    static func testSpecificURL() -> URL? {
+        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first?.appending(path: String(describing: self))
+    }
+    
+    enum Stub {
+        static func add(_ cache: LocalCache) throws {
+            guard let url = CodableFeedStoreTests.testSpecificURL() else { throw AnyError(message: "Failed to get test URL") }
+            let jsonData = try JSONEncoder().encode(cache)
+            try jsonData.write(to: url)
+        }
+        
+        static func clearTestArtifacts() {
+            guard let url = CodableFeedStoreTests.testSpecificURL() else { return }
+            try? FileManager.default.removeItem(at: url)
+        }
     }
 }
