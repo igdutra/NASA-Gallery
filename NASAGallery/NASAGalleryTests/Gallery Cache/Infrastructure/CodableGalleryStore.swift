@@ -47,8 +47,46 @@ final class CodableGalleryStore {
         else { return nil }
         
         let data = try Data(contentsOf: storeURL)
-        let jsonData = try JSONDecoder().decode(LocalCache.self, from: data)
-        return jsonData
+        let cache = try JSONDecoder().decode(Cache.self, from: data)
+        return LocalCache(gallery: cache.localGallery, timestamp: cache.timestamp)
+    }
+    
+    // MARK: - DTOs
+    
+    public struct Cache: Codable {
+        let gallery: [CodableLocalGalleryImage]
+        let timestamp: Date
+        
+        var localGallery: [LocalGalleryImage] {
+            return gallery.map { $0.local }
+        }
+    }
+
+    public struct CodableLocalGalleryImage: Codable {
+        let title: String
+        let url: URL
+        let date: String
+        let explanation: String
+        let mediaType: String
+        
+        let copyright: String?
+        let hdurl: URL?
+        let thumbnailUrl: URL?
+        
+        public init(local: LocalGalleryImage) {
+            self.title = local.title
+            self.url = local.url
+            self.date = local.date
+            self.explanation = local.explanation
+            self.mediaType = local.mediaType
+            self.copyright = local.copyright
+            self.hdurl = local.hdurl
+            self.thumbnailUrl = local.thumbnailUrl
+        }
+        
+        var local: LocalGalleryImage {
+            LocalGalleryImage(title: title, url: url, date: date, explanation: explanation, mediaType: mediaType, copyright: copyright, hdurl: hdurl, thumbnailUrl: thumbnailUrl)
+        }
     }
 }
 
@@ -106,7 +144,9 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     func makeSUT() -> CodableGalleryStore {
-        CodableGalleryStore(url: Self.testSpecificURL())
+        let sut = CodableGalleryStore(url: Self.testSpecificURL())
+        trackForMemoryLeaks(sut)
+        return sut
     }
     
     static func testSpecificURL() -> URL? {
@@ -114,9 +154,11 @@ private extension CodableFeedStoreTests {
     }
     
     enum Stub {
+        // TODO: FIX THAT with helpers to get the DTOs
         static func add(_ cache: LocalCache) throws {
             guard let url = CodableFeedStoreTests.testSpecificURL() else { throw AnyError(message: "Failed to get test URL") }
-            let jsonData = try JSONEncoder().encode(cache)
+            let gallery = cache.gallery.map { CodableGalleryStore.CodableLocalGalleryImage(local: $0) }
+            let jsonData = try JSONEncoder().encode(CodableGalleryStore.Cache(gallery: gallery, timestamp: cache.timestamp))
             try jsonData.write(to: url)
         }
         
