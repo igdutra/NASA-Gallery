@@ -51,6 +51,15 @@ final class CodableGalleryStore {
         return LocalCache(gallery: cache.localGallery, timestamp: cache.timestamp)
     }
     
+    func insert(_ cache: LocalCache) throws {
+        guard let storeURL = url,
+              !FileManager.default.fileExists(atPath: storeURL.path())
+        else { throw Error.insert }
+        
+        let data = try JSONEncoder().encode(Cache(local: cache))
+        try data.write(to: storeURL)
+    }
+    
     // MARK: - DTOs
     
     public struct Cache: Codable {
@@ -59,6 +68,11 @@ final class CodableGalleryStore {
         
         var localGallery: [LocalGalleryImage] {
             return gallery.map { $0.local }
+        }
+        
+        public init(local: LocalCache) {
+            self.gallery = local.gallery.map { CodableLocalGalleryImage(local: $0) }
+            self.timestamp = local.timestamp
         }
     }
 
@@ -87,6 +101,10 @@ final class CodableGalleryStore {
         var local: LocalGalleryImage {
             LocalGalleryImage(title: title, url: url, date: date, explanation: explanation, mediaType: mediaType, copyright: copyright, hdurl: hdurl, thumbnailUrl: thumbnailUrl)
         }
+    }
+    
+    enum Error: Swift.Error {
+        case insert
     }
 }
 
@@ -136,6 +154,16 @@ final class CodableFeedStoreTests: XCTestCase {
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
     }
+    
+    func test_insert_onEmptyCache_succeeds() throws {
+        let sut = makeSUT()
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+
+        XCTAssertNoThrow(try sut.insert(insertedCache))
+        
+        let retrievedCache = try sut.retrieve()
+        XCTAssertEqual(insertedCache, retrievedCache)
+    }
 }
 
 // MARK: - Helpers
@@ -155,8 +183,7 @@ private extension CodableFeedStoreTests {
         // TODO: FIX THAT with helpers to get the DTOs
         static func add(_ cache: LocalCache) throws {
             guard let url = CodableFeedStoreTests.testSpecificURL() else { throw AnyError(message: "Failed to get test URL") }
-            let gallery = cache.gallery.map { CodableGalleryStore.CodableLocalGalleryImage(local: $0) }
-            let jsonData = try JSONEncoder().encode(CodableGalleryStore.Cache(gallery: gallery, timestamp: cache.timestamp))
+            let jsonData = try JSONEncoder().encode(CodableGalleryStore.Cache(local: cache))
             try jsonData.write(to: url)
         }
         
