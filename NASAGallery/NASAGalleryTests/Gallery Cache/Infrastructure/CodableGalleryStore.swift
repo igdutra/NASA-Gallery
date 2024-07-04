@@ -114,11 +114,11 @@ final class CodableFeedStoreTests: XCTestCase {
     
     override func setUp() async throws {
         try await super.setUp()
-        Stub.clearTestArtifacts()
+        Stub.setupEmptyStoreState()
     }
     
     override func tearDown() async throws {
-        Stub.clearTestArtifacts()
+        Stub.undoStoreSideEffects()
         try await super.tearDown()
     }
     
@@ -187,10 +187,16 @@ private extension CodableFeedStoreTests {
             try jsonData.write(to: CodableFeedStoreTests.testSpecificURL())
         }
         
-        static func clearTestArtifacts() {
-            try? FileManager.default.removeItem(at: CodableFeedStoreTests.testSpecificURL())
+        static func setupEmptyStoreState() {
+            clearTestArtifacts()
+        }
+
+        static func undoStoreSideEffects() {
+            clearTestArtifacts()
         }
         
-        
+        private static func clearTestArtifacts() {
+            try? FileManager.default.removeItem(at: CodableFeedStoreTests.testSpecificURL())
+        }
     }
 }
