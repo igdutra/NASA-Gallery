@@ -11,7 +11,8 @@ import NASAGallery
 /* Author Notes on CodableGalleryStore
  Codable implementation of the GalleryStore
  
- This is not a use case to follow certain patters, but it is importatant to write a series of expectations, to help drive the unit tests!
+ - This is not a use case to follow certain patters, but it is importatant to write a series of expectations, to help drive the unit tests!
+ - Initially the DTOs were made public, so we could stub upfront the behavior and assuring that the cache would be non-nil so we can then test the retrival method. THIS IS NOT what we want (when testing only through public interfaces) because the DTOs have no reason to be made public! Thus we would be turing something public only so we could test it, and that is not desired for this project. Solution: test retrieve + insert in conjunction
  
 ## `GalleryStore` implementation Inbox
 
@@ -63,7 +64,7 @@ final class CodableGalleryStore {
     
     // MARK: - DTOs
     
-    public struct Cache: Codable {
+    private struct Cache: Codable {
         let gallery: [CodableLocalGalleryImage]
         let timestamp: Date
         
@@ -72,7 +73,7 @@ final class CodableGalleryStore {
         }
     }
 
-    public struct CodableLocalGalleryImage: Codable {
+    private struct CodableLocalGalleryImage: Codable {
         let title: String
         let url: URL
         let date: String
@@ -110,11 +111,11 @@ final class CodableFeedStoreTests: XCTestCase {
     
     override func setUp() async throws {
         try await super.setUp()
-        Stub.setupEmptyStoreState()
+        setupEmptyStoreState()
     }
     
     override func tearDown() async throws {
-        Stub.undoStoreSideEffects()
+        undoStoreSideEffects()
         try await super.tearDown()
     }
     
@@ -140,17 +141,18 @@ final class CodableFeedStoreTests: XCTestCase {
         XCTAssertNil(result2)
     }
     
-    func test_retrieve_onNonEmptyCache_succeedsWithCache() throws {
+    func test_retrieve_afterInserting_succeedsWithCache() throws {
         let sut = makeSUT()
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try Stub.add(expectedCache)
-        
+ 
+        try sut.insert(expectedCache)
         let result = try sut.retrieve()
         
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
     }
     
+    // TODO: MAKE THIS TEST ONLY TEST INSERT
     func test_insert_onEmptyCache_succeeds() throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
@@ -166,35 +168,25 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     func makeSUT() -> CodableGalleryStore {
-        let sut = CodableGalleryStore(url: Self.testSpecificURL())
+        let sut = CodableGalleryStore(url: testSpecificURL())
         trackForMemoryLeaks(sut)
         return sut
     }
     
-    static func testSpecificURL() -> URL {
+    func testSpecificURL() -> URL {
         // Note: I thought about returning optinal, but in test using ! to places that you know it's safe, is better!
         FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
     
-    enum Stub {
-        // TODO: FIX THAT with helpers to get the DTOs
-        static func add(_ cache: LocalCache) throws {
-            let encodableCache = CodableGalleryStore.Cache(gallery: cache.gallery.map(CodableGalleryStore.CodableLocalGalleryImage.init),
-                                                           timestamp: cache.timestamp)
-            let jsonData = try JSONEncoder().encode(encodableCache)
-            try jsonData.write(to: CodableFeedStoreTests.testSpecificURL())
-        }
-        
-        static func setupEmptyStoreState() {
-            clearTestArtifacts()
-        }
+    func setupEmptyStoreState() {
+        clearTestArtifacts()
+    }
 
-        static func undoStoreSideEffects() {
-            clearTestArtifacts()
-        }
-        
-        private static func clearTestArtifacts() {
-            try? FileManager.default.removeItem(at: CodableFeedStoreTests.testSpecificURL())
-        }
+    func undoStoreSideEffects() {
+        clearTestArtifacts()
+    }
+    
+    func clearTestArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificURL())
     }
 }
