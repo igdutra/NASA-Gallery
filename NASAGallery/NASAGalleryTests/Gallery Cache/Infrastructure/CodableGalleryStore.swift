@@ -56,7 +56,8 @@ final class CodableGalleryStore {
               !FileManager.default.fileExists(atPath: storeURL.path())
         else { throw Error.insert }
         
-        let data = try JSONEncoder().encode(Cache(local: cache))
+        let codableCache = Cache(gallery: cache.gallery.map(CodableLocalGalleryImage.init), timestamp: cache.timestamp)
+        let data = try JSONEncoder().encode(codableCache)
         try data.write(to: storeURL)
     }
     
@@ -68,11 +69,6 @@ final class CodableGalleryStore {
         
         var localGallery: [LocalGalleryImage] {
             return gallery.map { $0.local }
-        }
-        
-        public init(local: LocalCache) {
-            self.gallery = local.gallery.map { CodableLocalGalleryImage(local: $0) }
-            self.timestamp = local.timestamp
         }
     }
 
@@ -183,7 +179,9 @@ private extension CodableFeedStoreTests {
     enum Stub {
         // TODO: FIX THAT with helpers to get the DTOs
         static func add(_ cache: LocalCache) throws {
-            let jsonData = try JSONEncoder().encode(CodableGalleryStore.Cache(local: cache))
+            let encodableCache = CodableGalleryStore.Cache(gallery: cache.gallery.map(CodableGalleryStore.CodableLocalGalleryImage.init),
+                                                           timestamp: cache.timestamp)
+            let jsonData = try JSONEncoder().encode(encodableCache)
             try jsonData.write(to: CodableFeedStoreTests.testSpecificURL())
         }
         
