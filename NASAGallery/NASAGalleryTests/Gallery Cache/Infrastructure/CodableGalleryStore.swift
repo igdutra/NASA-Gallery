@@ -128,9 +128,7 @@ final class CodableFeedStoreTests: XCTestCase {
     
     func test_retrieve_onNonEmptyCache_succeedsWithCache() throws {
         let sut = makeSUT()
-        // TODO: move that to a helper
-        let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try Stub.add(expectedCache)
         
         let result = try sut.retrieve()
