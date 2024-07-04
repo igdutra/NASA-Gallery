@@ -175,21 +175,22 @@ private extension CodableFeedStoreTests {
         return sut
     }
     
-    static func testSpecificURL() -> URL? {
-        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first?.appending(path: String(describing: self))
+    static func testSpecificURL() -> URL {
+        // Note: I thought about returning optinal, but in test using ! to places that you know it's safe, is better!
+        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
     
     enum Stub {
         // TODO: FIX THAT with helpers to get the DTOs
         static func add(_ cache: LocalCache) throws {
-            guard let url = CodableFeedStoreTests.testSpecificURL() else { throw AnyError(message: "Failed to get test URL") }
             let jsonData = try JSONEncoder().encode(CodableGalleryStore.Cache(local: cache))
-            try jsonData.write(to: url)
+            try jsonData.write(to: CodableFeedStoreTests.testSpecificURL())
         }
         
         static func clearTestArtifacts() {
-            guard let url = CodableFeedStoreTests.testSpecificURL() else { return }
-            try? FileManager.default.removeItem(at: url)
+            try? FileManager.default.removeItem(at: CodableFeedStoreTests.testSpecificURL())
         }
+        
+        
     }
 }
