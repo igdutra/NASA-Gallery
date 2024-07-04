@@ -152,15 +152,11 @@ final class CodableFeedStoreTests: XCTestCase {
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
     }
     
-    // TODO: MAKE THIS TEST ONLY TEST INSERT
-    func test_insert_onEmptyCache_succeeds() throws {
+    func test_insert_onEmptyCache_succeedsWithNoThrow() {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
 
         XCTAssertNoThrow(try sut.insert(insertedCache))
-        
-        let retrievedCache = try sut.retrieve()
-        XCTAssertEqual(insertedCache, retrievedCache)
     }
 }
 
