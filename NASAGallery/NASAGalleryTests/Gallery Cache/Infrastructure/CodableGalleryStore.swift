@@ -20,12 +20,12 @@ import NASAGallery
     ✅ Empty cache returns empty
     ✅ Empty cache twice returns empty (no side-effects) (added in this lecture to be sure of side effects)
     ✅ Non-empty cache returns data
-    - Non-empty cache twice returns same data (no side-effects)
-    - Error returns error (if applicable, e.g., invalid data)
+    ✅ Non-empty cache twice returns same data (no side-effects)
+    ✅ Error returns error (if applicable, e.g., invalid data)
     - Error twice returns same error (if applicable, e.g., invalid data)
 - Insert
     ✅ To empty cache stores data
-    - To non-empty cache overrides previous data with new data
+    ✅ To non-empty cache overrides previous data with new data
     - Error (if applicable, e.g., no write permission)
 - Delete
     - Empty cache does nothing (cache stays empty and does not fail)
@@ -111,6 +111,8 @@ final class CodableFeedStoreTests: XCTestCase {
     
     // MARK: - Test Methods
     
+    // MARK: Retrieve
+    
     func test_retrieve_onEmptyCache_deliversEmpty() throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
@@ -130,6 +132,15 @@ final class CodableFeedStoreTests: XCTestCase {
         XCTAssertNil(result)
         XCTAssertNil(result2)
     }
+    
+    func test_retrieve_onInvalidData_fails() {
+        let sut = makeSUT()
+        try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
+        
+        XCTAssertThrowsError(try sut.retrieve(), "Retrieve should fail due to invalid data")
+    }
+    
+    // MARK: Insert
     
     func test_retrieve_afterInserting_succeedsWithCache() throws {
         let sut = makeSUT()
