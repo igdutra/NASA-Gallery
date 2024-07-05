@@ -35,7 +35,7 @@ import NASAGallery
 
 */
 
-final class CodableGalleryStore {
+final class CodableGalleryStore: GalleryStore {
     let storeURL: URL
     
     init(storeURL: URL) {
