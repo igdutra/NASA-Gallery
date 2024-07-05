@@ -22,7 +22,7 @@ import NASAGallery
     ✅ Non-empty cache returns data
     ✅ Non-empty cache twice returns same data (no side-effects)
     ✅ Error returns error (if applicable, e.g., invalid data)
-    - Error twice returns same error (if applicable, e.g., invalid data)
+    ✅ Error twice returns same error (if applicable, e.g., invalid data)
 - Insert
     ✅ To empty cache stores data
     ✅ To non-empty cache overrides previous data with new data
@@ -138,6 +138,30 @@ final class CodableFeedStoreTests: XCTestCase {
         try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
         
         XCTAssertThrowsError(try sut.retrieve(), "Retrieve should fail due to invalid data")
+    }
+    
+    func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() {
+        let sut = makeSUT()
+        try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
+        
+        var firstError: NSError?
+        var secondError: NSError?
+        
+        do {
+            let result = try sut.retrieve()
+            XCTFail("Retrieve should fail due to invalid data")
+        } catch let error as NSError {
+            firstError = error
+        }
+        
+        do {
+            let result = try sut.retrieve()
+            XCTFail("Retrieve should fail due to invalid data")
+        } catch let error as NSError {
+            secondError = error
+        }
+        
+        XCTAssertEqual(firstError, secondError)
     }
     
     // MARK: Insert
