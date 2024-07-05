@@ -36,16 +36,14 @@ import NASAGallery
 */
 
 final class CodableGalleryStore {
-    let url: URL?
+    let storeURL: URL
     
-    init(url: URL?) {
-        self.url = url
+    init(storeURL: URL) {
+        self.storeURL = storeURL
     }
     
     func retrieve() throws -> LocalCache? {
-        guard let storeURL = url,
-              FileManager.default.fileExists(atPath: storeURL.path())
-        else { return nil }
+        guard FileManager.default.fileExists(atPath: storeURL.path()) else { return nil }
         
         let data = try Data(contentsOf: storeURL)
         let cache = try JSONDecoder().decode(Cache.self, from: data)
@@ -53,8 +51,6 @@ final class CodableGalleryStore {
     }
     
     func insert(_ cache: LocalCache) throws {
-        guard let storeURL = url else { throw Error.insert }
-        
         let codableCache = Cache(gallery: cache.gallery.map(CodableLocalGalleryImage.init), timestamp: cache.timestamp)
         let data = try JSONEncoder().encode(codableCache)
         try data.write(to: storeURL)
@@ -96,10 +92,6 @@ final class CodableGalleryStore {
         var local: LocalGalleryImage {
             LocalGalleryImage(title: title, url: url, date: date, explanation: explanation, mediaType: mediaType, copyright: copyright, hdurl: hdurl, thumbnailUrl: thumbnailUrl)
         }
-    }
-    
-    enum Error: Swift.Error {
-        case insert
     }
 }
 
@@ -177,7 +169,7 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     func makeSUT() -> CodableGalleryStore {
-        let sut = CodableGalleryStore(url: testSpecificURL())
+        let sut = CodableGalleryStore(storeURL: testSpecificURL())
         trackForMemoryLeaks(sut)
         return sut
     }
