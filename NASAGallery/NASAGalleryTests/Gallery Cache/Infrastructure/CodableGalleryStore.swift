@@ -30,7 +30,7 @@ import NASAGallery
 - Delete
     ✅ Empty cache does nothing (cache stays empty and does not fail)
     ✅ Non-empty cache leaves cache empty
-    - Error (if applicable, e.g., no delete permission)
+    ✅ Error (if applicable, e.g., no delete permission)
 - Side-effects must run serially to avoid race-conditions
 
 */
@@ -233,6 +233,13 @@ final class CodableFeedStoreTests: XCTestCase {
         
         let result = try sut.retrieve()
         XCTAssertNil(result, "Cache should be empty after deletion")
+    }
+    
+    func test_delete_onDeletionError_fails() {
+        let noWritePermissionDirectory = cachesDirectory()
+        let sut = makeSUT(storeURL: noWritePermissionDirectory)
+        
+        XCTAssertThrowsError(try sut.deleteCachedGallery(), "Delete should fail on no-write permission directory")
     }
 }
 
