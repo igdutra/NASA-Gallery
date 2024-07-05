@@ -1,5 +1,5 @@
 //
-//  CodableGalleryStore.swift
+//  CodableGalleryStoreTests.swift
 //  NASAGallery
 //
 //  Created by Ivo on 27/06/24.
@@ -100,7 +100,7 @@ final class CodableGalleryStore: GalleryStore {
     }
 }
 
-final class CodableFeedStoreTests: XCTestCase {
+final class CodableGalleryStoreTests: XCTestCase {
     
     // MARK: - SetUp & TearDown
     
@@ -245,7 +245,7 @@ final class CodableFeedStoreTests: XCTestCase {
 
 // MARK: - Helpers
 
-private extension CodableFeedStoreTests {
+private extension CodableGalleryStoreTests {
     func makeSUT(storeURL: URL? = nil) -> GalleryStore {
         let sut = CodableGalleryStore(storeURL: storeURL ?? testSpecificURL())
         trackForMemoryLeaks(sut)
