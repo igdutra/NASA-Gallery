@@ -53,9 +53,7 @@ final class CodableGalleryStore {
     }
     
     func insert(_ cache: LocalCache) throws {
-        guard let storeURL = url,
-              !FileManager.default.fileExists(atPath: storeURL.path())
-        else { throw Error.insert }
+        guard let storeURL = url else { throw Error.insert }
         
         let codableCache = Cache(gallery: cache.gallery.map(CodableLocalGalleryImage.init), timestamp: cache.timestamp)
         let data = try JSONEncoder().encode(codableCache)
@@ -157,6 +155,21 @@ final class CodableFeedStoreTests: XCTestCase {
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
 
         XCTAssertNoThrow(try sut.insert(insertedCache))
+    }
+    
+    func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() throws {
+        let sut = makeSUT()
+        let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        XCTAssertNoThrow(try sut.insert(previousInsertedCache))
+        
+        let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        XCTAssertNoThrow(try sut.insert(lastInsertedCache))
+
+        let retrievedCache = try sut.retrieve()
+        
+        XCTAssertEqual(retrievedCache, lastInsertedCache)
     }
 }
 
