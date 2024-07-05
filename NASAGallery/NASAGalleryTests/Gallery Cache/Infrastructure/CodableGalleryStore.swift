@@ -26,7 +26,7 @@ import NASAGallery
 - Insert
     ✅ To empty cache stores data
     ✅ To non-empty cache overrides previous data with new data
-    - Error (if applicable, e.g., no write permission)
+    ✅ Error (if applicable, e.g., no write permission)
 - Delete
     - Empty cache does nothing (cache stays empty and does not fail)
     - Non-empty cache leaves cache empty
@@ -202,6 +202,14 @@ final class CodableFeedStoreTests: XCTestCase {
         
         XCTAssertEqual(retrievedCache, lastInsertedCache)
     }
+    
+    func test_insert_onInsertionError_fails() {
+        let noWritePermissionDirectory = cachesDirectory()
+        let sut = makeSUT(storeURL: noWritePermissionDirectory)
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        XCTAssertThrowsError(try sut.insert(insertedCache), "Insert should fail on no-write permission directory")
+    }
 }
 
 // MARK: - Helpers
@@ -216,6 +224,10 @@ private extension CodableFeedStoreTests {
     func testSpecificURL() -> URL {
         // Note: I thought about returning optinal, but in test using ! to places that you know it's safe, is better!
         FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!.appendingPathComponent("\(type(of: self)).store")
+    }
+    
+    func cachesDirectory() -> URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!
     }
     
     func setupEmptyStoreState() {
