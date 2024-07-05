@@ -28,8 +28,8 @@ import NASAGallery
     ✅ To non-empty cache overrides previous data with new data
     ✅ Error (if applicable, e.g., no write permission)
 - Delete
-    - Empty cache does nothing (cache stays empty and does not fail)
-    - Non-empty cache leaves cache empty
+    ✅ Empty cache does nothing (cache stays empty and does not fail)
+    ✅ Non-empty cache leaves cache empty
     - Error (if applicable, e.g., no delete permission)
 - Side-effects must run serially to avoid race-conditions
 
@@ -57,7 +57,8 @@ final class CodableGalleryStore {
     }
     
     func deleteCachedGallery() throws {
-        
+        guard FileManager.default.fileExists(atPath: storeURL.path()) else { return }
+        try FileManager.default.removeItem(at: storeURL)
     }
     
     // MARK: - DTOs
@@ -221,6 +222,17 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         
         XCTAssertNoThrow(try sut.deleteCachedGallery())
+    }
+    
+    func test_delete_onNonEmptyCache_succeedsClearingCache() throws {
+        let sut = makeSUT()
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try sut.insert(insertedCache)
+        
+        try sut.deleteCachedGallery()
+        
+        let result = try sut.retrieve()
+        XCTAssertNil(result, "Cache should be empty after deletion")
     }
 }
 
