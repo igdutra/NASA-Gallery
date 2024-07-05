@@ -246,7 +246,7 @@ final class CodableFeedStoreTests: XCTestCase {
 // MARK: - Helpers
 
 private extension CodableFeedStoreTests {
-    func makeSUT(storeURL: URL? = nil) -> CodableGalleryStore {
+    func makeSUT(storeURL: URL? = nil) -> GalleryStore {
         let sut = CodableGalleryStore(storeURL: storeURL ?? testSpecificURL())
         trackForMemoryLeaks(sut)
         return sut
