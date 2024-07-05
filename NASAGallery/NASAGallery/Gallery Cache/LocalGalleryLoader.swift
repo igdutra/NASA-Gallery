@@ -23,7 +23,7 @@ public final class LocalGalleryLoader {
     // TODO: Verify about injecting closure as date
     public func save(gallery: [GalleryImage], timestamp: Date) throws {
         try store.deleteCachedGallery()
-        try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
+        try store.insert(LocalCache(gallery: gallery.toLocal(), timestamp: timestamp))
     }
     
     public func load() throws -> [LocalGalleryImage] {

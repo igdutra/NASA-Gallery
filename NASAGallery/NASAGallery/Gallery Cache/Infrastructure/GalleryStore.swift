@@ -11,6 +11,6 @@ import Foundation
 // It can?
 public protocol GalleryStore {
     func deleteCachedGallery() throws
-    func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws
+    func insert(_ cache: LocalCache) throws
     func retrieve() throws -> LocalCache?
 }

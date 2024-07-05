@@ -87,7 +87,7 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         
         try? sut.save(gallery: gallery.images, timestamp: timestamp)
         
-        XCTAssertEqual(store.receivedMessages, [.delete, .insert(gallery.local, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.delete, .insert(LocalCache(gallery: gallery.local, timestamp: timestamp))])
     }
     
     func test_save_onSuccessfulCacheInsertion_succeeds() {

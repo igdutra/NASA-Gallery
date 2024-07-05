@@ -157,14 +157,14 @@ final class CodableFeedStoreTests: XCTestCase {
         var secondError: NSError?
         
         do {
-            let result = try sut.retrieve()
+            _ = try sut.retrieve()
             XCTFail("Retrieve should fail due to invalid data")
         } catch let error as NSError {
             firstError = error
         }
         
         do {
-            let result = try sut.retrieve()
+            _ = try sut.retrieve()
             XCTFail("Retrieve should fail due to invalid data")
         } catch let error as NSError {
             secondError = error

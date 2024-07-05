@@ -12,7 +12,7 @@ import NASAGallery
 final class GalleryStoreSpy: GalleryStore {
     enum ReceivedMessage: Equatable {
         case delete
-        case insert([LocalGalleryImage], Date)
+        case insert(LocalCache)
         case retrieve
     }
     
@@ -47,8 +47,8 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws {
-        receivedMessages.append(.insert(gallery, timestamp))
+    public func insert(_ cache: LocalCache) throws {
+        receivedMessages.append(.insert(cache))
         
         if let error = stub?.insertionError {
             throw error
