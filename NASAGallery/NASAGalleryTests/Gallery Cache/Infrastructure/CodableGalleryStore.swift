@@ -56,6 +56,10 @@ final class CodableGalleryStore {
         try data.write(to: storeURL)
     }
     
+    func deleteCachedGallery() throws {
+        
+    }
+    
     // MARK: - DTOs
     
     private struct Cache: Codable {
@@ -209,6 +213,14 @@ final class CodableFeedStoreTests: XCTestCase {
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
         XCTAssertThrowsError(try sut.insert(insertedCache), "Insert should fail on no-write permission directory")
+    }
+    
+    // MARK: Delete
+    
+    func test_delete_onEmptyCache_succeeds() {
+        let sut = makeSUT()
+        
+        XCTAssertNoThrow(try sut.deleteCachedGallery())
     }
 }
 

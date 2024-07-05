@@ -8,6 +8,7 @@
 import Foundation
 
 // Note: why insertCache does not use LocalCache? can't conform to Equatable!
+// It can?
 public protocol GalleryStore {
     func deleteCachedGallery() throws
     func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws
