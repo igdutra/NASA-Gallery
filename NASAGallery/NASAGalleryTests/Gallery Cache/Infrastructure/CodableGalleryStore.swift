@@ -134,14 +134,18 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_retrieve_onInvalidData_fails() {
-        let sut = makeSUT()
-        try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
+        let storeURL = testSpecificURL()
+        let sut = makeSUT(storeURL: storeURL)
+        
+        try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
         XCTAssertThrowsError(try sut.retrieve(), "Retrieve should fail due to invalid data")
     }
     
     func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() {
-        let sut = makeSUT()
+        let storeURL = testSpecificURL()
+        let sut = makeSUT(storeURL: storeURL)
+        
         try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
         
         var firstError: NSError?
@@ -203,8 +207,8 @@ final class CodableFeedStoreTests: XCTestCase {
 // MARK: - Helpers
 
 private extension CodableFeedStoreTests {
-    func makeSUT() -> CodableGalleryStore {
-        let sut = CodableGalleryStore(storeURL: testSpecificURL())
+    func makeSUT(storeURL: URL? = nil) -> CodableGalleryStore {
+        let sut = CodableGalleryStore(storeURL: storeURL ?? testSpecificURL())
         trackForMemoryLeaks(sut)
         return sut
     }
