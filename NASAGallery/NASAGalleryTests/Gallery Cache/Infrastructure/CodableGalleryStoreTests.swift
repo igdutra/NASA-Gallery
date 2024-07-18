@@ -176,6 +176,19 @@ final class CodableGalleryStoreTests: XCTestCase {
         
         XCTAssertThrowsError(try sut.deleteCachedGallery(), "Delete should fail on no-write permission directory")
     }
+    
+    /* Serially -  this test is here testing the swift language itself - just to demonstrate how the language is taking care of these operations now.
+     func test_databaseOperationsOccurSeriallyForReal() async throws {
+         let actor = DatabaseActor()
+         
+         await actor.insert("item1")
+         await actor.insert("item2")
+         await actor.insert("item3")
+         
+         let result = await actor.retrieve()
+         XCTAssertEqual(result, ["item1", "item2", "item3"])
+     }
+     */
 }
 
 // MARK: - Helpers
