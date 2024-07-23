@@ -110,45 +110,54 @@ final class CodableGalleryStoreTests: XCTestCase {
     
     // MARK: Insert
     
-    func test_retrieve_afterInserting_succeedsWithCache() throws {
+    func test_retrieve_afterInserting_succeedsWithCache() async throws {
         let sut = makeSUT()
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
  
-        try sut.insert(expectedCache)
+        try await sut.insert(expectedCache)
         let result = try sut.retrieve()
         
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
     }
     
-    func test_insert_onEmptyCache_succeedsWithNoThrow() {
+    func test_insert_onEmptyCache_succeedsWithNoThrow() async {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-
-        XCTAssertNoThrow(try sut.insert(insertedCache))
+        
+        do {
+            try await sut.insert(insertedCache)
+        } catch {
+            XCTFail("Insertion should succeed")
+        }
     }
     
-    func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() throws {
+    func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
         let sut = makeSUT()
         let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
-        XCTAssertNoThrow(try sut.insert(previousInsertedCache))
-        
-        let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        
-        XCTAssertNoThrow(try sut.insert(lastInsertedCache))
-
-        let retrievedCache = try sut.retrieve()
-        
-        XCTAssertEqual(retrievedCache, lastInsertedCache)
+        do {
+            try await sut.insert(previousInsertedCache)
+            let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+            try await sut.insert(lastInsertedCache)
+            let retrievedCache = try sut.retrieve()
+            XCTAssertEqual(retrievedCache, lastInsertedCache)
+        } catch {
+            XCTFail("Both insertions and retrieve should succeed with no throw")
+        }
     }
     
-    func test_insert_onInsertionError_fails() {
+    func test_insert_onInsertionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
-        XCTAssertThrowsError(try sut.insert(insertedCache), "Insert should fail on no-write permission directory")
+        do {
+            try await sut.insert(insertedCache)
+            XCTFail("Insert should fail on no-write permission directory")
+        } catch {
+            XCTAssertNotNil(error, "Should throw operation not permitted")
+        }
     }
     
     // MARK: Delete
@@ -166,7 +175,7 @@ final class CodableGalleryStoreTests: XCTestCase {
     func test_delete_onNonEmptyCache_succeedsClearingCache() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try sut.insert(insertedCache)
+        try await sut.insert(insertedCache)
         
         try await sut.delete()
         
