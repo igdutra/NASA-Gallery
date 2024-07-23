@@ -53,36 +53,41 @@ final class CodableGalleryStoreTests: XCTestCase {
     
     // MARK: Retrieve
     
-    func test_retrieve_onEmptyCache_deliversEmpty() throws {
+    func test_retrieve_onEmptyCache_deliversEmpty() async throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
-        let result = try sut.retrieve()
+        let result = try await sut.retrieve()
         
         XCTAssertNil(result)
     }
     
-    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() throws {
+    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() async throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
-        let result = try sut.retrieve()
-        let result2 = try sut.retrieve()
+        let result = try await sut.retrieve()
+        let result2 = try await sut.retrieve()
         
         XCTAssertNil(result)
         XCTAssertNil(result2)
     }
     
-    func test_retrieve_onInvalidData_fails() {
+    func test_retrieve_onInvalidData_fails() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
         
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
-        XCTAssertThrowsError(try sut.retrieve(), "Retrieve should fail due to invalid data")
+        do {
+            _ = try await sut.retrieve()
+            XCTFail("Retrieve should fail due to invalid data")
+        } catch {
+            XCTAssertNotNil(error, "Retrieve should fail due to invalid data")
+        }
     }
     
-    func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() {
+    func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
         
@@ -92,14 +97,14 @@ final class CodableGalleryStoreTests: XCTestCase {
         var secondError: NSError?
         
         do {
-            _ = try sut.retrieve()
+            _ = try await sut.retrieve()
             XCTFail("Retrieve should fail due to invalid data")
         } catch let error as NSError {
             firstError = error
         }
         
         do {
-            _ = try sut.retrieve()
+            _ = try await sut.retrieve()
             XCTFail("Retrieve should fail due to invalid data")
         } catch let error as NSError {
             secondError = error
@@ -115,7 +120,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
  
         try await sut.insert(expectedCache)
-        let result = try sut.retrieve()
+        let result = try await sut.retrieve()
         
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
@@ -140,7 +145,7 @@ final class CodableGalleryStoreTests: XCTestCase {
             try await sut.insert(previousInsertedCache)
             let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
             try await sut.insert(lastInsertedCache)
-            let retrievedCache = try sut.retrieve()
+            let retrievedCache = try await sut.retrieve()
             XCTAssertEqual(retrievedCache, lastInsertedCache)
         } catch {
             XCTFail("Both insertions and retrieve should succeed with no throw")
@@ -179,7 +184,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         
         try await sut.delete()
         
-        let result = try sut.retrieve()
+        let result = try await sut.retrieve()
         XCTAssertNil(result, "Cache should be empty after deletion")
     }
     

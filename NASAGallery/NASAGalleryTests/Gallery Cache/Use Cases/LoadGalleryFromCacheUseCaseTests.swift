@@ -42,29 +42,37 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [])
     }
     
-    func test_load_requestsCacheRetrival() {
+    func test_load_requestsCacheRetrival() async {
         let (sut, spy) = makeSUT()
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
     // MARK: - Error Cases
     
-    func test_load_onRetrivalError_fails() {
+    func test_load_onRetrivalError_fails() async {
         let (sut, spy) = makeSUT()
-        spy.stub(retrivalError: AnyError(message: "Retrival Error"))
+        let retrivalError = AnyError(message: "Retrival Error")
+        spy.stub(retrivalError: retrivalError)
         
-        XCTAssertThrowsError(try sut.load())
+        do {
+            _ = try await sut.load()
+            XCTFail("Load should fail on retrival error")
+        } catch let error as AnyError {
+            XCTAssertEqual(error, retrivalError)
+        } catch {
+            XCTFail("Expected error to be the retrival error")
+        }
     }
     
-    func test_load_onEmptyCache_deliversNoImages() throws {
+    func test_load_onEmptyCache_deliversNoImages() async throws {
         let (sut, spy) = makeSUT()
         let expectedCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)
         
-        let cache = try sut.load()
+        let cache = try await sut.load()
         
         XCTAssertEqual(cache, expectedCache.gallery)
     }
@@ -72,87 +80,87 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     // MARK: - Validating and Triangulation
     
     // Succeess case
-    func test_load_onNonExpiredCache_succeesdsWithCachedImages() throws {
+    func test_load_onNonExpiredCache_succeesdsWithCachedImages() async throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
-        let cache = try sut.load()
+        let cache = try await sut.load()
         
         XCTAssertEqual(cache, expectedCache.gallery)
     }
     
-    func test_load_onCacheExpiration_failsWithEmptyImages() throws {
+    func test_load_onCacheExpiration_failsWithEmptyImages() async throws {
         let (sut, spy) = makeSUT()
         let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
-        let cache = try sut.load()
+        let cache = try await sut.load()
         
         XCTAssertEqual(cache, [])
     }
     
-    func test_load_onExpiredCache_failsWithEmptyImages() throws {
+    func test_load_onExpiredCache_failsWithEmptyImages() async throws {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
         let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
-        let cache = try sut.load()
+        let cache = try await sut.load()
         
         XCTAssertEqual(cache, [])
     }
     
     // MARK: - Side Effects Free
     
-    func test_load_onRetrievalError_hasNoSideEffects() {
+    func test_load_onRetrievalError_hasNoSideEffects() async {
         let (sut, spy) = makeSUT()
         spy.stub(retrivalError: AnyError(message: "Retrival Error"))
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_onEmptyCache_hasNoSideEffects() {
+    func test_load_onEmptyCache_hasNoSideEffects() async {
         let (sut, spy) = makeSUT()
         let emptyCache = LocalCache(gallery: [], timestamp: Date())
         spy.stub(retrivalReturn: emptyCache)
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_onNonExpiredCache_hasNoSideEffects() {
+    func test_load_onNonExpiredCache_hasNoSideEffects() async {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_onCacheExpiration_hasNoSideEffects() {
+    func test_load_onCacheExpiration_hasNoSideEffects() async {
         let (sut, spy) = makeSUT()
         let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: onExpirationCache)
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_load_onExpiredCache_hasNoSideEffects() {
+    func test_load_onExpiredCache_hasNoSideEffects() async {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
         let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
-        _ = try? sut.load()
+        _ = try? await sut.load()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
