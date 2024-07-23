@@ -157,7 +157,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         let sut = makeSUT()
         
         do {
-            try await sut.deleteCachedGallery()
+            try await sut.delete()
         } catch {
             XCTFail("Deletion should succeed")
         }
@@ -168,7 +168,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try sut.insert(insertedCache)
         
-        try await sut.deleteCachedGallery()
+        try await sut.delete()
         
         let result = try sut.retrieve()
         XCTAssertNil(result, "Cache should be empty after deletion")
@@ -179,7 +179,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         
         do {
-            try await sut.deleteCachedGallery()
+            try await sut.delete()
             XCTFail("Delete should fail on no-write permission directory")
         } catch {
             XCTAssertNotNil(error, "Should fail with `Operation not permitted`")

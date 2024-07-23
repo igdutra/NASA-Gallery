@@ -28,7 +28,7 @@ public final class CodableGalleryStore: GalleryStore {
         try data.write(to: storeURL)
     }
     
-    public func deleteCachedGallery() throws {
+    public func delete() throws {
         guard FileManager.default.fileExists(atPath: storeURL.path()) else { return }
         try FileManager.default.removeItem(at: storeURL)
     }

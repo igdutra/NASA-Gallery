@@ -22,7 +22,7 @@ public final class LocalGalleryLoader {
     
     // TODO: Verify about injecting closure as date
     public func save(gallery: [GalleryImage], timestamp: Date) async throws {
-        try await store.deleteCachedGallery()
+        try await store.delete()
         try store.insert(LocalCache(gallery: gallery.toLocal(), timestamp: timestamp))
     }
     
@@ -40,10 +40,10 @@ public final class LocalGalleryLoader {
             guard let cache = try store.retrieve() else { return }
             let isCacheExpired = !cachePolicy.validate(cache.timestamp, against: Date())
             if isCacheExpired {
-                try await store.deleteCachedGallery()
+                try await store.delete()
             }
         } catch {
-            try await store.deleteCachedGallery()
+            try await store.delete()
             throw error
         }
     }

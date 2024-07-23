@@ -39,7 +39,7 @@ final class GalleryStoreSpy: GalleryStore {
     
     // MARK: - GalleryStore
     
-    public func deleteCachedGallery() throws {
+    public func delete() throws {
         receivedMessages.append(.delete)
         
         if let error = stub?.deletionError {
