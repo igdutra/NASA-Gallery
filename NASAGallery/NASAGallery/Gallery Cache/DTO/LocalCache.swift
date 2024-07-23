@@ -7,7 +7,9 @@
 
 import Foundation
 
-public class LocalCache {
+// Note: could also be a simple 
+// public typealias LocalCache = (gallery: [LocalGalleryImage], timestamp: Date)
+public struct LocalCache: Equatable {
     public let gallery: [LocalGalleryImage]
     public let timestamp: Date
     

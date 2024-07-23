@@ -8,15 +8,15 @@
 import Foundation
 
 public struct LocalGalleryImage: Equatable {
-    let title: String
-    let url: URL
-    let date: String
-    let explanation: String
-    let mediaType: String
+    public let title: String
+    public let url: URL
+    public let date: String
+    public let explanation: String
+    public let mediaType: String
     
-    let copyright: String?
-    let hdurl: URL?
-    let thumbnailUrl: URL?
+    public let copyright: String?
+    public let hdurl: URL?
+    public let thumbnailUrl: URL?
     
     public init(title: String, url: URL, date: String, explanation: String, mediaType: String, copyright: String?, hdurl: URL?, thumbnailUrl: URL?) {
         self.title = title

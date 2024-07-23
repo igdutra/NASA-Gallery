@@ -31,43 +31,43 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(spy.receivedMessages, [])
     }
 
-    func test_validateCache_onRetrievalError_deletesCache() {
+    func test_validateCache_onRetrievalError_deletesCache() async {
         let (sut, spy) = makeSUT()
         spy.stub(retrivalError: AnyError(message: "Retrival Error"))
         
-        try? sut.validateCache()
+        try? await sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
     
-    func test_validateCache_onNonExpiredCache_doesNotDeleteCache() throws {
+    func test_validateCache_onNonExpiredCache_doesNotDeleteCache() async throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
-        try sut.validateCache()
+        try await sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve])
     }
     
-    func test_validadeCache_onCacheExpiration_deletesCache() throws {
+    func test_validadeCache_onCacheExpiration_deletesCache() async throws {
         let (sut, spy) = makeSUT()
         let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: onExpirationCache)
         
-        try sut.validateCache()
+        try await sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }
     
-    func test_validateCache_onExpiredCache_deletesCache() throws {
+    func test_validateCache_onExpiredCache_deletesCache() async throws {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
         let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
-        try sut.validateCache()
+        try await sut.validateCache()
         
         XCTAssertEqual(spy.receivedMessages, [.retrieve, .delete])
     }

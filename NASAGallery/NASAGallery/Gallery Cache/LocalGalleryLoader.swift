@@ -8,51 +8,42 @@
 import Foundation
 
 public final class LocalGalleryLoader {
-    private let maxCacheAgeInDays: Int = 2
-    private let calendar = Calendar(identifier: .gregorian)
-    
     // TODO: add private struct InvalidCache: Error {}
-
+    private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
     
+    #warning("Verify against Date injection: should it be a closure?")
     public init(store: GalleryStore) {
         self.store = store
+        self.cachePolicy = GalleryCachePolicy()
     }
     
     // MARK: - Public methods
     
     // TODO: Verify about injecting closure as date
-    public func save(gallery: [GalleryImage], timestamp: Date) throws {
-        try store.deleteCachedGallery()
-        try store.insertCache(gallery: gallery.toLocal(), timestamp: timestamp)
+    public func save(gallery: [GalleryImage], timestamp: Date) async throws {
+        try await store.delete()
+        try await store.insert(LocalCache(gallery: gallery.toLocal(), timestamp: timestamp))
     }
     
-    public func load() throws -> [LocalGalleryImage] {
-        let cache = try store.retrieve()
-        
-        guard validate(cache.timestamp) else { return [] }
+    public func load() async throws -> [LocalGalleryImage] {
+        guard let cache = try await store.retrieve(),
+              cachePolicy.validate(cache.timestamp, against: Date())
+        else { return [] }
         
         return cache.gallery
     }
     
-    // TODO: verify again Date() against currentDate() closure
-    private func validate(_ timestamp: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        return Date() < maxCacheAge
-    }
-    
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
-    public func validateCache() throws {
+    public func validateCache() async throws {
         do {
-            let cache = try store.retrieve()
-            
-            if !validate(cache.timestamp) {
-                try store.deleteCachedGallery()
+            guard let cache = try await store.retrieve() else { return }
+            let isCacheExpired = !cachePolicy.validate(cache.timestamp, against: Date())
+            if isCacheExpired {
+                try await store.delete()
             }
         } catch {
-            try store.deleteCachedGallery()
+            try await store.delete()
             throw error
         }
     }

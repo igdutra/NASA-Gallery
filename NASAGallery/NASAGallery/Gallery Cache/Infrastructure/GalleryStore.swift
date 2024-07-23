@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol GalleryStore {
-    func deleteCachedGallery() throws
-    func insertCache(gallery: [LocalGalleryImage], timestamp: Date) throws
-    func retrieve() throws -> LocalCache
+    func delete() async throws
+    func insert(_ cache: LocalCache) async throws
+    func retrieve() async throws -> LocalCache?
 }
