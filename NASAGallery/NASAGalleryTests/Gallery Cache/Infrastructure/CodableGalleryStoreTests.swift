@@ -200,18 +200,26 @@ final class CodableGalleryStoreTests: XCTestCase {
         }
     }
     
-    /* Serially -  this test is here testing the swift language itself - just to demonstrate how the language is taking care of these operations now.
-     func test_databaseOperationsOccurSeriallyForReal() async throws {
-         let actor = DatabaseActor()
+    // Note: Serially
+    // - this test is here testing the swift language itself
+    // - just to demonstrate how the language guarantees that the operations, though async, will occur one after the other.
+    // Why this is here? Previously there was a test to guarnatee that, using DispatchQueues, these operations would run serially.
+     func test_databaseOperationsOccurSerially() async {
+         let sut = makeSUT()
+         let insertedCache1 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         let insertedCache2 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         let insertedCache3 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         var results: [LocalCache?] = []
          
-         await actor.insert("item1")
-         await actor.insert("item2")
-         await actor.insert("item3")
+         try? await sut.insert(insertedCache1)
+         await results.append(try? sut.retrieve())
+         try? await sut.insert(insertedCache2)
+         await results.append(try? sut.retrieve())
+         try? await sut.insert(insertedCache3)
+         await results.append(try? sut.retrieve())
          
-         let result = await actor.retrieve()
-         XCTAssertEqual(result, ["item1", "item2", "item3"])
+         XCTAssertEqual(results, [insertedCache1, insertedCache2, insertedCache3])
      }
-     */
 }
 
 // MARK: - Helpers
