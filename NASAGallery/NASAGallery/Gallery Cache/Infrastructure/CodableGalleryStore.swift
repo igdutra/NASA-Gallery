@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class CodableGalleryStore: GalleryStore {
+public actor CodableGalleryStore: GalleryStore {
     private let storeURL: URL
     
     public init(storeURL: URL) {
