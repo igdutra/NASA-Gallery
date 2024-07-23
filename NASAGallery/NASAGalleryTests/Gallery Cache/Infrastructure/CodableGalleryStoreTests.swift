@@ -153,28 +153,37 @@ final class CodableGalleryStoreTests: XCTestCase {
     
     // MARK: Delete
     
-    func test_delete_onEmptyCache_succeeds() {
+    func test_delete_onEmptyCache_succeeds() async {
         let sut = makeSUT()
         
-        XCTAssertNoThrow(try sut.deleteCachedGallery())
+        do {
+            try await sut.deleteCachedGallery()
+        } catch {
+            XCTFail("Deletion should succeed")
+        }
     }
     
-    func test_delete_onNonEmptyCache_succeedsClearingCache() throws {
+    func test_delete_onNonEmptyCache_succeedsClearingCache() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try sut.insert(insertedCache)
         
-        try sut.deleteCachedGallery()
+        try await sut.deleteCachedGallery()
         
         let result = try sut.retrieve()
         XCTAssertNil(result, "Cache should be empty after deletion")
     }
     
-    func test_delete_onDeletionError_fails() {
+    func test_delete_onDeletionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         
-        XCTAssertThrowsError(try sut.deleteCachedGallery(), "Delete should fail on no-write permission directory")
+        do {
+            try await sut.deleteCachedGallery()
+            XCTFail("Delete should fail on no-write permission directory")
+        } catch {
+            XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
+        }
     }
     
     /* Serially -  this test is here testing the swift language itself - just to demonstrate how the language is taking care of these operations now.

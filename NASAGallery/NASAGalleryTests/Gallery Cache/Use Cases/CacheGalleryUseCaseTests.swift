@@ -39,65 +39,65 @@ final class CacheGalleryUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [])
     }
     
-    func test_save_requestsCacheDeletion() {
+    func test_save_requestsCacheDeletion() async {
         let (sut, store) = makeSUT()
         
-        try? sut.save(gallery: [], timestamp: Date())
+        try? await sut.save(gallery: [], timestamp: Date())
         
         XCTAssert(store.receivedMessages.contains(.delete))
     }
     
     // MARK: - Error Cases
 
-    func test_save_onDeletionError_failsToRequestCacheInsertion() {
+    func test_save_onDeletionError_failsToRequestCacheInsertion() async {
         let (sut, store) = makeSUT()
         let deletionError = AnyError(message: "Deletion Error")
         store.stub(deletionError: deletionError, insertionError: nil)
         
-        try? sut.save(gallery: [], timestamp: Date())
+        try? await sut.save(gallery: [], timestamp: Date())
         
         XCTAssertEqual(store.receivedMessages, [.delete])
     }
     
-    func test_save_onDeletionError_fails() {
+    func test_save_onDeletionError_fails() async {
         let (sut, store) = makeSUT()
         let deletionError = AnyError(message: "Deletion Error")
         store.stub(deletionError: deletionError, insertionError: nil)
         
-        assertSaveThrowsError(sut: sut,
-                              expectedError: deletionError)
+        await assertSaveThrowsError(sut: sut,
+                                    expectedError: deletionError)
     }
     
-    func test_save_onInsertionError_fails() {
+    func test_save_onInsertionError_fails() async {
         let (sut, store) = makeSUT()
         let insertionError = AnyError(message: "Insertion Error")
         store.stub(deletionError: nil, insertionError: insertionError)
         
-        assertSaveThrowsError(sut: sut,
-                              expectedError: insertionError)
+        await assertSaveThrowsError(sut: sut,
+                                    expectedError: insertionError)
     }
     
     // MARK: - Success Case
     
-    func test_save_onSuccessfulDeletion_succeedsToRequestNewCacheInsertionWithTimestamp() {
+    func test_save_onSuccessfulDeletion_succeedsToRequestNewCacheInsertionWithTimestamp() async {
         let (sut, store) = makeSUT()
         let gallery = uniqueLocalImages()
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil) // Making test explicit that deletion error is nil
         
-        try? sut.save(gallery: gallery.images, timestamp: timestamp)
+        try? await sut.save(gallery: gallery.images, timestamp: timestamp)
         
         XCTAssertEqual(store.receivedMessages, [.delete, .insert(LocalCache(gallery: gallery.local, timestamp: timestamp))])
     }
     
-    func test_save_onSuccessfulCacheInsertion_succeeds() {
+    func test_save_onSuccessfulCacheInsertion_succeeds() async {
         let (sut, store) = makeSUT()
         let gallery = uniqueLocalImages()
         let timestamp = Date()
         store.stub(deletionError: nil, insertionError: nil)
         
         do {
-            try sut.save(gallery: gallery.images, timestamp: timestamp)
+            try await sut.save(gallery: gallery.images, timestamp: timestamp)
         } catch {
             XCTFail("Expected command to succeed, got \(error) instead")
         }
@@ -122,9 +122,9 @@ private extension CacheGalleryUseCaseTests {
     func assertSaveThrowsError<ErrorType: Error & Equatable>(sut: LocalGalleryLoader,
                                                              expectedError: ErrorType,
                                                              gallery: [GalleryImage] = [], timestamp: Date = Date(),
-                                                             file: StaticString = #filePath, line: UInt = #line) {
+                                                             file: StaticString = #filePath, line: UInt = #line) async {
         do {
-            try sut.save(gallery: gallery, timestamp: timestamp)
+            try await sut.save(gallery: gallery, timestamp: timestamp)
             XCTFail("Expected save to throw \(expectedError), but it succeeded")
         } catch let error as ErrorType {
             XCTAssertEqual(error, expectedError, "Expected \(expectedError), got \(error) instead", file: file, line: line)

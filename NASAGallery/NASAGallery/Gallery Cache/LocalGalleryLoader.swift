@@ -21,8 +21,8 @@ public final class LocalGalleryLoader {
     // MARK: - Public methods
     
     // TODO: Verify about injecting closure as date
-    public func save(gallery: [GalleryImage], timestamp: Date) throws {
-        try store.deleteCachedGallery()
+    public func save(gallery: [GalleryImage], timestamp: Date) async throws {
+        try await store.deleteCachedGallery()
         try store.insert(LocalCache(gallery: gallery.toLocal(), timestamp: timestamp))
     }
     
@@ -35,15 +35,15 @@ public final class LocalGalleryLoader {
     }
     
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
-    public func validateCache() throws {
+    public func validateCache() async throws {
         do {
             guard let cache = try store.retrieve() else { return }
             let isCacheExpired = !cachePolicy.validate(cache.timestamp, against: Date())
             if isCacheExpired {
-                try store.deleteCachedGallery()
+                try await store.deleteCachedGallery()
             }
         } catch {
-            try store.deleteCachedGallery()
+            try await store.deleteCachedGallery()
             throw error
         }
     }
