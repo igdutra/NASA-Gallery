@@ -7,6 +7,8 @@
 
 import XCTest
 
+typealias FailableGalleryStoreSpecs = FailableRetrieveGalleryStoreSpecs & FailableInsertGalleryStoreSpecs & FailableDeleteGalleryStoreSpecs
+ 
 protocol GalleryStoreSpecs: XCTestCase {
     // MARK: Retrieve
     func test_retrieve_onEmptyCache_deliversEmpty() async throws
