@@ -35,6 +35,12 @@ import NASAGallery
 
 */
 
+/* On GalleryStoreSpecs
+ 
+ The Infrastructure Specs where retrieved as an exercise, in a way that the names for CodableGalleryStore were not updated.
+ 
+ */
+
 final class CodableGalleryStoreTests: XCTestCase {
     
     // MARK: - SetUp & TearDown
