@@ -13,14 +13,14 @@ protocol GalleryStoreSpecs: XCTestCase {
     // MARK: Retrieve
     func test_retrieve_onEmptyCache_deliversEmpty() async throws
     func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws
-    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() async throws
-    func test_retrieveTwice_onNonCache_hasNoSideEffects() async throws
+    func test_retrieve_onEmptyCache_hasNoSideEffects() async throws
+    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws
     
     // MARK: Insert
     // NOTE: ah! why insert is the only one that has no test that will assert the side-effects? Cause the insertion is the side-effect.
     // No side-effect should be tested on failure.
     func test_insert_onEmptyCache_succeedsWithNoThrow() async
-    func test_insert_onNonCache_succeedsWithNoThrow() async
+    func test_insert_onNonEmptyCache_succeedsWithNoThrow() async
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async
 
     // MARK: Delete
@@ -34,7 +34,7 @@ protocol GalleryStoreSpecs: XCTestCase {
 
 protocol FailableRetrieveGalleryStoreSpecs: GalleryStoreSpecs {
     func test_retrieve_onRetrivalError_fails() async
-    func test_retrieve_onInsertionError_hasNoSideEffects() async
+    func test_retrieve_onRetrivalError_hasNoSideEffects() async
 }
 
 protocol FailableInsertGalleryStoreSpecs: GalleryStoreSpecs {
