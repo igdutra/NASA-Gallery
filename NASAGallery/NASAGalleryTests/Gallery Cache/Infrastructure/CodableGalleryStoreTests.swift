@@ -68,7 +68,18 @@ final class CodableGalleryStoreTests: XCTestCase {
         XCTAssertNil(result)
     }
     
-    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() async throws {
+    func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
+        let sut = makeSUT()
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+ 
+        try await sut.insert(expectedCache)
+        let result = try await sut.retrieve()
+        
+        XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
+        XCTAssertEqual(expectedCache.gallery, result?.gallery)
+    }
+    
+    func test_retrieve_onEmptyCache_hasNoSideEffects() async throws {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
@@ -79,7 +90,21 @@ final class CodableGalleryStoreTests: XCTestCase {
         XCTAssertNil(result2)
     }
     
-    func test_retrieve_onInvalidData_fails() async {
+    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws {
+        let sut = makeSUT()
+        let nonEmptyCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try await sut.insert(nonEmptyCache)
+        
+        let result1 = try await sut.retrieve()
+        let result2 = try await sut.retrieve()
+        
+        XCTAssertNotNil(result1)
+        XCTAssertNotNil(result2)
+        XCTAssertEqual(result1?.timestamp, result2?.timestamp)
+        XCTAssertEqual(result2?.gallery, result2?.gallery)
+    }
+    
+    func test_retrieve_onRetrivalError_fails() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
         
@@ -93,7 +118,7 @@ final class CodableGalleryStoreTests: XCTestCase {
         }
     }
     
-    func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() async {
+    func test_retrieve_onRetrivalError_hasNoSideEffects() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
         
@@ -120,17 +145,6 @@ final class CodableGalleryStoreTests: XCTestCase {
     }
     
     // MARK: Insert
-    
-    func test_retrieve_afterInserting_succeedsWithCache() async throws {
-        let sut = makeSUT()
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
- 
-        try await sut.insert(expectedCache)
-        let result = try await sut.retrieve()
-        
-        XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
-        XCTAssertEqual(expectedCache.gallery, result?.gallery)
-    }
     
     func test_insert_onEmptyCache_succeedsWithNoThrow() async {
         let sut = makeSUT()
