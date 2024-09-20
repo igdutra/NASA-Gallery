@@ -41,7 +41,7 @@ import NASAGallery
  
  */
 
-final class CodableGalleryStoreTests: XCTestCase {
+final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - SetUp & TearDown
     

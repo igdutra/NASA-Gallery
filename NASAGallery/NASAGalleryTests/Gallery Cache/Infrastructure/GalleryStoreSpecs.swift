@@ -21,12 +21,12 @@ protocol GalleryStoreSpecs: XCTestCase {
     // No side-effect should be tested on failure.
     func test_insert_onEmptyCache_succeedsWithNoThrow() async
     func test_insert_onNonEmptyCache_succeedsWithNoThrow() async
-    func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async
+    func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws
 
     // MARK: Delete
     func test_delete_onEmptyCache_succeeds() async
     func test_delete_onNonEmptyCache_succeeds() async throws
-    func test_delete_onEmptyCache_hasNoSideEffects() async
+    func test_delete_onEmptyCache_hasNoSideEffects() async throws
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws
 
 //    func test_databaseOperationsOccurSerially() async
