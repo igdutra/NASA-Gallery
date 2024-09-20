@@ -207,6 +207,14 @@
 			name = Tests;
 			sourceTree = "<group>";
 		};
+		927D81C42C9D81F0005ED010 /* Gallery Store Specs */ = {
+			isa = PBXGroup;
+			children = (
+				922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */,
+			);
+			path = "Gallery Store Specs";
+			sourceTree = "<group>";
+		};
 		929CFC6C2BB7005600A34D5D /* Domain Models - Application-Agnostic Business Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,7 +309,7 @@
 		92E2F7C92C2D7D09002145F8 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
-				922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */,
+				927D81C42C9D81F0005ED010 /* Gallery Store Specs */,
 				92E2F7CA2C2D7EC7002145F8 /* CodableGalleryStoreTests.swift */,
 			);
 			path = Infrastructure;
