@@ -231,7 +231,34 @@ final class CodableGalleryStoreTests: XCTestCase {
         }
     }
     
-    func test_delete_onNonEmptyCache_succeedsClearingCache() async throws {
+    func test_delete_onEmptyCache_hasNoSideEffects() async throws {
+        let sut = makeSUT()
+        
+        do {
+            try await sut.delete()
+        } catch {
+            XCTFail("Deletion should succeed")
+        }
+        
+        let result = try await sut.retrieve()
+        
+        XCTAssertNil(result)
+    }
+    
+    // Note: previous test, test_delete_onNonEmptyCache_succeedsClearingCache, was broken down into 2 separte assertions. One test will assert it succeeds, the other will assert that it leaves no side effects.
+    func test_delete_onNonEmptyCache_succeeds() async throws {
+        let sut = makeSUT()
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try await sut.insert(insertedCache)
+        
+        do {
+            try await sut.delete()
+        } catch {
+            XCTFail("Deletion should succeed")
+        }
+    }
+    
+    func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try await sut.insert(insertedCache)
@@ -253,6 +280,23 @@ final class CodableGalleryStoreTests: XCTestCase {
             XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
         }
     }
+    
+    func test_delete_onDeletionError_hasNoSideEffects() async {
+        let noWritePermissionDirectory = cachesDirectory()
+        let sut = makeSUT(storeURL: noWritePermissionDirectory)
+        
+        do {
+            try await sut.delete()
+            XCTFail("Delete should fail on no-write permission directory")
+        } catch {
+            XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
+        }
+        
+        // Note: verify possible side-effects when checking for file existance inside the caches folder.
+        XCTAssertFalse(FileManager.default.fileExists(atPath: noWritePermissionDirectory.absoluteString))
+    }
+    
+    // MARK: - Serially
     
     // Note: Serially
     // - this test is here testing the swift language itself
@@ -291,7 +335,11 @@ private extension CodableGalleryStoreTests {
     }
     
     func cachesDirectory() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!
+        FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!
+    }
+    
+    func cachesDirectoryFile() -> URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
     
     func setupEmptyStoreState() {

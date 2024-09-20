@@ -25,7 +25,7 @@ protocol GalleryStoreSpecs: XCTestCase {
 
     // MARK: Delete
     func test_delete_onEmptyCache_succeeds() async
-    func test_delete_onNonEmptyCache_succeedsClearingCache() async throws
+    func test_delete_onNonEmptyCache_succeeds() async throws
     func test_delete_onEmptyCache_hasNoSideEffects() async
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws
 
