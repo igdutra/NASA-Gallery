@@ -157,6 +157,19 @@ final class CodableGalleryStoreTests: XCTestCase {
         }
     }
     
+    func test_insert_onNonEmptyCache_succeedsWithNoThrow() async {
+        let sut = makeSUT()
+        let firstInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        do {
+            try await sut.insert(firstInsertedCache)
+            let secondInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+            try await sut.insert(secondInsertedCache)
+        } catch {
+            XCTFail("Both insertions should succeed with no throw")
+        }
+    }
+    
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
         let sut = makeSUT()
         let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
@@ -182,6 +195,27 @@ final class CodableGalleryStoreTests: XCTestCase {
             XCTFail("Insert should fail on no-write permission directory")
         } catch {
             XCTAssertNotNil(error, "Should throw operation not permitted")
+        }
+    }
+    
+    func test_insert_onInsertionError_hasNoSideEffects() async {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        do {
+            try await sut.insert(insertedCache)
+            XCTFail("Insert should fail on no-write permission directory")
+        } catch {
+            XCTAssertNotNil(error, "Should throw operation not permitted")
+        }
+        
+        do {
+            let result = try await sut.retrieve()
+            XCTAssertNil(result, "Insertion on insertion error should produce no side-effect")
+        } catch {
+            print(error)
+            XCTFail("Retrieve should not fail with ")
         }
     }
     
