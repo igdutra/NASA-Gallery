@@ -29,15 +29,7 @@ extension XCTestCase {
         }
     }
     
-    /// Example usage when expecting a specific error:
-    /// ```swift
-    /// func test_retrieve_onInvalidCache_throwsSpecificError() async {
-    ///     let sut = makeSUT()
-    ///     let error = await expectThrowAsync(try await sut.retrieve(), YourExpectedErrorType.self)
-    ///     XCTAssertEqual(error as? YourExpectedErrorType, YourExpectedErrorType.someCase)
-    /// }
-    /// ```
-    /// Example usage when you don't care about the error type:
+    /// Example usage:
     /// ```swift
     /// func test_retrieve_onInvalidCache_throwsAnyError() async {
     ///     let sut = makeSUT()
@@ -45,25 +37,57 @@ extension XCTestCase {
     ///     XCTAssertNotNil(error, "Expected an error, but no error was thrown")
     /// }
     /// ```
-    @discardableResult
-    func expectThrowAsync<AnyResult, ExpectedError: Error>(_ expression: @autoclosure () async throws -> AnyResult,
-                                                           _ expectedError: ExpectedError.Type? = nil,
-                                                           _ message: @autoclosure () -> String = "",
-                                                           file: StaticString = #file, line: UInt = #line
+    func expectThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
+                                     _ message: @autoclosure () -> String = "",
+                                     file: StaticString = #file, line: UInt = #line
     ) async -> Error? {
         do {
             _ = try await expression()
             XCTFail(message().isEmpty ? "Expected an error, but no error was thrown" : message(), file: file, line: line)
             return nil
-        } catch let error as ExpectedError where expectedError != nil {
-            return error
         } catch {
-            if expectedError == nil {
-                return error
-            } else {
-                XCTFail(message().isEmpty ? "Expected error of type \(String(describing: expectedError)), but got: \(error)" : message(), file: file, line: line)
-                return nil
-            }
+            return error
         }
     }
+    
+//     Note: for a better streamlined API, I think the assertions can be outside the helper. helper will always simply return. For the first return the result, for the second return the error type.
+    
+//
+//    / Example usage when expecting a specific error:
+//    / ```swift
+//    / func test_retrieve_onInvalidCache_throwsSpecificError() async {
+//    /     let sut = makeSUT()
+//    /     let error = await expectThrowAsync(try await sut.retrieve(), YourExpectedErrorType.self)
+//    /     XCTAssertEqual(error as? YourExpectedErrorType, YourExpectedErrorType.someCase)
+//    / }
+//    / ```
+//    / Example usage when you don't care about the error type:
+//    / ```swift
+//    / func test_retrieve_onInvalidCache_throwsAnyError() async {
+//    /     let sut = makeSUT()
+//    /     let error = await expectThrowAsync(try await sut.retrieve())
+//    /     XCTAssertNotNil(error, "Expected an error, but no error was thrown")
+//    / }
+//    / ```
+//    @discardableResult
+//    func expectThrowAsync<AnyResult, ExpectedError: Error>(_ expression: @autoclosure () async throws -> AnyResult,
+//                                                           _ expectedError: ExpectedError.Type? = Error.self,
+//                                                           _ message: @autoclosure () -> String = "",
+//                                                           file: StaticString = #file, line: UInt = #line
+//    ) async -> Error? {
+//        do {
+//            _ = try await expression()
+//            XCTFail(message().isEmpty ? "Expected an error, but no error was thrown" : message(), file: file, line: line)
+//            return nil
+//        } catch let error as ExpectedError where expectedError != nil {
+//            return error
+//        } catch {
+//            if expectedError == nil {
+//                return error
+//            } else {
+//                XCTFail(message().isEmpty ? "Expected error of type \(String(describing: expectedError)), but got: \(error)" : message(), file: file, line: line)
+//                return nil
+//            }
+//        }
+//    }
 }

@@ -107,15 +107,11 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_retrieve_onRetrivalError_fails() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
-        
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch {
-            XCTAssertNotNil(error, "Retrieve should fail due to invalid data")
-        }
+        let error = await expectThrowAsync(try await sut.retrieve())
+        
+        XCTAssertNotNil(error, "Retrieve should fail due to invalid data")
     }
     
     func test_retrieve_onRetrivalError_hasNoSideEffects() async {
