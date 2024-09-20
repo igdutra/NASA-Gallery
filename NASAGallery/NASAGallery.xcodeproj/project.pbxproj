@@ -14,6 +14,8 @@
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
 		9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9269EEB72BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift */; };
+		927D81C62C9D8244005ED010 /* XCTestCase+GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927D81C52C9D8244005ED010 /* XCTestCase+GalleryStoreSpecs.swift */; };
+		927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */; };
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */; };
 		929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */; };
@@ -68,6 +70,8 @@
 		925D36112B08037A00FE12DA /* GalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImage.swift; sourceTree = "<group>"; };
 		925D36132B0804A900FE12DA /* GalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryLoader.swift; sourceTree = "<group>"; };
 		9269EEB72BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateGalleryFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
+		927D81C52C9D8244005ED010 /* XCTestCase+GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+GalleryStoreSpecs.swift"; sourceTree = "<group>"; };
+		927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Throws.swift"; sourceTree = "<group>"; };
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheGalleryUseCaseTests.swift; sourceTree = "<group>"; };
 		929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCachePolicy.swift; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 			isa = PBXGroup;
 			children = (
 				922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */,
+				927D81C52C9D8244005ED010 /* XCTestCase+GalleryStoreSpecs.swift */,
 			);
 			path = "Gallery Store Specs";
 			sourceTree = "<group>";
@@ -292,6 +297,7 @@
 				92032A7B2B213423008053C0 /* Fixtures.swift */,
 				9282C9392B1A932900D564DE /* SharedTestHelpers.swift */,
 				92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */,
+				927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */,
 			);
 			path = "Shared Test Helpers";
 			sourceTree = "<group>";
@@ -504,6 +510,7 @@
 				92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */,
 				92E2F7CC2C2D7ED4002145F8 /* CodableGalleryStoreTests.swift in Sources */,
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
+				927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */,
 				92032A7C2B213423008053C0 /* Fixtures.swift in Sources */,
 				92EF7CDD2BA4BD4300F19C34 /* GalleryStoreSpy.swift in Sources */,
 				92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */,
@@ -512,6 +519,7 @@
 				9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */,
 				922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */,
 				92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */,
+				927D81C62C9D8244005ED010 /* XCTestCase+GalleryStoreSpecs.swift in Sources */,
 				9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
