@@ -20,12 +20,12 @@ extension XCTestCase {
     func expectNoThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
                                        _ message: @autoclosure () -> String = "",
                                        file: StaticString = #file, line: UInt = #line
-    ) async -> AnyResult? {
+    ) async throws-> AnyResult {
         do {
             return try await expression()
         } catch {
             XCTFail(message().isEmpty ? "Expected no error, but got: \(error)" : message(), file: file, line: line)
-            return nil
+            throw error
         }
     }
     

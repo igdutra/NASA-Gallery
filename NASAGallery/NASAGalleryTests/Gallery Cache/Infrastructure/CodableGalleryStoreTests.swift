@@ -60,12 +60,12 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // MARK: Retrieve
     
     func test_retrieve_onEmptyCache_deliversEmpty() async throws {
-        // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
+        // Note: since we are testing the real infra, the folder must be empty, so no stub is needed.
         let sut = makeSUT()
+
+        let result = try await expectNoThrowAsync(try await sut.retrieve())
         
-        let result = try await sut.retrieve()
-        
-        XCTAssertNil(result)
+        XCTAssertNil(result, "Result should be empty on empty cache, got \(String(describing: result)) instead")
     }
     
     func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
