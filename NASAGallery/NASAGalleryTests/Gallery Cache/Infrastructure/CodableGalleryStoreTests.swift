@@ -41,6 +41,19 @@ import NASAGallery
  
  */
 
+
+
+// TODO:
+// - expect empty result.
+
+
+
+
+
+
+
+
+
 final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - SetUp & TearDown
@@ -186,27 +199,21 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: Delete
     
-    func test_delete_onEmptyCache_succeeds() async {
+    func test_delete_onEmptyCache_succeeds() async throws {
         let sut = makeSUT()
         
-        do {
-            try await sut.delete()
-        } catch {
-            XCTFail("Deletion should succeed")
-        }
+        try await expectNoThrowAsync(try await sut.delete(),
+                                     "Deletion should succeed")
     }
     
     func test_delete_onEmptyCache_hasNoSideEffects() async throws {
         let sut = makeSUT()
         
-        do {
-            try await sut.delete()
-        } catch {
-            XCTFail("Deletion should succeed")
-        }
+        try await expectNoThrowAsync(try await sut.delete(),
+                                     "Deletion should succeed")
         
-        let result = try await sut.retrieve()
-        
+        let result = try await expectNoThrowAsync(try await sut.retrieve(),
+                                                  "Deletion should produce no side-effect")
         XCTAssertNil(result)
     }
     
@@ -214,48 +221,41 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_delete_onNonEmptyCache_succeeds() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await sut.insert(insertedCache)
-        
-        do {
-            try await sut.delete()
-        } catch {
-            XCTFail("Deletion should succeed")
-        }
+        try await expectNoThrowAsync(try await sut.insert(insertedCache),
+                                     "Simple test setup should succeed")
+       
+        try await expectNoThrowAsync(try await sut.delete(),
+                                     "Deletion should succeed")
     }
     
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await sut.insert(insertedCache)
+        try await expectNoThrowAsync(try await sut.insert(insertedCache),
+                                     "Simple test setup should succeed")
         
-        try await sut.delete()
+        try await expectNoThrowAsync(try await sut.delete(),
+                                     "Deletion should succeed")
         
-        let result = try await sut.retrieve()
-        XCTAssertNil(result, "Cache should be empty after deletion")
+        let result = try await expectNoThrowAsync(try await sut.retrieve(),
+                                                  "Cache should be empty after deletion")
+        XCTAssertNil(result)
     }
     
     func test_delete_onDeletionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         
-        do {
-            try await sut.delete()
-            XCTFail("Delete should fail on no-write permission directory")
-        } catch {
-            XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
-        }
+        await expectThrowAsync(try await sut.delete(),
+                               "Delete should fail on no-write permission directory")
     }
     
     func test_delete_onDeletionError_hasNoSideEffects() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         
-        do {
-            try await sut.delete()
-            XCTFail("Delete should fail on no-write permission directory")
-        } catch {
-            XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
-        }
+        await expectThrowAsync(try await sut.delete(),
+                               "Delete should fail on no-write permission directory")
         
         // Note: verify possible side-effects when checking for file existance inside the caches folder.
         XCTAssertFalse(FileManager.default.fileExists(atPath: noWritePermissionDirectory.absoluteString))

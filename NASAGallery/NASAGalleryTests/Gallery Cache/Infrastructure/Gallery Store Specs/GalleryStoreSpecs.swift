@@ -24,7 +24,7 @@ protocol GalleryStoreSpecs: XCTestCase {
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws
 
     // MARK: Delete
-    func test_delete_onEmptyCache_succeeds() async
+    func test_delete_onEmptyCache_succeeds() async throws
     func test_delete_onNonEmptyCache_succeeds() async throws
     func test_delete_onEmptyCache_hasNoSideEffects() async throws
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws
@@ -43,6 +43,6 @@ protocol FailableInsertGalleryStoreSpecs: GalleryStoreSpecs {
 }
 
 protocol FailableDeleteGalleryStoreSpecs: GalleryStoreSpecs {
-    func test_delete_onDeletionError_fails() async
-    func test_delete_onDeletionError_hasNoSideEffects() async
+    func test_delete_onDeletionError_fails() async throws
+    func test_delete_onDeletionError_hasNoSideEffects() async throws
 }
