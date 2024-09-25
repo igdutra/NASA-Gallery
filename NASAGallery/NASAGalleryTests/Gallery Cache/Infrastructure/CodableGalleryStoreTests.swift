@@ -72,49 +72,43 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: Retrieve
     
-    func test_retrieve_onEmptyCache_deliversEmpty() async throws {
+    func test_retrieve_onEmptyCache_deliversEmpty() async {
         // Note: since we are testing the real infra, the folder must be empty, so no stub is needed.
         let sut = makeSUT()
-
-        let result = try await expectNoThrowAsync(try await sut.retrieve())
         
-        XCTAssertNil(result, "Result should be empty on empty cache, got \(String(describing: result)) instead")
+        await expect(sut,
+                     toRetrieve: nil,
+                     "Result should be empty on empty cache")
     }
     
-    func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
+    func test_retrieve_onNonEmptyCache_succeedsWithCache() async {
         let sut = makeSUT()
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
  
-        try await expectNoThrowAsync(try await sut.insert(expectedCache))
-        let result = try await expectNoThrowAsync(try await sut.retrieve())
-
-        XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
-        XCTAssertEqual(expectedCache.gallery, result?.gallery)
+        await insert(expectedCache, to: sut)
+        
+        await expect(sut, 
+                     toRetrieve: expectedCache,
+                     "Retrieve should work on non-empty cache")
     }
     
-    func test_retrieve_onEmptyCache_hasNoSideEffects() async throws {
+    func test_retrieve_onEmptyCache_hasNoSideEffects() async {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
-        let result1 = try await expectNoThrowAsync(try await sut.retrieve())
-        let result2 = try await expectNoThrowAsync(try await sut.retrieve())
-
-        XCTAssertNil(result1)
-        XCTAssertNil(result2)
+        await expect(sut,
+                     toRetrieveTwice: nil,
+                     "Retrieve should have no sideEffect on empty cache")
     }
     
-    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws {
+    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async {
         let sut = makeSUT()
-        let nonEmptyCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await sut.insert(nonEmptyCache)
-        
-        let result1 = try await sut.retrieve()
-        let result2 = try await sut.retrieve()
-        
-        XCTAssertNotNil(result1)
-        XCTAssertNotNil(result2)
-        XCTAssertEqual(result1?.timestamp, result2?.timestamp)
-        XCTAssertEqual(result2?.gallery, result2?.gallery)
+        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        await insert(expectedCache, to: sut)
+
+        await expect(sut,
+                     toRetrieveTwice: expectedCache,
+                     "Retrieve should have no sideEffect on NON-empty cache")
     }
     
     func test_retrieve_onRetrivalError_fails() async {
@@ -237,9 +231,9 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         try await expectNoThrowAsync(try await sut.delete(),
                                      "Deletion should succeed")
         
-        let result = try await expectNoThrowAsync(try await sut.retrieve(),
-                                                  "Cache should be empty after deletion")
-        XCTAssertNil(result)
+        await expect(sut,
+                     toRetrieve: nil,
+                     "Cache should be empty after deletion")
     }
     
     func test_delete_onDeletionError_fails() async {
