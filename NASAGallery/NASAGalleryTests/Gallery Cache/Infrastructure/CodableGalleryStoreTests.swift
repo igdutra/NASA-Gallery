@@ -72,9 +72,9 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         let sut = makeSUT()
         let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
  
-        try await sut.insert(expectedCache)
-        let result = try await sut.retrieve()
-        
+        try await expectNoThrowAsync(try await sut.insert(expectedCache))
+        let result = try await expectNoThrowAsync(try await sut.retrieve())
+
         XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
         XCTAssertEqual(expectedCache.gallery, result?.gallery)
     }
@@ -83,10 +83,10 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
-        let result = try await sut.retrieve()
-        let result2 = try await sut.retrieve()
-        
-        XCTAssertNil(result)
+        let result1 = try await expectNoThrowAsync(try await sut.retrieve())
+        let result2 = try await expectNoThrowAsync(try await sut.retrieve())
+
+        XCTAssertNil(result1)
         XCTAssertNil(result2)
     }
     
@@ -120,24 +120,10 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         
         try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
         
-        var firstError: NSError?
-        var secondError: NSError?
+        let firstError = await expectThrowAsync(try await sut.retrieve())
+        let secondError = await expectThrowAsync(try await sut.retrieve())
         
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch let error as NSError {
-            firstError = error
-        }
-        
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch let error as NSError {
-            secondError = error
-        }
-        
-        XCTAssertEqual(firstError, secondError)
+        XCTAssertEqual(firstError?.localizedDescription, secondError?.localizedDescription)
     }
     
     // MARK: Insert

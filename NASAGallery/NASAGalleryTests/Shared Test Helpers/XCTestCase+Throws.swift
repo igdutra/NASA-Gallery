@@ -20,7 +20,7 @@ extension XCTestCase {
     func expectNoThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
                                        _ message: @autoclosure () -> String = "",
                                        file: StaticString = #file, line: UInt = #line
-    ) async throws-> AnyResult {
+    ) async throws -> AnyResult {
         do {
             return try await expression()
         } catch {
