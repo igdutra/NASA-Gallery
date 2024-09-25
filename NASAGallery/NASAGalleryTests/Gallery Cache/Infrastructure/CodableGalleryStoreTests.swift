@@ -41,19 +41,6 @@ import NASAGallery
  
  */
 
-
-
-// TODO:
-// - expect empty result.
-
-
-
-
-
-
-
-
-
 final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - SetUp & TearDown
