@@ -17,6 +17,7 @@ extension XCTestCase {
     ///     XCTAssertNil(result, "Expected nil, got \(String(describing: result))")
     /// }
     /// ```
+    @discardableResult
     func expectNoThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
                                        _ message: @autoclosure () -> String = "",
                                        file: StaticString = #file, line: UInt = #line
@@ -37,6 +38,7 @@ extension XCTestCase {
     ///     XCTAssertNotNil(error, "Expected an error, but no error was thrown")
     /// }
     /// ```
+    @discardableResult
     func expectThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
                                      _ message: @autoclosure () -> String = "",
                                      file: StaticString = #file, line: UInt = #line
