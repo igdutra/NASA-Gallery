@@ -35,7 +35,13 @@ import NASAGallery
 
 */
 
-final class CodableGalleryStoreTests: XCTestCase {
+/* On GalleryStoreSpecs
+ 
+ The Infrastructure Specs where retrieved as an exercise, in a way that the names for CodableGalleryStore were not updated.
+ 
+ */
+
+final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - SetUp & TearDown
     
@@ -49,156 +55,128 @@ final class CodableGalleryStoreTests: XCTestCase {
         try await super.tearDown()
     }
     
-    // MARK: - Test Methods
-    
     // MARK: Retrieve
     
-    func test_retrieve_onEmptyCache_deliversEmpty() async throws {
+    func test_retrieve_onEmptyCache_deliversEmpty() async {
+        // Note: since we are testing the real infra, the folder must be empty, so no stub is needed.
+        let sut = makeSUT()
+        
+        await assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
+    }
+    
+    func test_retrieve_onNonEmptyCache_succeedsWithCache() async {
+        let sut = makeSUT()
+
+        await assertThatRetrieveSucceedsWithCacheOnNonEmptyCache(on: sut)
+    }
+    
+    func test_retrieve_onEmptyCache_hasNoSideEffects() async {
         // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
         let sut = makeSUT()
         
-        let result = try await sut.retrieve()
-        
-        XCTAssertNil(result)
+        await assertThatRetrieveHasNoSideEffectOnEmptyCache(on: sut)
     }
     
-    func test_retrieveTwice_onEmptyCache_hasNoSideEffects() async throws {
-        // Note: since we are testing the real infra, the folder must be empty does no stub is needed.
+    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async {
         let sut = makeSUT()
-        
-        let result = try await sut.retrieve()
-        let result2 = try await sut.retrieve()
-        
-        XCTAssertNil(result)
-        XCTAssertNil(result2)
+       
+        await assertThatRetrieveHasNoSideEffectOnNonEmptyCache(on: sut)
     }
     
-    func test_retrieve_onInvalidData_fails() async {
+    func test_retrieve_onRetrivalError_fails() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
-        
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch {
-            XCTAssertNotNil(error, "Retrieve should fail due to invalid data")
-        }
+        await assertThatRetrieveFailsOnRetrivalError(on: sut)
     }
     
-    func test_retrieveTwice_onInvalidData_failsTwiceWithSameError() async {
+    func test_retrieve_onRetrivalError_hasNoSideEffects() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
         
         try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
         
-        var firstError: NSError?
-        var secondError: NSError?
-        
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch let error as NSError {
-            firstError = error
-        }
-        
-        do {
-            _ = try await sut.retrieve()
-            XCTFail("Retrieve should fail due to invalid data")
-        } catch let error as NSError {
-            secondError = error
-        }
-        
-        XCTAssertEqual(firstError, secondError)
+        await assertThatRetrieveHasNoSideEffectOnRetrivalError(on: sut)
     }
     
     // MARK: Insert
     
-    func test_retrieve_afterInserting_succeedsWithCache() async throws {
+    func test_insert_onEmptyCache_succeedsWithNoThrow() async throws {
         let sut = makeSUT()
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
- 
-        try await sut.insert(expectedCache)
-        let result = try await sut.retrieve()
-        
-        XCTAssertEqual(expectedCache.timestamp, result?.timestamp)
-        XCTAssertEqual(expectedCache.gallery, result?.gallery)
+
+        try await assertThatInsertSucceedsOnEmptyCache(on: sut)
     }
     
-    func test_insert_onEmptyCache_succeedsWithNoThrow() async {
+    func test_insert_onNonEmptyCache_succeedsWithNoThrow() async throws {
         let sut = makeSUT()
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
-        do {
-            try await sut.insert(insertedCache)
-        } catch {
-            XCTFail("Insertion should succeed")
-        }
+       try await assertThatInsertSucceedsOnNonEmptyCache(on: sut)
     }
     
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
         let sut = makeSUT()
-        let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        
-        do {
-            try await sut.insert(previousInsertedCache)
-            let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-            try await sut.insert(lastInsertedCache)
-            let retrievedCache = try await sut.retrieve()
-            XCTAssertEqual(retrievedCache, lastInsertedCache)
-        } catch {
-            XCTFail("Both insertions and retrieve should succeed with no throw")
-        }
+ 
+        try await assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on: sut)
     }
     
     func test_insert_onInsertionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+       
+        await assertThatInsertFailsOnInsertionError(on: sut)
+    }
+    
+    func test_insert_onInsertionError_hasNoSideEffects() async throws {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
         
-        do {
-            try await sut.insert(insertedCache)
-            XCTFail("Insert should fail on no-write permission directory")
-        } catch {
-            XCTAssertNotNil(error, "Should throw operation not permitted")
-        }
+        await assertThatInsertHasNoSideEffectOnInsertionError(on: sut)
     }
     
     // MARK: Delete
     
-    func test_delete_onEmptyCache_succeeds() async {
+    func test_delete_onEmptyCache_succeeds() async throws {
         let sut = makeSUT()
         
-        do {
-            try await sut.delete()
-        } catch {
-            XCTFail("Deletion should succeed")
-        }
+       try await assertThatDeleteSucceedsOnEmptyCache(on: sut)
     }
     
-    func test_delete_onNonEmptyCache_succeedsClearingCache() async throws {
+    func test_delete_onEmptyCache_hasNoSideEffects() async throws {
         let sut = makeSUT()
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await sut.insert(insertedCache)
         
-        try await sut.delete()
+       try await assertThatDeleteHasNoSideEffectOnEmptyCache(on: sut)
+    }
+    
+    // Note: previous test, test_delete_onNonEmptyCache_succeedsClearingCache, was broken down into 2 separte assertions. One test will assert it succeeds, the other will assert that it leaves no side effects.
+    func test_delete_onNonEmptyCache_succeeds() async throws {
+        let sut = makeSUT()
         
-        let result = try await sut.retrieve()
-        XCTAssertNil(result, "Cache should be empty after deletion")
+        try await assertThatDeleteSucceedsOnNonEmptyCache(on: sut)
+    }
+    
+    func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
+        let sut = makeSUT()
+        
+        try await assertThatDeleteHasNoSideEffectOnNonEmptyCache(on: sut)
     }
     
     func test_delete_onDeletionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
         
-        do {
-            try await sut.delete()
-            XCTFail("Delete should fail on no-write permission directory")
-        } catch {
-            XCTAssertNotNil(error, "Should fail with `Operation not permitted`")
-        }
+        await assertThatDeleteFailsOnDeletionError(on: sut)
     }
+    
+    func test_delete_onDeletionError_hasNoSideEffects() async {
+        let noWritePermissionDirectory = cachesDirectory()
+        let sut = makeSUT(storeURL: noWritePermissionDirectory)
+        
+        await assertThatDeleteHasNoSideEffectOnDeletionError(on: sut,
+                                                             testDirectory: noWritePermissionDirectory)
+    }
+    
+    // MARK: - Serially
     
     // Note: Serially
     // - this test is here testing the swift language itself
@@ -237,7 +215,11 @@ private extension CodableGalleryStoreTests {
     }
     
     func cachesDirectory() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .allDomainsMask).first!
+        FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!
+    }
+    
+    func cachesDirectoryFile() -> URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }
     
     func setupEmptyStoreState() {
