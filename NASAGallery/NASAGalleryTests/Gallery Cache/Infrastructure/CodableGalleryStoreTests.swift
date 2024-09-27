@@ -133,7 +133,7 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         let sut = makeSUT()
         
         let firstInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(firstInsertedCache))
+        await insert(firstInsertedCache, to: sut)
         
         let secondInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try await expectNoThrowAsync(try await sut.insert(secondInsertedCache),
@@ -144,10 +144,10 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         let sut = makeSUT()
  
         let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(previousInsertedCache))
+        await insert(previousInsertedCache, to: sut)
         let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(lastInsertedCache))
-        
+        await insert(lastInsertedCache, to: sut)
+
         let retrievedCache = try await expectNoThrowAsync(try await sut.retrieve(),
                                                           "Both insertions and retrieve should succeed with no throw")
         
@@ -198,8 +198,7 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_delete_onNonEmptyCache_succeeds() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(insertedCache),
-                                     "Simple test setup should succeed")
+        await insert(insertedCache, to: sut)
        
         try await expectNoThrowAsync(try await sut.delete(),
                                      "Deletion should succeed")
@@ -208,8 +207,7 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
         let sut = makeSUT()
         let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(insertedCache),
-                                     "Simple test setup should succeed")
+        await insert(insertedCache, to: sut)
         
         try await expectNoThrowAsync(try await sut.delete(),
                                      "Deletion should succeed")
