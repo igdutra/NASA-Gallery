@@ -111,7 +111,60 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         XCTAssertEqual(firstError?.localizedDescription, secondError?.localizedDescription, file: file, line: line)
     }
     
+    func assertThatInsertSucceedsOnEmptyCache(on sut: GalleryStore,
+                                              file: StaticString = #file, line: UInt = #line) async throws {
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        try await expectNoThrowAsync(try await sut.insert(insertedCache),
+                                     "Insertion should succeed",
+                                     file: file, line: line)
+    }
     
+    func assertThatInsertSucceedsOnNonEmptyCache(on sut: GalleryStore,
+                                                 file: StaticString = #file, line: UInt = #line) async throws {
+        let firstInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        await insert(firstInsertedCache, to: sut)
+        
+        let secondInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try await expectNoThrowAsync(try await sut.insert(secondInsertedCache),
+                                     "Both insertions should succeed with no throw",
+                                     file: file, line: line)
+    }
+    
+    func assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on sut: GalleryStore,
+                                                               file: StaticString = #file, line: UInt = #line) async throws {
+        let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        await insert(previousInsertedCache, to: sut)
+        let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        await insert(lastInsertedCache, to: sut)
+
+        let retrievedCache = try await expectNoThrowAsync(try await sut.retrieve(),
+                                                          "Both insertions and retrieve should succeed with no throw",
+                                                          file: file, line: line)
+        
+        XCTAssertEqual(retrievedCache, lastInsertedCache)
+    }
+    
+    func assertThatInsertFailsOnInsertionError(on sut: GalleryStore,
+                                               file: StaticString = #file, line: UInt = #line) async {
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        await expectThrowAsync(try await sut.insert(insertedCache),
+                               "Insert should fail on no-write permission directory",
+                               file: file, line: line)
+    }
+    
+    func assertThatInsertHasNoSideEffectOnInsertionError(on sut: GalleryStore,
+                                                         file: StaticString = #file, line: UInt = #line) async {
+        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        await expectThrowAsync(try await sut.insert(insertedCache),
+                               "Insert should fail on no-write permission directory")
+        
+        await assertSUTReturnsEmpty(sut,
+                                    "Insertion on insertion error should produce no side-effect",
+                                    file: file, line: line)
+    }
     
     // MARK: - Test Methods
     
@@ -164,56 +217,34 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     func test_insert_onEmptyCache_succeedsWithNoThrow() async throws {
         let sut = makeSUT()
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        
-        try await expectNoThrowAsync(try await sut.insert(insertedCache),
-                                     "Insertion should succeed")
+
+        try await assertThatInsertSucceedsOnEmptyCache(on: sut)
     }
     
     func test_insert_onNonEmptyCache_succeedsWithNoThrow() async throws {
         let sut = makeSUT()
         
-        let firstInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        await insert(firstInsertedCache, to: sut)
-        
-        let secondInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        try await expectNoThrowAsync(try await sut.insert(secondInsertedCache),
-                                     "Both insertions should succeed with no throw")
+       try await assertThatInsertSucceedsOnNonEmptyCache(on: sut)
     }
     
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
         let sut = makeSUT()
  
-        let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        await insert(previousInsertedCache, to: sut)
-        let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        await insert(lastInsertedCache, to: sut)
-
-        let retrievedCache = try await expectNoThrowAsync(try await sut.retrieve(),
-                                                          "Both insertions and retrieve should succeed with no throw")
-        
-        XCTAssertEqual(retrievedCache, lastInsertedCache)
+        try await assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on: sut)
     }
     
     func test_insert_onInsertionError_fails() async {
         let noWritePermissionDirectory = cachesDirectory()
         let sut = makeSUT(storeURL: noWritePermissionDirectory)
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-        
-        await expectThrowAsync(try await sut.insert(insertedCache),
-                               "Insert should fail on no-write permission directory")
+       
+        await assertThatInsertFailsOnInsertionError(on: sut)
     }
     
     func test_insert_onInsertionError_hasNoSideEffects() async throws {
         let invalidStoreURL = URL(string: "invalid://store-url")!
         let sut = makeSUT(storeURL: invalidStoreURL)
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
-        await expectThrowAsync(try await sut.insert(insertedCache),
-                               "Insert should fail on no-write permission directory")
-        
-        await assertSUTReturnsEmpty(sut,
-                                    "Insertion on insertion error should produce no side-effect")
+        await assertThatInsertHasNoSideEffectOnInsertionError(on: sut)
     }
     
     // MARK: Delete
