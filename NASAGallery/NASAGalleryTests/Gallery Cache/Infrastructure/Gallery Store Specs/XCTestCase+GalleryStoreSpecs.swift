@@ -38,12 +38,27 @@ extension GalleryStoreSpecs where Self: XCTestCase {
             XCTAssertEqual(result1, expectedResult, comment, file: file, line: line)
             XCTAssertEqual(result2, expectedResult, comment, file: file, line: line)
         } catch {
-            XCTFail("Expected: \(comment), got \(error) instead")
+            XCTFail("Expected: \(String(describing: expectedResult)), got \(error) instead")
         }
     }
     
-    func insert(_ expectedCache: LocalCache, to sut: GalleryStore) async {
-        try? await expectNoThrowAsync(try await sut.insert(expectedCache))
+    func assertSUTReturnsEmpty(_ sut: GalleryStore,
+                               _ comment: String,
+                               file: StaticString = #filePath, line: UInt = #line) async {
+        do {
+            let result = try await sut.retrieve()
+            XCTAssertNil(result, comment, file: file, line: line)
+        } catch {
+            XCTFail("Expected cache to retrieve empty, got \(error) instead")
+        }
+    }
+    
+    func insert(_ expectedCache: LocalCache, to sut: GalleryStore, file: StaticString = #filePath, line: UInt = #line) async {
+        do {
+            try await sut.insert(expectedCache)
+        } catch {
+            XCTFail("Expected to insert with no errors, got \(error) instead", file: file, line: line)
+        }
     }
 
 }

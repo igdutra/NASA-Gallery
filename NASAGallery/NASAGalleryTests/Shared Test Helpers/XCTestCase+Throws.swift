@@ -40,14 +40,15 @@ extension XCTestCase {
     /// ```
     @discardableResult
     func expectThrowAsync<AnyResult>(_ expression: @autoclosure () async throws -> AnyResult,
-                                     _ message: @autoclosure () -> String = "",
+                                     _ message: String = "",
                                      file: StaticString = #file, line: UInt = #line
     ) async -> Error? {
         do {
             _ = try await expression()
-            XCTFail(message().isEmpty ? "Expected an error, but no error was thrown" : message(), file: file, line: line)
+            XCTFail(message.isEmpty ? "Expected an error, but no error was thrown" : message, file: file, line: line)
             return nil
         } catch {
+            XCTAssertNotNil(error, message, file: file, line: line)
             return error
         }
     }

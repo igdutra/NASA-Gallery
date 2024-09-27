@@ -103,9 +103,8 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         let sut = makeSUT(storeURL: storeURL)
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
-        let error = await expectThrowAsync(try await sut.retrieve())
-        
-        XCTAssertNotNil(error, "Retrieve should fail due to invalid data")
+        await expectThrowAsync(try await sut.retrieve(),
+                               "Retrieve should fail due to invalid data")
     }
     
     func test_retrieve_onRetrivalError_hasNoSideEffects() async {
@@ -172,10 +171,8 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         await expectThrowAsync(try await sut.insert(insertedCache),
                                "Insert should fail on no-write permission directory")
         
-        let result = try await expectNoThrowAsync(try await sut.retrieve(),
-                                                  "Insertion on insertion error should produce no side-effect")
-        
-        XCTAssertNil(result, "Insertion on insertion error should produce no side-effect")
+        await assertSUTReturnsEmpty(sut,
+                                    "Insertion on insertion error should produce no side-effect")
     }
     
     // MARK: Delete
@@ -193,9 +190,8 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         try await expectNoThrowAsync(try await sut.delete(),
                                      "Deletion should succeed")
         
-        let result = try await expectNoThrowAsync(try await sut.retrieve(),
-                                                  "Deletion should produce no side-effect")
-        XCTAssertNil(result)
+        await assertSUTReturnsEmpty(sut,
+                                    "Deletion should produce no side-effect")
     }
     
     // Note: previous test, test_delete_onNonEmptyCache_succeedsClearingCache, was broken down into 2 separte assertions. One test will assert it succeeds, the other will assert that it leaves no side effects.
