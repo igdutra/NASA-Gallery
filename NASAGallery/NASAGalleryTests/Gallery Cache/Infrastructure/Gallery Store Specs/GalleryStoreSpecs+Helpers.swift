@@ -8,10 +8,6 @@
 import XCTest
 import NASAGallery
 
-extension GalleryStoreSpecs where Self: XCTestCase {
-    
-}
-
 // MARK: - Helpers
 
 extension GalleryStoreSpecs where Self: XCTestCase {
