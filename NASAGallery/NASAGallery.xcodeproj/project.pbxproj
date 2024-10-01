@@ -37,6 +37,7 @@
 		92E9DE192BA264C10073DEFE /* RemoteAPODItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */; };
 		92E9DE1B2BA266860073DEFE /* LocalGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE1A2BA266860073DEFE /* LocalGalleryImage.swift */; };
 		92E9DE202BA26A6A0073DEFE /* API Diagram.png in Resources */ = {isa = PBXBuildFile; fileRef = 92E9DE1F2BA26A6A0073DEFE /* API Diagram.png */; };
+		92EADC832CACB10200E9ACF1 /* CoreDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */; };
 		92EF7CDD2BA4BD4300F19C34 /* GalleryStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF7CDB2BA4BD2000F19C34 /* GalleryStoreSpy.swift */; };
 		92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF7CD92BA4BD1500F19C34 /* CacheHelpers.swift */; };
 		92F4B5DC2C381CE2003919E2 /* CodableGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */; };
@@ -93,6 +94,7 @@
 		92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAPODItem.swift; sourceTree = "<group>"; };
 		92E9DE1A2BA266860073DEFE /* LocalGalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGalleryImage.swift; sourceTree = "<group>"; };
 		92E9DE1F2BA26A6A0073DEFE /* API Diagram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "API Diagram.png"; sourceTree = "<group>"; };
+		92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStore.swift; sourceTree = "<group>"; };
 		92EF7CD92BA4BD1500F19C34 /* CacheHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheHelpers.swift; sourceTree = "<group>"; };
 		92EF7CDB2BA4BD2000F19C34 /* GalleryStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpy.swift; sourceTree = "<group>"; };
 		92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableGalleryStore.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 			children = (
 				927D81C42C9D81F0005ED010 /* Gallery Store Specs */,
 				92E2F7CA2C2D7EC7002145F8 /* CodableGalleryStoreTests.swift */,
+				92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
 				9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */,
 				927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */,
+				92EADC832CACB10200E9ACF1 /* CoreDataGalleryStore.swift in Sources */,
 				92032A7C2B213423008053C0 /* Fixtures.swift in Sources */,
 				92EF7CDD2BA4BD4300F19C34 /* GalleryStoreSpy.swift in Sources */,
 				92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */,
