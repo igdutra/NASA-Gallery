@@ -33,8 +33,8 @@ protocol GalleryStoreSpecs: XCTestCase {
 }
 
 protocol FailableRetrieveGalleryStoreSpecs: GalleryStoreSpecs {
-    func test_retrieve_onRetrivalError_fails() async
-    func test_retrieve_onRetrivalError_hasNoSideEffects() async
+    func test_retrieve_onRetrivalError_fails() async throws
+    func test_retrieve_onRetrivalError_hasNoSideEffects() async throws
 }
 
 protocol FailableInsertGalleryStoreSpecs: GalleryStoreSpecs {
