@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class LocalGalleryLoader {
+public final class LocalGalleryLoader: GalleryLoader {
     // TODO: add private struct InvalidCache: Error {}
     private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
@@ -26,12 +26,12 @@ public final class LocalGalleryLoader {
         try await store.insert(LocalCache(gallery: gallery.toLocal(), timestamp: timestamp))
     }
     
-    public func load() async throws -> [LocalGalleryImage] {
+    public func load() async throws -> [GalleryImage] {
         guard let cache = try await store.retrieve(),
               cachePolicy.validate(cache.timestamp, against: Date())
         else { return [] }
         
-        return cache.gallery
+        return cache.gallery.toModel()
     }
     
     // Note: This is a prime example of a command function only! (CQS separation). It can produce side-effects (cache deletion)
@@ -56,3 +56,10 @@ private extension Array where Element == GalleryImage {
         return map { LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl) }
     }
 }
+
+private extension Array where Element == LocalGalleryImage {
+    func toModel() -> [GalleryImage] {
+        return map { GalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl) }
+    }
+}
+

@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-/* Author Notes on RemoteGalleryLoaderTests
+/* Author Notes on LoadGalleryFromCacheUseCaseTests
  - Load Galley from Cache Use Case is the LocalStore load command, which will conform to `GalleryLoader` protocol
  - LocalGalleryLoader was also choosen to be the component where this functionality would reside, but this could easily be swapped to a separate space!
     - thus the test_init_doesNotMessageStoreUponCreation appears to be duplicated, but it is not.
@@ -69,12 +69,13 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_load_onEmptyCache_deliversNoImages() async throws {
         let (sut, spy) = makeSUT()
-        let expectedCache = LocalCache(gallery: [], timestamp: Date())
+        let expectedImages = uniqueLocalImages()
+        let expectedCache = LocalCache(gallery: expectedImages.local, timestamp: Date())
         spy.stub(retrivalReturn: expectedCache)
         
         let cache = try await sut.load()
         
-        XCTAssertEqual(cache, expectedCache.gallery)
+        XCTAssertEqual(cache, expectedImages.images)
     }
     
     // MARK: - Validating and Triangulation
@@ -83,12 +84,13 @@ final class LoadGalleryFromCacheUseCaseTests: XCTestCase {
     func test_load_onNonExpiredCache_succeesdsWithCachedImages() async throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
+        let expectedImages = uniqueLocalImages()
+        let expectedCache = LocalCache(gallery: expectedImages.local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
         let cache = try await sut.load()
         
-        XCTAssertEqual(cache, expectedCache.gallery)
+        XCTAssertEqual(cache, expectedImages.images)
     }
     
     func test_load_onCacheExpiration_failsWithEmptyImages() async throws {
