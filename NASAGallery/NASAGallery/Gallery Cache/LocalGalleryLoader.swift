@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class LocalGalleryLoader {
+public final class LocalGalleryLoader: GalleryLoader {
     // TODO: add private struct InvalidCache: Error {}
     private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
