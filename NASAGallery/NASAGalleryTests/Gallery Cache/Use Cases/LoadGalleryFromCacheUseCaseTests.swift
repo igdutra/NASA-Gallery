@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-/* Author Notes on RemoteGalleryLoaderTests
+/* Author Notes on LoadGalleryFromCacheUseCaseTests
  - Load Galley from Cache Use Case is the LocalStore load command, which will conform to `GalleryLoader` protocol
  - LocalGalleryLoader was also choosen to be the component where this functionality would reside, but this could easily be swapped to a separate space!
     - thus the test_init_doesNotMessageStoreUponCreation appears to be duplicated, but it is not.
