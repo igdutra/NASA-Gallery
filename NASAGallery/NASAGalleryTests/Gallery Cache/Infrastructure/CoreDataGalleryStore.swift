@@ -8,6 +8,10 @@
 import XCTest
 import NASAGallery
 
+
+// TODO: add this optimization  // Verify that the context has uncommitted changes.
+//guard persistentContainer.viewContext.hasChanges else { return }
+
 final class CoreDataGalleryStore: GalleryStore {
     func delete() async throws {
         
