@@ -6,14 +6,31 @@
 //
 
 import XCTest
+import NASAGallery
 
-final class CoreDataGalleryStore: XCTestCase, FailableGalleryStoreSpecs {
+final class CoreDataGalleryStore: GalleryStore {
+    func delete() async throws {
+        
+    }
+    
+    func insert(_ cache: LocalCache) async throws {
+        
+    }
+    
+    func retrieve() async throws -> LocalCache? {
+        return nil
+    }
+}
+
+final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - Retrieve
     
 
     func test_retrieve_onEmptyCache_deliversEmpty() async throws {
+        let sut = makeSUT()
         
+        await assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
     func test_retrieve_onEmptyCache_hasNoSideEffects() async throws {
@@ -82,5 +99,15 @@ final class CoreDataGalleryStore: XCTestCase, FailableGalleryStoreSpecs {
     
     func test_delete_onDeletionError_hasNoSideEffects() async throws {
         
+    }
+}
+
+// MARK: - Helpers
+
+private extension CoreDataGalleryStoreTests {
+    func makeSUT() -> GalleryStore {
+        let store = CoreDataGalleryStore()
+        trackForMemoryLeaks(store)
+        return store
     }
 }
