@@ -13,6 +13,15 @@ import NASAGallery
 //guard persistentContainer.viewContext.hasChanges else { return }
 
 final class CoreDataGalleryStore: GalleryStore {
+    
+    private let storeBundle: Bundle
+    private let storeURL: URL
+    
+    init(storeBundle: Bundle, storeURL: URL) throws {
+        self.storeBundle = storeBundle
+        self.storeURL = storeURL
+    }
+    
     func delete() async throws {
         
     }
@@ -32,7 +41,7 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
 
     func test_retrieve_onEmptyCache_deliversEmpty() async throws {
-        let sut = makeSUT()
+        let sut = try makeSUT()
         
         await assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
@@ -109,9 +118,11 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
 // MARK: - Helpers
 
 private extension CoreDataGalleryStoreTests {
-    func makeSUT() -> GalleryStore {
-        let store = CoreDataGalleryStore()
-        trackForMemoryLeaks(store)
-        return store
+    func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> GalleryStore {
+        let storeBundle = Bundle(for: CoreDataGalleryStore.self)
+        let storeURL = URL(fileURLWithPath: "/dev/null")
+        let sut = try CoreDataGalleryStore(storeBundle: storeBundle, storeURL: storeURL)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
