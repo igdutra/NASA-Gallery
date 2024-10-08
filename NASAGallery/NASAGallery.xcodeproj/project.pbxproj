@@ -10,6 +10,7 @@
 		92032A7C2B213423008053C0 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92032A7B2B213423008053C0 /* Fixtures.swift */; };
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
 		922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */; };
+		925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */; };
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
@@ -67,6 +68,7 @@
 		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpecs.swift; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
+		925029522CB54B00006113BC /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36112B08037A00FE12DA /* GalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImage.swift; sourceTree = "<group>"; };
@@ -154,6 +156,14 @@
 				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
 			);
 			path = "Gallery API";
+			sourceTree = "<group>";
+		};
+		925029502CB54AD6006113BC /* CoreDataGalleryStore */ = {
+			isa = PBXGroup;
+			children = (
+				925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */,
+			);
+			path = CoreDataGalleryStore;
 			sourceTree = "<group>";
 		};
 		925D35EF2B08037000FE12DA = {
@@ -341,6 +351,7 @@
 			children = (
 				92E9DE132BA25DF40073DEFE /* GalleryStore.swift */,
 				92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */,
+				925029502CB54AD6006113BC /* CoreDataGalleryStore */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -495,6 +506,7 @@
 			files = (
 				922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */,
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
+				925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */,
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */,
@@ -864,6 +876,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				925029522CB54B00006113BC /* GalleryStore.xcdatamodel */,
+			);
+			currentVersion = 925029522CB54B00006113BC /* GalleryStore.xcdatamodel */;
+			name = GalleryStore.xcdatamodeld;
+			path = "/Users/ivo/Desktop/NASA-Gallery/NASAGallery/NASAGallery/Gallery Cache/Infrastructure/CoreDataGalleryStore/GalleryStore.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 925D35F02B08037000FE12DA /* Project object */;
 }
