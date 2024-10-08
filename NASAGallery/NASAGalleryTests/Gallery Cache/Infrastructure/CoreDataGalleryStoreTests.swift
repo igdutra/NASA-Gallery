@@ -8,33 +8,6 @@
 import XCTest
 import NASAGallery
 
-
-// TODO: add this optimization  // Verify that the context has uncommitted changes.
-//guard persistentContainer.viewContext.hasChanges else { return }
-
-final class CoreDataGalleryStore: GalleryStore {
-    
-    private let storeBundle: Bundle
-    private let storeURL: URL
-    
-    init(storeBundle: Bundle, storeURL: URL) throws {
-        self.storeBundle = storeBundle
-        self.storeURL = storeURL
-    }
-    
-    func delete() async throws {
-        
-    }
-    
-    func insert(_ cache: LocalCache) async throws {
-        
-    }
-    
-    func retrieve() async throws -> LocalCache? {
-        return nil
-    }
-}
-
 final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - Retrieve

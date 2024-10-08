@@ -11,6 +11,7 @@
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
 		922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */; };
 		925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */; };
+		925029552CB54FEC006113BC /* CoreDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */; };
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
@@ -38,7 +39,7 @@
 		92E9DE192BA264C10073DEFE /* RemoteAPODItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */; };
 		92E9DE1B2BA266860073DEFE /* LocalGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9DE1A2BA266860073DEFE /* LocalGalleryImage.swift */; };
 		92E9DE202BA26A6A0073DEFE /* API Diagram.png in Resources */ = {isa = PBXBuildFile; fileRef = 92E9DE1F2BA26A6A0073DEFE /* API Diagram.png */; };
-		92EADC832CACB10200E9ACF1 /* CoreDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */; };
+		92EADC832CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EADC822CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift */; };
 		92EF7CDD2BA4BD4300F19C34 /* GalleryStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF7CDB2BA4BD2000F19C34 /* GalleryStoreSpy.swift */; };
 		92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EF7CD92BA4BD1500F19C34 /* CacheHelpers.swift */; };
 		92F4B5DC2C381CE2003919E2 /* CodableGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */; };
@@ -69,6 +70,7 @@
 		922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpecs.swift; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
 		925029522CB54B00006113BC /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
+		925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStore.swift; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36112B08037A00FE12DA /* GalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImage.swift; sourceTree = "<group>"; };
@@ -96,7 +98,7 @@
 		92E9DE182BA264C10073DEFE /* RemoteAPODItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAPODItem.swift; sourceTree = "<group>"; };
 		92E9DE1A2BA266860073DEFE /* LocalGalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGalleryImage.swift; sourceTree = "<group>"; };
 		92E9DE1F2BA26A6A0073DEFE /* API Diagram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "API Diagram.png"; sourceTree = "<group>"; };
-		92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStore.swift; sourceTree = "<group>"; };
+		92EADC822CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStoreTests.swift; sourceTree = "<group>"; };
 		92EF7CD92BA4BD1500F19C34 /* CacheHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheHelpers.swift; sourceTree = "<group>"; };
 		92EF7CDB2BA4BD2000F19C34 /* GalleryStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpy.swift; sourceTree = "<group>"; };
 		92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableGalleryStore.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */,
+				925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */,
 			);
 			path = CoreDataGalleryStore;
 			sourceTree = "<group>";
@@ -332,7 +335,7 @@
 			children = (
 				927D81C42C9D81F0005ED010 /* Gallery Store Specs */,
 				92E2F7CA2C2D7EC7002145F8 /* CodableGalleryStoreTests.swift */,
-				92EADC822CACB10200E9ACF1 /* CoreDataGalleryStore.swift */,
+				92EADC822CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */,
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */,
+				925029552CB54FEC006113BC /* CoreDataGalleryStore.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */,
 				92E9DE1B2BA266860073DEFE /* LocalGalleryImage.swift in Sources */,
 				92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */,
@@ -530,7 +534,7 @@
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
 				9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */,
 				927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */,
-				92EADC832CACB10200E9ACF1 /* CoreDataGalleryStore.swift in Sources */,
+				92EADC832CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift in Sources */,
 				92032A7C2B213423008053C0 /* Fixtures.swift in Sources */,
 				92EF7CDD2BA4BD4300F19C34 /* GalleryStoreSpy.swift in Sources */,
 				92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */,
