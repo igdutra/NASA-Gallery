@@ -11,6 +11,7 @@ import CoreData
 //guard persistentContainer.viewContext.hasChanges else { return }
 
 // TODO: add on wiki step by step: add file "data model"
+// TODO: codegen, manual
 
 public final class CoreDataGalleryStore: GalleryStore {
     
