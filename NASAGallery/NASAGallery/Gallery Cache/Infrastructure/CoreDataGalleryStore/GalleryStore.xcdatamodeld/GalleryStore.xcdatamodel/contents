@@ -9,6 +9,7 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="explanation" attributeType="String"/>
         <attribute name="hdurl" optional="YES" attributeType="String"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="mediaType" attributeType="String"/>
         <attribute name="thumbnailUrl" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
