@@ -12,7 +12,7 @@
         <attribute name="mediaType" attributeType="String"/>
         <attribute name="thumbnailUrl" optional="YES" attributeType="String"/>
         <attribute name="title" attributeType="String"/>
-        <attribute name="url" attributeType="String"/>
+        <attribute name="url" attributeType="URI"/>
         <relationship name="cache" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataStoredGalleryCache" inverseName="gallery" inverseEntity="CoreDataStoredGalleryCache"/>
     </entity>
 </model>
