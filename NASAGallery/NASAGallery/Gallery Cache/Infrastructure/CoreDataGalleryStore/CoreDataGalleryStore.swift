@@ -10,6 +10,8 @@ import CoreData
 // TODO: add this optimization  // Verify that the context has uncommitted changes.
 //guard persistentContainer.viewContext.hasChanges else { return }
 
+// TODO: add on wiki step by step: add file "data model"
+
 public final class CoreDataGalleryStore: GalleryStore {
     
     private let storeBundle: Bundle
@@ -24,11 +26,11 @@ public final class CoreDataGalleryStore: GalleryStore {
         
     }
     
-    public func insert(_ cache: LocalCache) async throws {
+    public func insert(_ cache: LocalGalleryCache) async throws {
         
     }
     
-    public func retrieve() async throws -> LocalCache? {
+    public func retrieve() async throws -> LocalGalleryCache? {
         return nil
     }
 }

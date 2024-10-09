@@ -12,7 +12,7 @@ import NASAGallery
 final class GalleryStoreSpy: GalleryStore {
     enum ReceivedMessage: Equatable {
         case delete
-        case insert(LocalCache)
+        case insert(LocalGalleryCache)
         case retrieve
     }
     
@@ -22,7 +22,7 @@ final class GalleryStoreSpy: GalleryStore {
         let deletionError: Error?
         let insertionError: Error?
         let retrivalError: Error?
-        let retrivalReturn: LocalCache?
+        let retrivalReturn: LocalGalleryCache?
     }
     
     private var stub: Stub?
@@ -30,7 +30,7 @@ final class GalleryStoreSpy: GalleryStore {
     func stub(deletionError: Error? = nil,
               insertionError: Error? = nil,
               retrivalError: Error? = nil,
-              retrivalReturn: LocalCache? = nil) {
+              retrivalReturn: LocalGalleryCache? = nil) {
         stub = Stub(deletionError: deletionError,
                     insertionError: insertionError,
                     retrivalError: retrivalError,
@@ -47,7 +47,7 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func insert(_ cache: LocalCache) throws {
+    public func insert(_ cache: LocalGalleryCache) throws {
         receivedMessages.append(.insert(cache))
         
         if let error = stub?.insertionError {
@@ -55,7 +55,7 @@ final class GalleryStoreSpy: GalleryStore {
         }
     }
     
-    public func retrieve() throws -> LocalCache? {
+    public func retrieve() throws -> LocalGalleryCache? {
         receivedMessages.append(.retrieve)
         
         if let error = stub?.retrivalError {
@@ -65,6 +65,6 @@ final class GalleryStoreSpy: GalleryStore {
         }
         
         // If there's no return or error, cache is empty!
-        return LocalCache(gallery: [], timestamp: Date())
+        return LocalGalleryCache(gallery: [], timestamp: Date())
     }
 }
