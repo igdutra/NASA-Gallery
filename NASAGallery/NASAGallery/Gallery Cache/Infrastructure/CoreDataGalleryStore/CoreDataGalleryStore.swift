@@ -14,13 +14,10 @@ import CoreData
 // TODO: codegen, manual
 
 public final class CoreDataGalleryStore: GalleryStore {
-    
-    private let storeBundle: Bundle
-    private let storeURL: URL
-    
-    public init(storeBundle: Bundle, storeURL: URL) throws {
-        self.storeBundle = storeBundle
-        self.storeURL = storeURL
+    private let container: NSPersistentContainer
+
+    public init(storeBundle: Bundle = .main, storeURL: URL) throws {
+        container = try NSPersistentContainer.load(modelName: "GalleryStore")
     }
     
     // MARK: - Gallery Store
@@ -38,4 +35,25 @@ public final class CoreDataGalleryStore: GalleryStore {
     }
     
     // MARK: - Helpers
+}
+
+// MARK: - NSPersistentContainer
+
+private extension NSPersistentContainer {
+    static func load(modelName: String) throws -> NSPersistentContainer {
+        let container = NSPersistentContainer(name: modelName)
+        var loadError: Error?
+        
+        container.loadPersistentStores { _, error in
+            if let error {
+                loadError = error
+            }
+        }
+        
+        if let loadError {
+            throw loadError
+        }
+
+        return container
+    }
 }
