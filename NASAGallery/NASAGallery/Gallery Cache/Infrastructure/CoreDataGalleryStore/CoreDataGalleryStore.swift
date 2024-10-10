@@ -15,9 +15,11 @@ import CoreData
 
 public final class CoreDataGalleryStore: GalleryStore {
     private let container: NSPersistentContainer
+    private let context: NSManagedObjectContext
 
     public init(storeBundle: Bundle = .main, storeURL: URL) throws {
         container = try NSPersistentContainer.load(modelName: "GalleryStore")
+        context = container.newBackgroundContext()
     }
     
     // MARK: - Gallery Store
