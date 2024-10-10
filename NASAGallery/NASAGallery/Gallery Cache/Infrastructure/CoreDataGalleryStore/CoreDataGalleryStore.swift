@@ -10,15 +10,12 @@ import CoreData
 // TODO: add this optimization  // Verify that the context has uncommitted changes.
 //guard persistentContainer.viewContext.hasChanges else { return }
 
-// TODO: add on wiki step by step: add file "data model"
-// TODO: codegen, manual
-
 public final class CoreDataGalleryStore: GalleryStore {
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
 
     public init(storeBundle: Bundle = .main, storeURL: URL) throws {
-        container = try NSPersistentContainer.load(modelName: "GalleryStore")
+        container = try NSPersistentContainer.load(modelName: "GalleryStore", storeURL: storeURL)
         context = container.newBackgroundContext()
     }
     
@@ -42,10 +39,14 @@ public final class CoreDataGalleryStore: GalleryStore {
 // MARK: - NSPersistentContainer
 
 private extension NSPersistentContainer {
-    static func load(modelName: String) throws -> NSPersistentContainer {
+    static func load(modelName: String, storeURL: URL) throws -> NSPersistentContainer {
         let container = NSPersistentContainer(name: modelName)
-        var loadError: Error?
         
+        // Inject the /dev/null
+        let storeDescription = NSPersistentStoreDescription(url: storeURL)
+        container.persistentStoreDescriptions = [storeDescription]
+        
+        var loadError: Error?
         container.loadPersistentStores { _, error in
             if let error {
                 loadError = error
