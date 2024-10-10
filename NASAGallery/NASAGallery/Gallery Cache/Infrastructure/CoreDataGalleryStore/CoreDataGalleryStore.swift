@@ -41,6 +41,7 @@ public final class CoreDataGalleryStore: GalleryStore {
 private extension NSPersistentContainer {
     static func load(modelName: String, storeURL: URL) throws -> NSPersistentContainer {
         let container = NSPersistentContainer(name: modelName)
+        // TODO: most likely need to inject not only the modelname but the managed object model too, with the current bundle, but i want to see a failing test first.
         
         // Inject the /dev/null
         let storeDescription = NSPersistentStoreDescription(url: storeURL)
