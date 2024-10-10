@@ -47,16 +47,9 @@ private extension NSPersistentContainer {
         container.persistentStoreDescriptions = [storeDescription]
         
         var loadError: Error?
-        container.loadPersistentStores { _, error in
-            if let error {
-                loadError = error
-            }
-        }
+        container.loadPersistentStores { loadError = $1 }
+        try loadError.map { throw $0 }
         
-        if let loadError {
-            throw loadError
-        }
-
         return container
     }
 }
