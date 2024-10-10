@@ -2,11 +2,11 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23H124" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CoreDataStoredGalleryCache" representedClassName="CoreDataStoredGalleryCache" syncable="YES">
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="gallery" toMany="YES" deletionRule="Cascade" destinationEntity="CoreDataStoredGalleryImage" inverseName="cache" inverseEntity="CoreDataStoredGalleryImage"/>
+        <relationship name="gallery" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="CoreDataStoredGalleryImage" inverseName="cache" inverseEntity="CoreDataStoredGalleryImage"/>
     </entity>
     <entity name="CoreDataStoredGalleryImage" representedClassName="CoreDataStoredGalleryImage" syncable="YES">
         <attribute name="copyright" optional="YES" attributeType="String"/>
-        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" attributeType="String"/>
         <attribute name="explanation" attributeType="String"/>
         <attribute name="hdurl" optional="YES" attributeType="URI"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>

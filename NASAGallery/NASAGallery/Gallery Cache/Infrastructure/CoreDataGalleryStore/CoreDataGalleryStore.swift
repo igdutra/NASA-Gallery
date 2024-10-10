@@ -7,8 +7,8 @@
 
 import CoreData
 
-// TODO: add this optimization  // Verify that the context has uncommitted changes.
-//guard persistentContainer.viewContext.hasChanges else { return }
+
+// TODO: verify new unique instance.
 
 public final class CoreDataGalleryStore: GalleryStore {
     private let container: NSPersistentContainer
@@ -26,14 +26,75 @@ public final class CoreDataGalleryStore: GalleryStore {
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
-        
+        try await context.perform { [context] in
+            let storedImages = cache.gallery.map {
+                CoreDataStoredGalleryImage(context: context, image: $0)
+            }
+            
+            let storedCache = CoreDataStoredGalleryCache(context: context)
+            storedCache.timestamp =  cache.timestamp
+            storedCache.gallery = NSOrderedSet(array: storedImages)
+            
+            guard context.hasChanges else { return }
+            
+            try context.save()
+        }
     }
     
     public func retrieve() async throws -> LocalGalleryCache? {
-        return nil
+        return try await context.perform { [context] in
+            let storedCache = try CoreDataStoredGalleryCache.find(in: context)
+            
+            let gallery = storedCache?.gallery.compactMap { item -> LocalGalleryImage? in
+                guard let galleryImage = item as? CoreDataStoredGalleryImage else { return nil }
+                return LocalGalleryImage(
+                    title: galleryImage.title,
+                    url: galleryImage.url,
+                    date: galleryImage.date,
+                    explanation: galleryImage.explanation,
+                    mediaType: galleryImage.mediaType,
+                    copyright: galleryImage.copyright,
+                    hdurl: galleryImage.hdurl,
+                    thumbnailUrl: galleryImage.thumbnailUrl
+                )
+            }
+            
+            // TODO: improve that with map + right mappers
+            if let storedCache, let gallery {
+                return LocalGalleryCache(gallery: gallery, timestamp: storedCache.timestamp)
+            }
+            else {
+                return nil
+            }
+        }
     }
-    
-    // MARK: - Helpers
+}
+
+extension CoreDataStoredGalleryCache {
+    // Note: by wrapping the fetch with a function that returns optional, we are able to return nil inside the retrieve
+    static func find(in context: NSManagedObjectContext) throws -> CoreDataStoredGalleryCache? {
+        let request = NSFetchRequest<CoreDataStoredGalleryCache>(entityName: entity().name!)
+        request.returnsObjectsAsFaults = false
+        return try context.fetch(request).first
+    }
+}
+
+// MARK: - Helpers
+
+private extension CoreDataStoredGalleryImage {
+    convenience init(context: NSManagedObjectContext, image: LocalGalleryImage) {
+        self.init(context: context)
+        copyright = image.copyright
+        date = image.date
+        explanation = image.explanation
+        hdurl = image.hdurl
+        // TODO: image will be done later in time
+        imageData = nil
+        mediaType = image.mediaType
+        thumbnailUrl = image.thumbnailUrl
+        title = image.title
+        url = image.url
+    }
 }
 
 // MARK: - CoreData Initialization: NSPersistentContainer & NSManagedObjectModel

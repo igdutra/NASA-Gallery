@@ -25,12 +25,14 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         await assertThatRetrieveHasNoSideEffectOnEmptyCache(on: sut)
     }
     
-    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws {
+    func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
         
     }
     
-    func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
+    func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws {
+        let sut = try makeSUT()
         
+        await assertThatRetrieveSucceedsWithCacheOnNonEmptyCache(on: sut)
     }
     
     func test_retrieve_onRetrivalError_fails() async throws {
