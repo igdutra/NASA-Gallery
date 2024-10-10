@@ -15,7 +15,7 @@ public final class CoreDataGalleryStore: GalleryStore {
     private let context: NSManagedObjectContext
 
     public init(storeBundle: Bundle = .main, storeURL: URL) throws {
-        container = try NSPersistentContainer.load(modelName: "GalleryStore", storeURL: storeURL)
+        container = try NSPersistentContainer.load(modelName: "GalleryStore", in: storeBundle, storeURL: storeURL)
         context = container.newBackgroundContext()
     }
     
@@ -36,12 +36,20 @@ public final class CoreDataGalleryStore: GalleryStore {
     // MARK: - Helpers
 }
 
-// MARK: - NSPersistentContainer
+// MARK: - CoreData Initialization: NSPersistentContainer & NSManagedObjectModel
 
 private extension NSPersistentContainer {
-    static func load(modelName: String, storeURL: URL) throws -> NSPersistentContainer {
-        let container = NSPersistentContainer(name: modelName)
-        // TODO: most likely need to inject not only the modelname but the managed object model too, with the current bundle, but i want to see a failing test first.
+    enum LoadingError: Error {
+        case modelNotFound
+        case failedToLoadPersistentStores(Error)
+    }
+    
+    static func load(modelName: String, in bundle: Bundle, storeURL: URL) throws -> NSPersistentContainer {
+        guard let model = NSManagedObjectModel.with(name: modelName, in: bundle) else {
+            throw LoadingError.modelNotFound
+        }
+        
+        let container = NSPersistentContainer(name: modelName, managedObjectModel: model)
         
         // Inject the /dev/null
         let storeDescription = NSPersistentStoreDescription(url: storeURL)
@@ -52,5 +60,13 @@ private extension NSPersistentContainer {
         try loadError.map { throw $0 }
         
         return container
+    }
+}
+
+private extension NSManagedObjectModel {
+    static func with(name: String, in bundle: Bundle) -> NSManagedObjectModel? {
+        return bundle
+            .url(forResource: name, withExtension: "momd")
+            .flatMap { NSManagedObjectModel(contentsOf: $0) }
     }
 }
