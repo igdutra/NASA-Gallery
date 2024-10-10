@@ -23,6 +23,8 @@ public final class CoreDataGalleryStore: GalleryStore {
         self.storeURL = storeURL
     }
     
+    // MARK: - Gallery Store
+    
     public func delete() async throws {
         
     }
@@ -34,4 +36,6 @@ public final class CoreDataGalleryStore: GalleryStore {
     public func retrieve() async throws -> LocalGalleryCache? {
         return nil
     }
+    
+    // MARK: - Helpers
 }

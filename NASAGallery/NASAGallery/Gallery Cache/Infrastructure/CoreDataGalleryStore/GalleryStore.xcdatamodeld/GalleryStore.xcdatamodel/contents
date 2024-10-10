@@ -8,10 +8,10 @@
         <attribute name="copyright" optional="YES" attributeType="String"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="explanation" attributeType="String"/>
-        <attribute name="hdurl" optional="YES" attributeType="String"/>
+        <attribute name="hdurl" optional="YES" attributeType="URI"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="mediaType" attributeType="String"/>
-        <attribute name="thumbnailUrl" optional="YES" attributeType="String"/>
+        <attribute name="thumbnailUrl" optional="YES" attributeType="URI"/>
         <attribute name="title" attributeType="String"/>
         <attribute name="url" attributeType="URI"/>
         <relationship name="cache" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataStoredGalleryCache" inverseName="gallery" inverseEntity="CoreDataStoredGalleryCache"/>
