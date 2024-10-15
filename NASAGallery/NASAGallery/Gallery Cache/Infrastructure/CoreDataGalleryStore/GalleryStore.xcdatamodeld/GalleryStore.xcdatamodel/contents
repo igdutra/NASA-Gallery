@@ -6,7 +6,7 @@
     </entity>
     <entity name="CoreDataStoredGalleryImage" representedClassName="CoreDataStoredGalleryImage" syncable="YES">
         <attribute name="copyright" optional="YES" attributeType="String"/>
-        <attribute name="date" attributeType="String"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="explanation" attributeType="String"/>
         <attribute name="hdurl" optional="YES" attributeType="URI"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>

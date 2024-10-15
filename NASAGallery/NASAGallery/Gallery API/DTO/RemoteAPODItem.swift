@@ -11,7 +11,7 @@ import Foundation
 struct RemoteAPODItem: Decodable {
     let title: String
     let url: URL
-    let date: String
+    let date: Date
     let explanation: String
     let mediaType: String
     let copyright: String?

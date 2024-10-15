@@ -47,7 +47,7 @@ public actor CodableGalleryStore: GalleryStore {
     private struct CodableLocalGalleryImage: Codable {
         let title: String
         let url: URL
-        let date: String
+        let date: Date
         let explanation: String
         let mediaType: String
         

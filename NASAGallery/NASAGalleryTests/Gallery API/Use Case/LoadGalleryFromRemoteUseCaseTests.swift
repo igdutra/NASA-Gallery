@@ -168,19 +168,19 @@ private extension LoadGalleryFromRemoteUseCaseTests {
                     file: StaticString = #filePath, line: UInt = #line) async {
         let sut = makeSUT(withSuccessfulClientResponse: clientResponse, file: file, line: line)
         
-        await assertLoadFrom(sut,
-                             toThrow: expectedError)
+        await assertLoadFrom(sut, toThrow: expectedError, file: file, line: line)
     }
-    
+
     func assertLoadFrom(_ sut: RemoteGalleryLoader,
-                        toThrow expectedError: RemoteGalleryLoader.Error) async {
+                        toThrow expectedError: RemoteGalleryLoader.Error,
+                        file: StaticString = #filePath, line: UInt = #line) async {
         do {
             _ = try await sut.load()
             XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
         } catch let error as RemoteGalleryLoader.Error {
             XCTAssertEqual(error, expectedError)
         } catch {
-            XCTFail("Expected RemoteGalleryLoader.Error but returned \(error) instead")
+            XCTFail("Expected \(expectedError) but returned \(error) instead", file: file, line: line)
         }
     }
     
@@ -193,7 +193,7 @@ private extension LoadGalleryFromRemoteUseCaseTests {
             let images = try await sut.load()
             XCTAssertEqual(images, expectedImages)
         } catch {
-            XCTFail("Expected Success but returned \(error) instead")
+            XCTFail("Expected Success but returned \(error) instead", file: file, line: line)
         }
     }
 }

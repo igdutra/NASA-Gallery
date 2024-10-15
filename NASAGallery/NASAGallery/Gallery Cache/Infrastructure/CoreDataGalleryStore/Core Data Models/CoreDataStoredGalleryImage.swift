@@ -11,8 +11,7 @@ import CoreData
 final class CoreDataStoredGalleryImage: NSManagedObject {
     @NSManaged public var title: String
     @NSManaged public var url: URL
-    #warning("fix date format")
-    @NSManaged public var date: String
+    @NSManaged public var date: Date
     @NSManaged public var explanation: String
     @NSManaged public var mediaType: String
 
