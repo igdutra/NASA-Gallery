@@ -95,16 +95,18 @@ final class LoadGalleryFromRemoteUseCaseTests: XCTestCase {
         // Note: .forEach() method expects a synchronous closure
         for code in samples {
             let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: code), data: Data())
-            await assertLoad(toThrow: .invalidData,
+            await assertLoad(toThrow: .invalidData(underlying: URLError(.badServerResponse)),
                              whenClientReturnsWithResponse: clientResponse)
         }
     }
-    
+        
     func test_load_on200HTTPResponseWithInvalidJSON_failsWithInvalidDataError() async {
         let invalidJSON = invalidJSON()
         let clientResponse = SuccessResponse(response: HTTPURLResponse(statusCode: 200), data: invalidJSON)
+        // Noto: this is not the real issue.
+        let underlyingError = DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Invalid JSON"))
         
-        await assertLoad(toThrow: .invalidData,
+        await assertLoad(toThrow: .invalidData(underlying: underlyingError),
                          whenClientReturnsWithResponse: clientResponse)
     }
     
@@ -178,7 +180,7 @@ private extension LoadGalleryFromRemoteUseCaseTests {
             _ = try await sut.load()
             XCTFail("Expected RemoteGalleryLoader.Error but returned successfully instead")
         } catch let error as RemoteGalleryLoader.Error {
-            XCTAssertEqual(error, expectedError)
+            XCTAssertEqual(error, expectedError, file: file, line: line)
         } catch {
             XCTFail("Expected \(expectedError) but returned \(error) instead", file: file, line: line)
         }
@@ -233,5 +235,20 @@ private extension LoadGalleryFromRemoteUseCaseTests {
             }
         }
     }
-    
+}
+
+// MARK: - Error Extension
+
+extension RemoteGalleryLoader.Error: Equatable {
+    // Note: TradeOff: compare in the tests just the type, but for debugging this is helpful information
+    public static func == (lhs: RemoteGalleryLoader.Error, rhs: RemoteGalleryLoader.Error) -> Bool {
+        switch (lhs, rhs) {
+        case (.connectivity, .connectivity):
+            return true
+        case (.invalidData, .invalidData):
+            return true
+        default:
+            return false
+        }
+    }
 }

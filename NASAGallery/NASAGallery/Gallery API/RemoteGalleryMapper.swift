@@ -13,15 +13,18 @@ enum RemoteGalleryMapper {
     
     public static func map(_ data: Data, response: HTTPURLResponse) throws -> [RemoteAPODItem] {
         guard response.statusCode == OK_200 else {
-            throw RemoteGalleryLoader.Error.invalidData
+            throw RemoteGalleryLoader.Error.invalidData(underlying: URLError(.badServerResponse))
         }
         
         let decoder = JSONDecoder()        
         decoder.dateDecodingStrategy = .formatted(DateFormatter.remoteAPODDateFormatter)
         
-        let items = try decoder.decode([RemoteAPODItem].self, from: data)
-        
-        return items
+        do {
+            let items = try decoder.decode([RemoteAPODItem].self, from: data)
+            return items
+        } catch {
+            throw RemoteGalleryLoader.Error.invalidData(underlying: error)
+        }
     }
 }
 
