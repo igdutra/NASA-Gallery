@@ -27,7 +27,7 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         try await context.perform { [context] in
-            let storedCache = CoreDataStoredGalleryCache.from(local: cache, in: context)
+            let storedCache = CoreDataMapper.storedCache(from: cache, in: context)
             
             guard context.hasChanges else { return }
             
