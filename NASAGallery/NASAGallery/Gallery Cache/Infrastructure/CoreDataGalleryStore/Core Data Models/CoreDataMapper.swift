@@ -11,14 +11,16 @@ enum CoreDataMapper {
     
     // MARK: - Stored to Local
     
-    static func localImages(from cache: CoreDataStoredGalleryCache) -> [LocalGalleryImage] {
-        cache.gallery.compactMap { element in
-            guard let image = element as? CoreDataStoredGalleryImage else { return nil }
-            return localImage(from: image)
-        }
+    static func toLocalCache(from storedCache: CoreDataStoredGalleryCache) -> LocalGalleryCache {
+        let images = toLocalImages(from: storedCache)
+        return LocalGalleryCache(gallery: images, timestamp: storedCache.timestamp)
     }
     
-    static func localImage(from storedImage: CoreDataStoredGalleryImage) -> LocalGalleryImage {
+    static func toLocalImages(from cache: CoreDataStoredGalleryCache) -> [LocalGalleryImage] {
+        cache.gallery.compactMap { $0 as? CoreDataStoredGalleryImage }.map(toLocalImage(from:))
+    }
+    
+    static func toLocalImage(from storedImage: CoreDataStoredGalleryImage) -> LocalGalleryImage {
         LocalGalleryImage(
             title: storedImage.title,
             url: storedImage.url,
@@ -31,33 +33,30 @@ enum CoreDataMapper {
         )
     }
     
-    static func localCache(from storedCache: CoreDataStoredGalleryCache) -> LocalGalleryCache {
-        let images = localImages(from: storedCache)
-        return LocalGalleryCache(gallery: images, timestamp: storedCache.timestamp)
-    }
-    
     // MARK: - Local to Stored
     
-    static func storedCache(from localCache: LocalGalleryCache, in context: NSManagedObjectContext) -> CoreDataStoredGalleryCache {
-        let storedImages: [CoreDataStoredGalleryImage] = localCache.gallery.map { local in
-            let storedImage = CoreDataStoredGalleryImage(context: context)
-            storedImage.copyright = local.copyright
-            storedImage.date = local.date
-            storedImage.explanation = local.explanation
-            storedImage.hdurl = local.hdurl
-            // TODO: image will be done later in time
-            storedImage.imageData = nil
-            storedImage.mediaType = local.mediaType
-            storedImage.thumbnailUrl = local.thumbnailUrl
-            storedImage.title = local.title
-            storedImage.url = local.url
-            return storedImage
-        }
+    static func toStoredCache(from localCache: LocalGalleryCache, in context: NSManagedObjectContext) -> CoreDataStoredGalleryCache {
+        let storedImages = localCache.gallery.map { toStoredImage(from: $0, in: context) }
         
         let storedCache = CoreDataStoredGalleryCache(context: context)
         storedCache.timestamp = localCache.timestamp
         storedCache.gallery = NSOrderedSet(array: storedImages)
         
         return storedCache
+    }
+    
+    static func toStoredImage(from localImage: LocalGalleryImage, in context: NSManagedObjectContext) -> CoreDataStoredGalleryImage {
+        let storedImage = CoreDataStoredGalleryImage(context: context)
+        storedImage.copyright = localImage.copyright
+        storedImage.date = localImage.date
+        storedImage.explanation = localImage.explanation
+        storedImage.hdurl = localImage.hdurl
+        // TODO: image will be done later in time
+        storedImage.imageData = nil
+        storedImage.mediaType = localImage.mediaType
+        storedImage.thumbnailUrl = localImage.thumbnailUrl
+        storedImage.title = localImage.title
+        storedImage.url = localImage.url
+        return storedImage
     }
 }

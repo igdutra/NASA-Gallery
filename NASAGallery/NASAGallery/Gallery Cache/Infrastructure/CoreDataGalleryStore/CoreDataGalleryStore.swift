@@ -27,7 +27,7 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         try await context.perform { [context] in
-            let storedCache = CoreDataMapper.storedCache(from: cache, in: context)
+            let storedCache = CoreDataMapper.toStoredCache(from: cache, in: context)
             
             guard context.hasChanges else { return }
             
@@ -38,8 +38,8 @@ public final class CoreDataGalleryStore: GalleryStore {
     public func retrieve() async throws -> LocalGalleryCache? {
         return try await context.perform { [context] in
             let storedCache = try CoreDataStoredGalleryCache.find(in: context)
-            
-            return storedCache.map(CoreDataMapper.localCache(from:))
+    
+            return storedCache.map(CoreDataMapper.toLocalCache(from:))
         }
     }
 }
