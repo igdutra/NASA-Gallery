@@ -27,13 +27,7 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         try await context.perform { [context] in
-            let storedImages = cache.gallery.map {
-                CoreDataStoredGalleryImage(context: context, image: $0)
-            }
-            
-            let storedCache = CoreDataStoredGalleryCache(context: context)
-            storedCache.timestamp =  cache.timestamp
-            storedCache.gallery = NSOrderedSet(array: storedImages)
+            let storedCache = CoreDataStoredGalleryCache.from(local: cache, in: context)
             
             guard context.hasChanges else { return }
             
@@ -70,30 +64,14 @@ public final class CoreDataGalleryStore: GalleryStore {
     }
 }
 
+// MARK: - Helpers
+
 extension CoreDataStoredGalleryCache {
     // Note: by wrapping the fetch with a function that returns optional, we are able to return nil inside the retrieve
     static func find(in context: NSManagedObjectContext) throws -> CoreDataStoredGalleryCache? {
         let request = NSFetchRequest<CoreDataStoredGalleryCache>(entityName: entity().name!)
         request.returnsObjectsAsFaults = false
         return try context.fetch(request).first
-    }
-}
-
-// MARK: - Helpers
-
-private extension CoreDataStoredGalleryImage {
-    convenience init(context: NSManagedObjectContext, image: LocalGalleryImage) {
-        self.init(context: context)
-        copyright = image.copyright
-        date = image.date
-        explanation = image.explanation
-        hdurl = image.hdurl
-        // TODO: image will be done later in time
-        imageData = nil
-        mediaType = image.mediaType
-        thumbnailUrl = image.thumbnailUrl
-        title = image.title
-        url = image.url
     }
 }
 
