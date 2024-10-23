@@ -39,27 +39,7 @@ public final class CoreDataGalleryStore: GalleryStore {
         return try await context.perform { [context] in
             let storedCache = try CoreDataStoredGalleryCache.find(in: context)
             
-            let gallery = storedCache?.gallery.compactMap { item -> LocalGalleryImage? in
-                guard let galleryImage = item as? CoreDataStoredGalleryImage else { return nil }
-                return LocalGalleryImage(
-                    title: galleryImage.title,
-                    url: galleryImage.url,
-                    date: galleryImage.date,
-                    explanation: galleryImage.explanation,
-                    mediaType: galleryImage.mediaType,
-                    copyright: galleryImage.copyright,
-                    hdurl: galleryImage.hdurl,
-                    thumbnailUrl: galleryImage.thumbnailUrl
-                )
-            }
-            
-            // TODO: improve that with map + right mappers
-            if let storedCache, let gallery {
-                return LocalGalleryCache(gallery: gallery, timestamp: storedCache.timestamp)
-            }
-            else {
-                return nil
-            }
+            return storedCache.map(CoreDataMapper.localCache(from:))
         }
     }
 }

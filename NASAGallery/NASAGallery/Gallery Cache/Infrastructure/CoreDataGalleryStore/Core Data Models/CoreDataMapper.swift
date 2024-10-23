@@ -9,7 +9,14 @@ import CoreData
 
 enum CoreDataMapper {
     
-    // MARK: - Local to Stored
+    // MARK: - Stored to Local
+    
+    static func localImages(from cache: CoreDataStoredGalleryCache) -> [LocalGalleryImage] {
+        cache.gallery.compactMap { element in
+            guard let image = element as? CoreDataStoredGalleryImage else { return nil }
+            return localImage(from: image)
+        }
+    }
     
     static func localImage(from storedImage: CoreDataStoredGalleryImage) -> LocalGalleryImage {
         LocalGalleryImage(
@@ -24,7 +31,12 @@ enum CoreDataMapper {
         )
     }
     
-    // MARK: - Stored to Local
+    static func localCache(from storedCache: CoreDataStoredGalleryCache) -> LocalGalleryCache {
+        let images = localImages(from: storedCache)
+        return LocalGalleryCache(gallery: images, timestamp: storedCache.timestamp)
+    }
+    
+    // MARK: - Local to Stored
     
     static func storedCache(from localCache: LocalGalleryCache, in context: NSManagedObjectContext) -> CoreDataStoredGalleryCache {
         let storedImages: [CoreDataStoredGalleryImage] = localCache.gallery.map { local in
