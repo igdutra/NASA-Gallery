@@ -52,7 +52,9 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // MARK: - Insert
     
     func test_insert_onEmptyCache_succeedsWithNoThrow() async throws {
+        let sut = try makeSUT()
         
+        try await assertThatInsertSucceedsOnEmptyCache(on: sut)
     }
     
     func test_insert_onNonEmptyCache_succeedsWithNoThrow() async throws {
