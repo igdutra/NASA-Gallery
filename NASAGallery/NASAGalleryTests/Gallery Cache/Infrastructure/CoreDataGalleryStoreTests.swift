@@ -8,6 +8,18 @@
 import XCTest
 import NASAGallery
 
+/* Author notes on CoreDataGalleryStoreTests
+ 
+ Per Caio's comment:
+ it’s not straightforward to force erros in Core Data.
+ It requires techniques like swizzling, which are not ideal.
+ And the risk is very low here because it should just complete with the error without any behavior.
+ So we decided it was best not to test the error cases since it’s not possible without not ideal solutions.
+ 
+ Implementing the failable tests once the entire normal feedspec suit is done!
+ 
+ */
+
 final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     
     // MARK: - Retrieve
@@ -37,14 +49,6 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
         await assertThatRetrieveHasNoSideEffectOnNonEmptyCache(on: sut)
     }
     
-    func test_retrieve_onRetrivalError_fails() async throws {
-    
-    }
-    
-    func test_retrieve_onRetrivalError_hasNoSideEffects() async throws {
-    
-    }
-    
     // MARK: - Insert
     
     func test_insert_onEmptyCache_succeedsWithNoThrow() async throws {
@@ -56,14 +60,6 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
-        
-    }
-    
-    func test_insert_onInsertionError_fails() async throws {
-        
-    }
-    
-    func test_insert_onInsertionError_hasNoSideEffects() async throws {
         
     }
     
@@ -82,6 +78,24 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
+        
+    }
+    
+    // MARK: - Failable tests - Swizzling
+    
+    func test_retrieve_onRetrivalError_fails() async throws {
+    
+    }
+    
+    func test_retrieve_onRetrivalError_hasNoSideEffects() async throws {
+    
+    }
+    
+    func test_insert_onInsertionError_fails() async throws {
+        
+    }
+    
+    func test_insert_onInsertionError_hasNoSideEffects() async throws {
         
     }
     
