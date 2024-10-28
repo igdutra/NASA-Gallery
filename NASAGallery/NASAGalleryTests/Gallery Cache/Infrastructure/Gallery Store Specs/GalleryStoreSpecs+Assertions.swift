@@ -95,9 +95,16 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on sut: GalleryStore,
                                                                file: StaticString = #file, line: UInt = #line) async throws {
-        let previousInsertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let previousInsertedCache = LocalGalleryCache(
+            gallery: uniqueLocalImages(title: "First inserted cache").local,
+            timestamp: Date()
+        )
         await insert(previousInsertedCache, to: sut)
-        let lastInsertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        let lastInsertedCache = LocalGalleryCache(
+            gallery: uniqueLocalImages(title: "This is the lastInsertedCache Image").local,
+            timestamp: Date()
+        )
         await insert(lastInsertedCache, to: sut)
 
         let retrievedCache = try await expectNoThrowAsync(try await sut.retrieve(),

@@ -64,7 +64,9 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_insert_onNonEmptyCache_succeedsWithOverridingPreviousCache() async throws {
-        
+        let sut = try makeSUT()
+
+        try await assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on: sut)
     }
     
     // MARK: - Delete

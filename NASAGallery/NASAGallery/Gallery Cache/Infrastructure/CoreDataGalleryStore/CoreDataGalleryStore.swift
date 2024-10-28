@@ -22,10 +22,28 @@ public final class CoreDataGalleryStore: GalleryStore {
     // MARK: - Gallery Store
     
     public func delete() async throws {
+        try await context.perform { [context] in
+            try CoreDataStoredGalleryCache
+                .find(in: context)
+                .map(context.delete)
+                .map(context.save)
+            // Note: in a normal scenario would make sense to use context.hasChanges but here, since delete will only get executed if there's a value, then there's no need to check it first.
+        }
         
+        // Note: this replaces
+        /*
+         try await context.perform { [context] in
+                if let storedCache = try CoreDataStoredGalleryCache.find(in: context) {
+                    context.delete(storedCache)
+                    guard context.hasChanges else { return }
+                    try context.save()
+                }
+            }
+         */
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
+        try await delete() // Ensure that Insert will override existing cache
         try await context.perform { [context] in
             _ = CoreDataMapper.toStoredCache(from: cache, in: context)
             
@@ -50,7 +68,7 @@ extension CoreDataStoredGalleryCache {
     // Note: by wrapping the fetch with a function that returns optional, we are able to return nil inside the retrieve
     static func find(in context: NSManagedObjectContext) throws -> CoreDataStoredGalleryCache? {
         let request = NSFetchRequest<CoreDataStoredGalleryCache>(entityName: entity().name!)
-        request.returnsObjectsAsFaults = false
+        request.returnsObjectsAsFaults = false // Core Data optimization
         return try context.fetch(request).first
     }
 }
