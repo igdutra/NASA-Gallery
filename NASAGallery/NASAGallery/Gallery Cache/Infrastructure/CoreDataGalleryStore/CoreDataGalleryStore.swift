@@ -7,9 +7,6 @@
 
 import CoreData
 
-
-// TODO: verify new unique instance.
-
 public final class CoreDataGalleryStore: GalleryStore {
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
@@ -23,28 +20,16 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func delete() async throws {
         try await context.perform { [context] in
-            try CoreDataStoredGalleryCache
-                .find(in: context)
-                .map(context.delete)
-                .map(context.save)
+            try CoreDataStoredGalleryCache.deleteCache(in: context)
+            try context.save()
             // Note: in a normal scenario would make sense to use context.hasChanges but here, since delete will only get executed if there's a value, then there's no need to check it first.
         }
-        
-        // Note: this replaces
-        /*
-         try await context.perform { [context] in
-                if let storedCache = try CoreDataStoredGalleryCache.find(in: context) {
-                    context.delete(storedCache)
-                    guard context.hasChanges else { return }
-                    try context.save()
-                }
-            }
-         */
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
-        try await delete() // Ensure that Insert will override existing cache
         try await context.perform { [context] in
+            try CoreDataStoredGalleryCache.deleteCache(in: context)
+            
             _ = CoreDataMapper.toStoredCache(from: cache, in: context)
             
             guard context.hasChanges else { return }
@@ -70,6 +55,11 @@ extension CoreDataStoredGalleryCache {
         let request = NSFetchRequest<CoreDataStoredGalleryCache>(entityName: entity().name!)
         request.returnsObjectsAsFaults = false // Core Data optimization
         return try context.fetch(request).first
+    }
+    
+    // Note: to optimize insert function, we do not use the public API, so that we can save the context only once.
+    static func deleteCache(in context: NSManagedObjectContext) throws {
+        try find(in: context).map(context.delete)
     }
 }
 
@@ -107,3 +97,23 @@ private extension NSManagedObjectModel {
             .flatMap { NSManagedObjectModel(contentsOf: $0) }
     }
 }
+
+// MARK: - Note on functional approach
+/*
+ 
+// old approach:
+try await context.perform { [context] in
+    if let storedCache = try CoreDataStoredGalleryCache.find(in: context) {
+        context.delete(storedCache)
+        guard context.hasChanges else { return }
+        try context.save()
+    }
+}
+// was replaced by
+ try CoreDataStoredGalleryCache
+     .find(in: context)
+     .map(context.delete)
+     .map(context.save)
+ 
+ Now both of these were placed in favor of deleteCache helper, enforcing that on insert, we call context.save only once.
+*/
