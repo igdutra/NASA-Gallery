@@ -90,7 +90,9 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
+        let sut = try makeSUT()
         
+        try await assertThatDeleteHasNoSideEffectOnNonEmptyCache(on: sut)
     }
     
     // MARK: - Failable tests - Swizzling
