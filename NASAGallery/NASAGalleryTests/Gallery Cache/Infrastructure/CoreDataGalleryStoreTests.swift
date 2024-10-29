@@ -72,7 +72,9 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // MARK: - Delete
 
     func test_delete_onEmptyCache_succeeds() async throws {
+        let sut = try makeSUT()
         
+        try await assertThatDeleteSucceedsOnEmptyCache(on: sut)
     }
     
     func test_delete_onEmptyCache_hasNoSideEffects() async throws {

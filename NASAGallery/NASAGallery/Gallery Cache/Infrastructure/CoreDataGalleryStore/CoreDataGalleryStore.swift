@@ -49,6 +49,8 @@ public final class CoreDataGalleryStore: GalleryStore {
 
 // MARK: - Helpers
 
+// TODO: should the deleteCache func need to be an extension of the type?
+// Verify in the challenge where I placed these helper functions.
 extension CoreDataStoredGalleryCache {
     // Note: by wrapping the fetch with a function that returns optional, we are able to return nil inside the retrieve
     static func find(in context: NSManagedObjectContext) throws -> CoreDataStoredGalleryCache? {
