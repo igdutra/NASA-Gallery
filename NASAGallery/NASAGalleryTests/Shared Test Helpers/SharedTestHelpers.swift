@@ -65,5 +65,16 @@ extension Date {
     func adding(seconds: TimeInterval) -> Date {
         return self + seconds
     }
+    
+    static func from(_ dateString: String,
+                     format: String = "yyyy-MM-dd",
+                     timeZone: TimeZone = TimeZone(secondsFromGMT: 0)!,
+                     locale: Locale = Locale(identifier: "en_US_POSIX")) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.timeZone = timeZone
+        dateFormatter.locale = locale
+        return dateFormatter.date(from: dateString)
+    }
 }
 

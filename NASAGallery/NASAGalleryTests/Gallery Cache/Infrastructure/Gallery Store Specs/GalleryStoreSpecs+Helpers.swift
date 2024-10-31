@@ -13,7 +13,7 @@ import NASAGallery
 extension GalleryStoreSpecs where Self: XCTestCase {
     
     func expect(_ sut: GalleryStore,
-                toRetrieve expectedResult: LocalCache?,
+                toRetrieve expectedResult: LocalGalleryCache?,
                 _ comment: String,
                 file: StaticString = #filePath, line: UInt = #line) async {
         do {
@@ -25,7 +25,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     }
     
     func expect(_ sut: GalleryStore,
-                toRetrieveTwice expectedResult: LocalCache?,
+                toRetrieveTwice expectedResult: LocalGalleryCache?,
                 _ comment: String,
                 file: StaticString = #filePath, line: UInt = #line) async {
         do {
@@ -49,7 +49,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
         }
     }
     
-    func insert(_ expectedCache: LocalCache, to sut: GalleryStore, file: StaticString = #filePath, line: UInt = #line) async {
+    func insert(_ expectedCache: LocalGalleryCache, to sut: GalleryStore, file: StaticString = #filePath, line: UInt = #line) async {
         do {
             try await sut.insert(expectedCache)
         } catch {

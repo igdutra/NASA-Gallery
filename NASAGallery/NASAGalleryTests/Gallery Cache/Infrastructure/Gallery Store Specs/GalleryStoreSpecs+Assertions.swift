@@ -21,7 +21,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatRetrieveSucceedsWithCacheOnNonEmptyCache(on sut: GalleryStore,
                                                             file: StaticString = #file, line: UInt = #line) async {
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let expectedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
  
         await insert(expectedCache, to: sut, file: file, line: line)
         
@@ -41,7 +41,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatRetrieveHasNoSideEffectOnNonEmptyCache(on sut: GalleryStore,
                                                           file: StaticString = #file, line: UInt = #line) async {
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let expectedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         await insert(expectedCache, to: sut, file: file, line: line)
 
         await expect(sut,
@@ -75,7 +75,7 @@ extension FailableRetrieveGalleryStoreSpecs where Self: XCTestCase {
 extension GalleryStoreSpecs where Self: XCTestCase {
     func assertThatInsertSucceedsOnEmptyCache(on sut: GalleryStore,
                                               file: StaticString = #file, line: UInt = #line) async throws {
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let insertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
         try await expectNoThrowAsync(try await sut.insert(insertedCache),
                                      "Insertion should succeed",
@@ -84,10 +84,10 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatInsertSucceedsOnNonEmptyCache(on sut: GalleryStore,
                                                  file: StaticString = #file, line: UInt = #line) async throws {
-        let firstInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let firstInsertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         await insert(firstInsertedCache, to: sut)
         
-        let secondInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let secondInsertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         try await expectNoThrowAsync(try await sut.insert(secondInsertedCache),
                                      "Both insertions should succeed with no throw",
                                      file: file, line: line)
@@ -95,9 +95,16 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatInsertOverridesPreviousCacheOnNonEmptyCache(on sut: GalleryStore,
                                                                file: StaticString = #file, line: UInt = #line) async throws {
-        let previousInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let previousInsertedCache = LocalGalleryCache(
+            gallery: uniqueLocalImages(title: "First inserted cache").local,
+            timestamp: Date()
+        )
         await insert(previousInsertedCache, to: sut)
-        let lastInsertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        
+        let lastInsertedCache = LocalGalleryCache(
+            gallery: uniqueLocalImages(title: "This is the lastInsertedCache Image").local,
+            timestamp: Date()
+        )
         await insert(lastInsertedCache, to: sut)
 
         let retrievedCache = try await expectNoThrowAsync(try await sut.retrieve(),
@@ -113,7 +120,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
 extension FailableInsertGalleryStoreSpecs where Self: XCTestCase {
     func assertThatInsertFailsOnInsertionError(on sut: GalleryStore,
                                                file: StaticString = #file, line: UInt = #line) async {
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let insertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
         await expectThrowAsync(try await sut.insert(insertedCache),
                                "Insert should fail on no-write permission directory",
@@ -122,7 +129,7 @@ extension FailableInsertGalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatInsertHasNoSideEffectOnInsertionError(on sut: GalleryStore,
                                                          file: StaticString = #file, line: UInt = #line) async {
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let insertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         
         await expectThrowAsync(try await sut.insert(insertedCache),
                                "Insert should fail on no-write permission directory")
@@ -155,7 +162,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatDeleteSucceedsOnNonEmptyCache(on sut: GalleryStore,
                                                  file: StaticString = #file, line: UInt = #line) async throws {
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let insertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         await insert(insertedCache, to: sut)
        
         try await expectNoThrowAsync(try await sut.delete(),
@@ -165,7 +172,7 @@ extension GalleryStoreSpecs where Self: XCTestCase {
     
     func assertThatDeleteHasNoSideEffectOnNonEmptyCache(on sut: GalleryStore,
                                                         file: StaticString = #file, line: UInt = #line) async throws {
-        let insertedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        let insertedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
         await insert(insertedCache, to: sut)
         
         try await expectNoThrowAsync(try await sut.delete(),

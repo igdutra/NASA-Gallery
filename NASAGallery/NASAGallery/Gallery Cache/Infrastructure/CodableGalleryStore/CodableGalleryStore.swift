@@ -14,15 +14,15 @@ public actor CodableGalleryStore: GalleryStore {
         self.storeURL = storeURL
     }
     
-    public func retrieve() throws -> LocalCache? {
+    public func retrieve() throws -> LocalGalleryCache? {
         guard FileManager.default.fileExists(atPath: storeURL.path()) else { return nil }
         
         let data = try Data(contentsOf: storeURL)
         let cache = try JSONDecoder().decode(Cache.self, from: data)
-        return LocalCache(gallery: cache.localGallery, timestamp: cache.timestamp)
+        return LocalGalleryCache(gallery: cache.localGallery, timestamp: cache.timestamp)
     }
     
-    public func insert(_ cache: LocalCache) throws {
+    public func insert(_ cache: LocalGalleryCache) throws {
         let codableCache = Cache(gallery: cache.gallery.map(CodableLocalGalleryImage.init), timestamp: cache.timestamp)
         let data = try JSONEncoder().encode(codableCache)
         try data.write(to: storeURL)
@@ -47,7 +47,7 @@ public actor CodableGalleryStore: GalleryStore {
     private struct CodableLocalGalleryImage: Codable {
         let title: String
         let url: URL
-        let date: String
+        let date: Date
         let explanation: String
         let mediaType: String
         

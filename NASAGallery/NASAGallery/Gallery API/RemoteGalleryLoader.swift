@@ -25,7 +25,7 @@ public final class RemoteGalleryLoader: GalleryLoader {
             let items = try RemoteGalleryMapper.map(data, response: response)
             return items.toModels()
         } catch {
-            throw Error.invalidData
+            throw error
         }
     }
         
@@ -33,7 +33,7 @@ public final class RemoteGalleryLoader: GalleryLoader {
     
     public enum Error: Swift.Error {
         case connectivity
-        case invalidData
+        case invalidData(underlying: Swift.Error)
     }
 }
 

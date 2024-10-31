@@ -184,10 +184,10 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // Why this is here? Previously there was a test to guarnatee that, using DispatchQueues, these operations would run serially.
      func test_databaseOperationsOccurSerially() async {
          let sut = makeSUT()
-         let insertedCache1 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-         let insertedCache2 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-         let insertedCache3 = LocalCache(gallery: uniqueLocalImages().local, timestamp: Date())
-         var results: [LocalCache?] = []
+         let insertedCache1 = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         let insertedCache2 = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         let insertedCache3 = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+         var results: [LocalGalleryCache?] = []
          
          try? await sut.insert(insertedCache1)
          await results.append(try? sut.retrieve())

@@ -10,7 +10,7 @@ import Foundation
 public struct LocalGalleryImage: Equatable {
     public let title: String
     public let url: URL
-    public let date: String
+    public let date: Date
     public let explanation: String
     public let mediaType: String
     
@@ -18,7 +18,7 @@ public struct LocalGalleryImage: Equatable {
     public let hdurl: URL?
     public let thumbnailUrl: URL?
     
-    public init(title: String, url: URL, date: String, explanation: String, mediaType: String, copyright: String?, hdurl: URL?, thumbnailUrl: URL?) {
+    public init(title: String, url: URL, date: Date, explanation: String, mediaType: String, copyright: String?, hdurl: URL?, thumbnailUrl: URL?) {
         self.title = title
         self.url = url
         self.date = date

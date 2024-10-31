@@ -43,7 +43,7 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
     func test_validateCache_onNonExpiredCache_doesNotDeleteCache() async throws {
         let (sut, spy) = makeSUT()
         let lessThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: 1)
-        let expectedCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
+        let expectedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: lessThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expectedCache)
         
         try await sut.validateCache()
@@ -53,7 +53,7 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
     
     func test_validadeCache_onCacheExpiration_deletesCache() async throws {
         let (sut, spy) = makeSUT()
-        let onExpirationCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
+        let onExpirationCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: cacheMaxAgeLimitTimestamp)
         spy.stub(retrivalReturn: onExpirationCache)
         
         try await sut.validateCache()
@@ -64,7 +64,7 @@ final class ValidateGalleryFromCacheUseCaseTests: XCTestCase {
     func test_validateCache_onExpiredCache_deletesCache() async throws {
         let (sut, spy) = makeSUT()
         let moreThanMaxOldTimestamp = cacheMaxAgeLimitTimestamp.adding(seconds: -1)
-        let expiredCache = LocalCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
+        let expiredCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: moreThanMaxOldTimestamp)
         spy.stub(retrivalReturn: expiredCache)
         
         try await sut.validateCache()

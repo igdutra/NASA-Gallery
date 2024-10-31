@@ -11,13 +11,13 @@ import NASAGallery
 // MARK: - GalleryItem
 
 func makeGalleryImageFixture(title: String = "A Title",
-                            urlString: String = "example.com",
-                            date: String = "2023-01-01",
-                            explanation: String = "A explanation",
-                            mediaType: String = "image",
-                            copyright: String? = nil,
-                            hdurlString: String? = nil,
-                            thumbnailUrlString: String? = nil
+                             urlString: String = "example.com",
+                             date: Date = Date.from("2023-01-01")!,
+                             explanation: String = "A explanation",
+                             mediaType: String = "image",
+                             copyright: String? = nil,
+                             hdurlString: String? = nil,
+                             thumbnailUrlString: String? = nil
 ) -> GalleryImage {
     let url = anyURL(urlString)
     let hdurl = hdurlString != nil ? anyURL(hdurlString!) : nil
@@ -52,7 +52,11 @@ func makeGalleryJSONData(_ images: [GalleryImage]) -> Data {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(galleryImage.title, forKey: .title)
             try container.encode(galleryImage.url.absoluteString, forKey: .url)
-            try container.encode(galleryImage.date, forKey: .date)
+            
+            // Use the helper DateFormatter extension for consistency
+            let dateString = DateFormatter.remoteAPODDateFormatter.string(from: galleryImage.date)
+            try container.encode(dateString, forKey: .date)
+            
             try container.encode(galleryImage.explanation, forKey: .explanation)
             try container.encode(galleryImage.mediaType, forKey: .mediaType)
             try container.encodeIfPresent(galleryImage.copyright, forKey: .copyright)
@@ -60,7 +64,6 @@ func makeGalleryJSONData(_ images: [GalleryImage]) -> Data {
             try container.encodeIfPresent(galleryImage.thumbnailUrl?.absoluteString, forKey: .thumbnailUrl)
         }
     }
-
     let encoder = JSONEncoder()
     do {
         let encodableImages = images.map { EncodableGalleryImage(galleryImage: $0) }
