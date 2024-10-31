@@ -12,7 +12,6 @@
 		921A45BE2CBE9C57002875EB /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92032A7B2B213423008053C0 /* Fixtures.swift */; };
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
 		922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */; };
-		925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */; };
 		925029552CB54FEC006113BC /* CoreDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */; };
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
@@ -28,6 +27,7 @@
 		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
 		92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2A4C62B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift */; };
 		92B6056B2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */; };
+		92B6EFB12CD3B47F008405B1 /* GalleryStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 92B6EFAF2CD3B47F008405B1 /* GalleryStore.xcdatamodeld */; };
 		92CFC4212B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */; };
 		92CFC4222B372C8E00DEECF1 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		92D4825C2BA4C3570041BD25 /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
@@ -74,7 +74,6 @@
 		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpecs.swift; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
-		925029522CB54B00006113BC /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
 		925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStore.swift; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +90,7 @@
 		92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryMapper.swift; sourceTree = "<group>"; };
 		92A2A4C62B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadGalleryFromRemoteUseCaseTests.swift; sourceTree = "<group>"; };
 		92B6056A2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
+		92B6EFB02CD3B47F008405B1 /* GalleryStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GalleryStore.xcdatamodel; sourceTree = "<group>"; };
 		92CFC41E2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		92CFC4202B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		92D4825F2BA4CDD00041BD25 /* LocalGalleryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalGalleryCache.swift; sourceTree = "<group>"; };
@@ -172,8 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				92FD6AA92CB7F8ED004DFDB8 /* Core Data Models */,
-				925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */,
 				925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */,
+				92B6EFAF2CD3B47F008405B1 /* GalleryStore.xcdatamodeld */,
 			);
 			path = CoreDataGalleryStore;
 			sourceTree = "<group>";
@@ -544,7 +544,6 @@
 			files = (
 				922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */,
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
-				925029532CB54B00006113BC /* GalleryStore.xcdatamodeld in Sources */,
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
 				92FD6AAB2CB7F8FC004DFDB8 /* CoreDataStoredGalleryImage.swift in Sources */,
 				92FD6AAD2CB7F93A004DFDB8 /* CoreDataStoredGalleryCache.swift in Sources */,
@@ -557,6 +556,7 @@
 				92E9DE162BA25E170073DEFE /* LocalGalleryLoader.swift in Sources */,
 				92E9DE192BA264C10073DEFE /* RemoteAPODItem.swift in Sources */,
 				92F4B5DC2C381CE2003919E2 /* CodableGalleryStore.swift in Sources */,
+				92B6EFB12CD3B47F008405B1 /* GalleryStore.xcdatamodeld in Sources */,
 				92EEACF32CC87EB3008C2FB5 /* CoreDataMapper.swift in Sources */,
 				92DABC022B34769A009B1763 /* URLSessionHTTPClient.swift in Sources */,
 				92E9DE142BA25DF40073DEFE /* GalleryStore.swift in Sources */,
@@ -922,14 +922,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		925029512CB54B00006113BC /* GalleryStore.xcdatamodeld */ = {
+		92B6EFAF2CD3B47F008405B1 /* GalleryStore.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				925029522CB54B00006113BC /* GalleryStore.xcdatamodel */,
+				92B6EFB02CD3B47F008405B1 /* GalleryStore.xcdatamodel */,
 			);
-			currentVersion = 925029522CB54B00006113BC /* GalleryStore.xcdatamodel */;
+			currentVersion = 92B6EFB02CD3B47F008405B1 /* GalleryStore.xcdatamodel */;
 			name = GalleryStore.xcdatamodeld;
-			path = "/Users/ivo/Desktop/NASA-Gallery/NASAGallery/NASAGallery/Gallery Cache/Infrastructure/CoreDataGalleryStore/GalleryStore.xcdatamodeld";
+			path = "GalleryStore.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
