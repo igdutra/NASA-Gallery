@@ -318,6 +318,14 @@
 			path = DTO;
 			sourceTree = "<group>";
 		};
+		92D9192B2CD3B1B900558463 /* CodableGalleryStore */ = {
+			isa = PBXGroup;
+			children = (
+				92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */,
+			);
+			path = CodableGalleryStore;
+			sourceTree = "<group>";
+		};
 		92DC023E2BA4844700515BF5 /* Shared Test Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,7 +370,8 @@
 			isa = PBXGroup;
 			children = (
 				92FD6AB02CB7FBAF004DFDB8 /* Boundary */,
-				92FD6AB22CB7FBF1004DFDB8 /* Different Implementations */,
+				92D9192B2CD3B1B900558463 /* CodableGalleryStore */,
+				925029502CB54AD6006113BC /* CoreDataGalleryStore */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -392,15 +401,6 @@
 				92E9DE132BA25DF40073DEFE /* GalleryStore.swift */,
 			);
 			path = Boundary;
-			sourceTree = "<group>";
-		};
-		92FD6AB22CB7FBF1004DFDB8 /* Different Implementations */ = {
-			isa = PBXGroup;
-			children = (
-				925029502CB54AD6006113BC /* CoreDataGalleryStore */,
-				92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */,
-			);
-			name = "Different Implementations";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
