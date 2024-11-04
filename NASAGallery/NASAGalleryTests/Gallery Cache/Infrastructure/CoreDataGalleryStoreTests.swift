@@ -98,7 +98,13 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // MARK: - Failable tests - Swizzling
     
     func test_retrieve_onRetrivalError_fails() async throws {
-    
+        let stub = NSManagedObjectContext.alwaysFailingFetchStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+        
+        await assertThatRetrieveFailsOnRetrivalError(on: sut)
+        
+        try stub.stopIntercepting()
     }
     
     func test_retrieve_onRetrivalError_hasNoSideEffects() async throws {
