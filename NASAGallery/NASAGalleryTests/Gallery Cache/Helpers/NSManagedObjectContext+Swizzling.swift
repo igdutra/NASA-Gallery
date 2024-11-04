@@ -7,6 +7,17 @@
 
 import CoreData.NSManagedObjectContext
 
+/* Alternative
+ 
+ One possible alternative for this Swizzling would be to INJECT an always failing context directly inside the CoreDataGalleryStore tests.
+ 
+ public init(storeBundle: Bundle = .main, storeURL: URL, context: NSManagedObjectContext? = nil) throws {
+     container = try NSPersistentContainer.load(modelName: "GalleryStore", in: storeBundle, storeURL: storeURL)
+     self.context = context ?? container.newBackgroundContext()
+ }
+*/
+
+/// This extension is used so that we can stub a failing behavior for CoreData. Used for the Failable GalleryCache Tests.
 extension NSManagedObjectContext {
     
     enum CoreDataTestError: Error {
