@@ -59,12 +59,16 @@ extension NSManagedObjectContext {
 
             method_exchangeImplementations(originalMethod, swizzledMethod)
         }
-
-        deinit {
-            if let originalMethod = class_getInstanceMethod(NSManagedObjectContext.self, originalSelector),
-               let swizzledMethod = class_getInstanceMethod(Stub.self, swizzledSelector) {
-                method_exchangeImplementations(swizzledMethod, originalMethod)
+        
+        func stopIntercepting() throws {
+            guard
+                let originalMethod = class_getInstanceMethod(NSManagedObjectContext.self, originalSelector),
+                let swizzledMethod = class_getInstanceMethod(Stub.self, swizzledSelector)
+            else {
+                throw CoreDataTestError.swizzlingFailed
             }
+            
+            method_exchangeImplementations(swizzledMethod, originalMethod)
         }
     }
 }
