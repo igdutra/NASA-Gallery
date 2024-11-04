@@ -57,7 +57,7 @@ extension FailableRetrieveGalleryStoreSpecs where Self: XCTestCase {
     func assertThatRetrieveFailsOnRetrivalError(on sut: GalleryStore,
                                                 file: StaticString = #file, line: UInt = #line) async {
         await expectThrowAsync(try await sut.retrieve(),
-                               "Retrieve should fail due to invalid data",
+                               "Retrieve should fail due to stubbed invalid behavior",
                                file: file, line: line)
     }
     

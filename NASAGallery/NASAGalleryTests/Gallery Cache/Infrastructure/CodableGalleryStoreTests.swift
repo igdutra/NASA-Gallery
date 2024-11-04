@@ -86,7 +86,7 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_retrieve_onRetrivalError_fails() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
-        try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
+        stubInvalidData(in: storeURL)
         
         await assertThatRetrieveFailsOnRetrivalError(on: sut)
     }
@@ -94,8 +94,7 @@ final class CodableGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     func test_retrieve_onRetrivalError_hasNoSideEffects() async {
         let storeURL = testSpecificURL()
         let sut = makeSUT(storeURL: storeURL)
-        
-        try! "invalid data".write(to: testSpecificURL(), atomically: false, encoding: .utf8)
+        stubInvalidData(in: storeURL)
         
         await assertThatRetrieveHasNoSideEffectOnRetrivalError(on: sut)
     }
@@ -207,6 +206,10 @@ private extension CodableGalleryStoreTests {
         let sut = CodableGalleryStore(storeURL: storeURL ?? testSpecificURL())
         trackForMemoryLeaks(sut)
         return sut
+    }
+    
+    func stubInvalidData(in url: URL) {
+        try! "invalid data".write(to: url, atomically: false, encoding: .utf8)
     }
     
     func testSpecificURL() -> URL {
