@@ -108,7 +108,13 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_retrieve_onRetrivalError_hasNoSideEffects() async throws {
-    
+        let stub = NSManagedObjectContext.alwaysFailingFetchStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatRetrieveHasNoSideEffectOnRetrivalError(on: sut)
+        
+        try stub.stopIntercepting()
     }
     
     func test_insert_onInsertionError_fails() async throws {
