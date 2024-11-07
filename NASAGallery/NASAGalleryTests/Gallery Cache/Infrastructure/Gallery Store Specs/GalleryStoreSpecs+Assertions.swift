@@ -191,7 +191,7 @@ extension FailableDeleteGalleryStoreSpecs where Self: XCTestCase {
     func assertThatDeleteFailsOnDeletionError(on sut: GalleryStore,
                                               file: StaticString = #file, line: UInt = #line) async {
         await expectThrowAsync(try await sut.delete(),
-                               "Delete should fail on no-write permission directory",
+                               "Delete should fail on stubbed behavior",
                                file: file, line: line)
     }
     

@@ -148,7 +148,19 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_delete_onDeletionError_hasNoSideEffects() async throws {
+        let sut = try makeSUT()
+        let expectedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try await sut.insert(expectedCache)
         
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        
+        try? await sut.delete() // Optional try, otherwise this try is supposed to fail and will break test execution.
+        
+        try stub.stopIntercepting()
+        
+        let retrievedCache = try await sut.retrieve()
+        XCTAssertEqual(retrievedCache, expectedCache, "Cache should not have been deleted")
     }
 }
 
