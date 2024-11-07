@@ -138,7 +138,13 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     }
     
     func test_delete_onDeletionError_fails() async throws {
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatDeleteFailsOnDeletionError(on: sut)
         
+        try stub.stopIntercepting()
     }
     
     func test_delete_onDeletionError_hasNoSideEffects() async throws {
