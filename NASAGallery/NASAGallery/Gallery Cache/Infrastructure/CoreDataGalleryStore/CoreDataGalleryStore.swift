@@ -28,13 +28,18 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         try await context.perform { [context] in
-            try CoreDataStoredGalleryCache.deleteCache(in: context)
-            
-            _ = CoreDataMapper.toStoredCache(from: cache, in: context)
-            
-            guard context.hasChanges else { return }
-            
-            try context.save()
+            do {
+                try CoreDataStoredGalleryCache.deleteCache(in: context)
+                
+                _ = CoreDataMapper.toStoredCache(from: cache, in: context)
+                
+                guard context.hasChanges else { return }
+                
+                try context.save()
+            } catch {
+                context.rollback()
+                throw error
+            }
         }
     }
     
