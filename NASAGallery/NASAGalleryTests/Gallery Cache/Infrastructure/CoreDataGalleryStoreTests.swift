@@ -98,27 +98,69 @@ final class CoreDataGalleryStoreTests: XCTestCase, FailableGalleryStoreSpecs {
     // MARK: - Failable tests - Swizzling
     
     func test_retrieve_onRetrivalError_fails() async throws {
-    
+        let stub = NSManagedObjectContext.alwaysFailingFetchStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+        
+        await assertThatRetrieveFailsOnRetrivalError(on: sut)
+        
+        try stub.stopIntercepting()
     }
     
     func test_retrieve_onRetrivalError_hasNoSideEffects() async throws {
-    
+        let stub = NSManagedObjectContext.alwaysFailingFetchStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatRetrieveHasNoSideEffectOnRetrivalError(on: sut)
+        
+        try stub.stopIntercepting()
     }
     
     func test_insert_onInsertionError_fails() async throws {
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatInsertFailsOnInsertionError(on: sut)
         
+        try stub.stopIntercepting()
     }
     
     func test_insert_onInsertionError_hasNoSideEffects() async throws {
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatInsertHasNoSideEffectOnInsertionError(on: sut)
         
+        try stub.stopIntercepting()
     }
     
     func test_delete_onDeletionError_fails() async throws {
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        let sut = try makeSUT()
+
+        await assertThatDeleteFailsOnDeletionError(on: sut)
         
+        try stub.stopIntercepting()
     }
     
     func test_delete_onDeletionError_hasNoSideEffects() async throws {
+        let sut = try makeSUT()
+        let expectedCache = LocalGalleryCache(gallery: uniqueLocalImages().local, timestamp: Date())
+        try await sut.insert(expectedCache)
         
+        let stub = NSManagedObjectContext.alwaysFailingSaveStub()
+        try stub.startIntercepting()
+        
+        try? await sut.delete() // Optional try, otherwise this try is supposed to fail and will break test execution.
+        
+        try stub.stopIntercepting()
+        
+        let retrievedCache = try await sut.retrieve()
+        XCTAssertEqual(retrievedCache, expectedCache, "Cache should not have been deleted")
     }
 }
 

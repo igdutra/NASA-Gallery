@@ -20,21 +20,31 @@ public final class CoreDataGalleryStore: GalleryStore {
     
     public func delete() async throws {
         try await context.perform { [context] in
-            try CoreDataStoredGalleryCache.deleteCache(in: context)
-            try context.save()
-            // Note: in a normal scenario would make sense to use context.hasChanges but here, since delete will only get executed if there's a value, then there's no need to check it first.
+            do {
+                try CoreDataStoredGalleryCache.deleteCache(in: context)
+                try context.save()
+                // Note: in a normal scenario would make sense to use context.hasChanges but here, since delete will only get executed if there's a value, then there's no need to check it first.
+            } catch {
+                context.rollback()
+                throw error
+            }
         }
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         try await context.perform { [context] in
-            try CoreDataStoredGalleryCache.deleteCache(in: context)
-            
-            _ = CoreDataMapper.toStoredCache(from: cache, in: context)
-            
-            guard context.hasChanges else { return }
-            
-            try context.save()
+            do {
+                try CoreDataStoredGalleryCache.deleteCache(in: context)
+                
+                _ = CoreDataMapper.toStoredCache(from: cache, in: context)
+                
+                guard context.hasChanges else { return }
+                
+                try context.save()
+            } catch {
+                context.rollback()
+                throw error
+            }
         }
     }
     
