@@ -6,10 +6,13 @@
 //
 
 import XCTest
+import NASAGallery
 
 final class SwiftDataGalleryStoreTests: XCTestCase {
 
-    func test() {
-        XCTFail("Initial failing test.")
+    func test() async {
+        let test = ModelActorExample()
+       await  ModelActorExample.main()
+        print("\n\n\n\n FINISHED")
     }
 }
