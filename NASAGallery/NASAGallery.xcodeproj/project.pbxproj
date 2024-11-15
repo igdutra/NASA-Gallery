@@ -12,6 +12,8 @@
 		921A45BE2CBE9C57002875EB /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92032A7B2B213423008053C0 /* Fixtures.swift */; };
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
 		922F11FA2B17DC1F008B3FB8 /* RemoteGalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */; };
+		9232814D2CE6CA8F00624143 /* SwiftDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9232814C2CE6CA8F00624143 /* SwiftDataGalleryStore.swift */; };
+		9232814F2CE6CAAC00624143 /* SwiftDataGalleryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9232814E2CE6CAAC00624143 /* SwiftDataGalleryStoreTests.swift */; };
 		925029552CB54FEC006113BC /* CoreDataGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */; };
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
@@ -75,6 +77,8 @@
 		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpecs.swift; sourceTree = "<group>"; };
 		922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryLoader.swift; sourceTree = "<group>"; };
+		9232814C2CE6CA8F00624143 /* SwiftDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataGalleryStore.swift; sourceTree = "<group>"; };
+		9232814E2CE6CAAC00624143 /* SwiftDataGalleryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataGalleryStoreTests.swift; sourceTree = "<group>"; };
 		925029542CB54FEC006113BC /* CoreDataGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataGalleryStore.swift; sourceTree = "<group>"; };
 		925D35F92B08037000FE12DA /* NASAGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		925D36012B08037000FE12DA /* NASAGalleryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,6 +172,14 @@
 				922F11F92B17DC1F008B3FB8 /* RemoteGalleryLoader.swift */,
 			);
 			path = "Gallery API";
+			sourceTree = "<group>";
+		};
+		9232814B2CE6CA7D00624143 /* SwiftDataGalleryStore */ = {
+			isa = PBXGroup;
+			children = (
+				9232814C2CE6CA8F00624143 /* SwiftDataGalleryStore.swift */,
+			);
+			path = SwiftDataGalleryStore;
 			sourceTree = "<group>";
 		};
 		925029502CB54AD6006113BC /* CoreDataGalleryStore */ = {
@@ -355,6 +367,7 @@
 				927D81C42C9D81F0005ED010 /* Gallery Store Specs */,
 				92E2F7CA2C2D7EC7002145F8 /* CodableGalleryStoreTests.swift */,
 				92EADC822CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift */,
+				9232814E2CE6CAAC00624143 /* SwiftDataGalleryStoreTests.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -374,6 +387,7 @@
 				92FD6AB02CB7FBAF004DFDB8 /* Boundary */,
 				92D9192B2CD3B1B900558463 /* CodableGalleryStore */,
 				925029502CB54AD6006113BC /* CoreDataGalleryStore */,
+				9232814B2CE6CA7D00624143 /* SwiftDataGalleryStore */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -553,6 +567,7 @@
 				929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */,
 				925029552CB54FEC006113BC /* CoreDataGalleryStore.swift in Sources */,
 				925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */,
+				9232814D2CE6CA8F00624143 /* SwiftDataGalleryStore.swift in Sources */,
 				92E9DE1B2BA266860073DEFE /* LocalGalleryImage.swift in Sources */,
 				92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */,
 				92D482602BA4CDD00041BD25 /* LocalGalleryCache.swift in Sources */,
@@ -582,6 +597,7 @@
 				92A2A4C72B0C23AE003F7B74 /* LoadGalleryFromRemoteUseCaseTests.swift in Sources */,
 				92DC023D2BA4842B00515BF5 /* LoadGalleryFromCacheUseCaseTests.swift in Sources */,
 				92B6056B2B2E1C9C00514473 /* URLSessionHTTPClientTests.swift in Sources */,
+				9232814F2CE6CAAC00624143 /* SwiftDataGalleryStoreTests.swift in Sources */,
 				9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */,
 				922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */,
 				92DBF2742B2CF8E20037094F /* XCTestCase+MemoryLeak.swift in Sources */,
@@ -766,7 +782,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
