@@ -21,5 +21,5 @@ final class CoreDataStoredGalleryImage: NSManagedObject {
 
     @NSManaged public var imageData: Data?
      
-    @NSManaged public var cache: CoreDataStoredGalleryCache?
+    @NSManaged public var cache: CoreDataStoredGalleryCache
 }
