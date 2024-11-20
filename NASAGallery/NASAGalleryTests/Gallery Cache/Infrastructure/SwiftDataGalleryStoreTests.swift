@@ -21,7 +21,9 @@ final class SwiftDataGalleryStoreTests: XCTestCase, GalleryStoreSpecs {
     }
     
     func test_retrieve_onEmptyCache_hasNoSideEffects() async throws {
+        let sut = try makeSUT()
         
+        await assertThatRetrieveHasNoSideEffectOnEmptyCache(on: sut)
     }
     
     func test_retrieve_onNonEmptyCache_hasNoSideEffects() async throws {
