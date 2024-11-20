@@ -11,10 +11,27 @@ import SwiftData
 @ModelActor
 public final actor SwiftDataGalleryStore: GalleryStore {
     public func retrieve() async throws -> LocalGalleryCache? {
-        nil
+        let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
+        guard let storedCache = try modelContext.fetch(fetchDescriptor).first else {
+            return nil
+        }
+        let localGallery = storedCache.gallery.map {
+            LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
+        }
+        
+        return LocalGalleryCache(gallery: localGallery, timestamp: storedCache.timestamp)
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
+        let storedCache = SwiftDataStoredGalleryCache(timestamp: cache.timestamp, gallery: [])
+        let storedGallery = cache.gallery.map {
+            SwiftDataStoredGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, cache: storedCache)
+        }
+        
+        storedCache.gallery = storedGallery
+        
+        modelContext.insert(storedCache)
+        try modelContext.save()
     }
     
     public func delete() async throws {

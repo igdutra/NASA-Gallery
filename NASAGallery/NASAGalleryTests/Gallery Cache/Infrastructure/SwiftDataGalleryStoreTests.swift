@@ -17,7 +17,9 @@ final class SwiftDataGalleryStoreTests: XCTestCase, GalleryStoreSpecs {
     }
     
     func test_retrieve_onNonEmptyCache_succeedsWithCache() async throws {
+        let sut = try makeSUT()
         
+        await assertThatRetrieveSucceedsWithCacheOnNonEmptyCache(on: sut)
     }
     
     func test_retrieve_onEmptyCache_hasNoSideEffects() async throws {
