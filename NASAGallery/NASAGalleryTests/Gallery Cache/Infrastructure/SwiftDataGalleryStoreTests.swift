@@ -59,30 +59,6 @@ final class SwiftDataGalleryStoreTests: XCTestCase, GalleryStoreSpecs {
     func test_delete_onNonEmptyCache_hasNoSideEffects() async throws {
         
     }
-    
-
-//    func test() async throws {
-//        let sut = try makeSUT()
-//        let newUser = User(name: "John Doe")
-//        try await sut.insert(user: newUser)
-//
-//        let results = try await sut.fetchAllUsers()
-//        XCTAssertFalse(results.isEmpty)
-//        
-//        try await sut.delete(user: newUser)
-//        let results2 = try await sut.fetchAllUsers()
-//        XCTAssertTrue(results2.isEmpty)
-//    }
-//    
-//    func test2_assertThatThereAreNoSideEffects() async throws {
-//        let sut = try makeSUT()
-//        let newUser = User(name: "John Doe 2")
-//        try await sut.insert(user: newUser)
-//
-//        let results = try await sut.fetchAllUsers()
-//        XCTAssertTrue(results.contains(newUser))
-//        XCTAssertEqual(results.count, 1)
-//    }
 }
 
 // MARK: - Helpers
@@ -93,7 +69,6 @@ private extension SwiftDataGalleryStoreTests {
         let container = try ModelContainer(for: SwiftDataStoredGalleryCache.self,
                                            configurations: config)
         
-        // Initialize the UserModelActor
         return SwiftDataGalleryStore(modelContainer: container)
     }
 }

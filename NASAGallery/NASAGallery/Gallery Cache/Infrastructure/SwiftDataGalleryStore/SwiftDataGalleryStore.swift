@@ -49,28 +49,3 @@ public final class User {
         self.name = name
     }
 }
-
-// Define the model actor
-@ModelActor
-public final actor UserModelActor {
-    // Insert operation
-    public func insert(user: User) throws {
-        modelContext.insert(user)
-        try modelContext.save()
-    }
-
-    // Delete operation
-    public func delete(user: User) throws {
-        let allUsers = try fetchAllUsers()
-        if allUsers.contains(user) {
-            modelContext.delete(user)
-            try modelContext.save()
-        }
-    }
-
-    // Fetch all users
-    public func fetchAllUsers() throws -> [User] {
-        let fetchDescriptor = FetchDescriptor<User>()
-        return try modelContext.fetch(fetchDescriptor)
-    }
-}
