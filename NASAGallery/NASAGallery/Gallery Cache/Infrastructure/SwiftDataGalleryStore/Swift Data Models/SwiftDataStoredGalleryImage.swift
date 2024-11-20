@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class SwiftDataStoredGalleryImage {
+public final class SwiftDataStoredGalleryImage {
     var title: String
     @Attribute(.unique) var url: URL
     var date: Date

@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class SwiftDataStoredGalleryCache {
+public final class SwiftDataStoredGalleryCache {
     @Relationship(deleteRule: .cascade, inverse: \SwiftDataStoredGalleryImage.cache)
     var gallery: [SwiftDataStoredGalleryImage]
     var timestamp: Date

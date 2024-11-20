@@ -8,6 +8,19 @@
 import Foundation
 import SwiftData
 
+@ModelActor
+public final actor SwiftDataGalleryStore: GalleryStore {
+    public func retrieve() async throws -> LocalGalleryCache? {
+        nil
+    }
+    
+    public func insert(_ cache: LocalGalleryCache) async throws {
+    }
+    
+    public func delete() async throws {
+    }
+}
+
 // Define a basic model
 @Model
 public final class User {
