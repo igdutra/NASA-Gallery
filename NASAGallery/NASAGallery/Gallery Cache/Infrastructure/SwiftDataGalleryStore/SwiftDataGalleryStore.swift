@@ -31,7 +31,7 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         do {
-            try await delete()
+            try deleteAllCachesFromMemory()
             
             let storedCache = SwiftDataMapper.toStoredCache(from: cache)
             
@@ -48,15 +48,22 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     
     public func delete() async throws {
         do {
-            let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
-            let allCaches = try modelContext.fetch(fetchDescriptor)
-            
-            allCaches.forEach { modelContext.delete($0) }
+            try deleteAllCachesFromMemory()
             
             try modelContext.save()
         } catch {
             modelContext.rollback()
             throw error
         }
+    }
+    
+    // MARK: - Private Helpers
+    
+    /// Removes all cached gallery objects from the context, but does not call `save()`.
+    /// - Throws: An error if the fetch or deletion fails.
+    private func deleteAllCachesFromMemory() throws {
+        let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
+        let cache = try modelContext.fetch(fetchDescriptor).first
+        cache.map(modelContext.delete)
     }
 }
