@@ -10,21 +10,27 @@ import SwiftData
 
 @Model
 public final class SwiftDataStoredGalleryImage {
-    var title: String
-    @Attribute(.unique) var url: URL
+    // Note: without an explicit sortIndex, swiftData will retrieve the elements in the array at a random order
+    var sortIndex: Int
+    
+    @Attribute(.unique) var title: String
+    var url: URL
     var date: Date
     var explanation: String
     var mediaType: String
 
     var copyright: String?
+    
     var hdurl: URL?
     var thumbnailUrl: URL?
 
     var imageData: Data?
-
-    var cache: SwiftDataStoredGalleryCache
     
-    init(title: String,
+    // Note: as per SwiftData requirement to satisfy the "Cascade" delete rule, either this must be optional or give it a default value
+    var cache: SwiftDataStoredGalleryCache?
+    
+    init(sortIndex: Int,
+         title: String,
          url: URL,
          date: Date,
          explanation: String,
@@ -34,6 +40,7 @@ public final class SwiftDataStoredGalleryImage {
          thumbnailUrl: URL? = nil,
          imageData: Data? = nil,
          cache: SwiftDataStoredGalleryCache) {
+        self.sortIndex = sortIndex
         self.title = title
         self.url = url
         self.date = date

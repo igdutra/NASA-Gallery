@@ -15,17 +15,30 @@ public final actor SwiftDataGalleryStore: GalleryStore {
         guard let storedCache = try modelContext.fetch(fetchDescriptor).first else {
             return nil
         }
-        let localGallery = storedCache.gallery.map {
-            LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
-        }
+        let localGallery = storedCache.gallery
+            .sorted { $0.sortIndex < $1.sortIndex }
+            .map {
+                LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
+            }
         
         return LocalGalleryCache(gallery: localGallery, timestamp: storedCache.timestamp)
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
         let storedCache = SwiftDataStoredGalleryCache(timestamp: cache.timestamp, gallery: [])
-        let storedGallery = cache.gallery.map {
-            SwiftDataStoredGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, cache: storedCache)
+        
+        let storedGallery = cache.gallery.enumerated().map { (index, image) in
+            SwiftDataStoredGalleryImage(sortIndex: index,
+                                        title: image.title,
+                                        url: image.url,
+                                        date: image.date,
+                                        explanation: image.explanation,
+                                        mediaType: image.mediaType,
+                                        copyright: image.copyright,
+                                        hdurl: image.hdurl,
+                                        thumbnailUrl: image.thumbnailUrl,
+                                        imageData: nil,
+                                        cache: storedCache)
         }
         
         storedCache.gallery = storedGallery

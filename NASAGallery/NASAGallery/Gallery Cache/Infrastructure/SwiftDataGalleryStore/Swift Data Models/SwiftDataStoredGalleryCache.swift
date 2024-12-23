@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 public final class SwiftDataStoredGalleryCache {
-    @Relationship(deleteRule: .cascade)
+    @Relationship(deleteRule: .cascade, inverse: \SwiftDataStoredGalleryImage.cache)
     var gallery: [SwiftDataStoredGalleryImage]
     var timestamp: Date
     
     init(timestamp: Date,
-         gallery: [SwiftDataStoredGalleryImage]) {
+         gallery: [SwiftDataStoredGalleryImage] = []) {
         self.timestamp = timestamp
         self.gallery = gallery
     }
