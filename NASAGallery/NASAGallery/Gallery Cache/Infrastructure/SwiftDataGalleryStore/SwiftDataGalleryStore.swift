@@ -74,15 +74,3 @@ public final actor SwiftDataGalleryStore: GalleryStore {
         }
     }
 }
-
-// Define a basic model
-@Model
-public final class User {
-    @Attribute(.unique) public var id: UUID
-    var name: String
-
-    public init(id: UUID = UUID(), name: String) {
-        self.id = id
-        self.name = name
-    }
-}
