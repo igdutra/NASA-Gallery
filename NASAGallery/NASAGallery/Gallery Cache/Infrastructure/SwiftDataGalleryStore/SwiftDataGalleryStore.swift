@@ -10,55 +10,41 @@ import SwiftData
 
 @ModelActor
 public final actor SwiftDataGalleryStore: GalleryStore {
+    
+    // MARK: - Retrieve
+    
     public func retrieve() async throws -> LocalGalleryCache? {
         do {
             let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
             guard let storedCache = try modelContext.fetch(fetchDescriptor).first else {
                 return nil
             }
-            let localGallery = storedCache.gallery
-                .sorted { $0.sortIndex < $1.sortIndex }
-                .map {
-                    LocalGalleryImage(title: $0.title, url: $0.url, date: $0.date, explanation: $0.explanation, mediaType: $0.mediaType, copyright: $0.copyright, hdurl: $0.hdurl, thumbnailUrl: $0.thumbnailUrl)
-                }
             
-            return LocalGalleryCache(gallery: localGallery, timestamp: storedCache.timestamp)
+            return SwiftDataMapper.toLocalCache(from: storedCache)
         } catch {
             modelContext.rollback()
             throw error
         }
     }
     
+    // MARK: - Insert
+    
     public func insert(_ cache: LocalGalleryCache) async throws {
         do {
-            // Note: make sure to override previous cache
             try await delete()
             
-            let storedCache = SwiftDataStoredGalleryCache(timestamp: cache.timestamp, gallery: [])
-            
-            let storedGallery = cache.gallery.enumerated().map { (index, image) in
-                SwiftDataStoredGalleryImage(sortIndex: index,
-                                            title: image.title,
-                                            url: image.url,
-                                            date: image.date,
-                                            explanation: image.explanation,
-                                            mediaType: image.mediaType,
-                                            copyright: image.copyright,
-                                            hdurl: image.hdurl,
-                                            thumbnailUrl: image.thumbnailUrl,
-                                            imageData: nil,
-                                            cache: storedCache)
-            }
-            
-            storedCache.gallery = storedGallery
+            let storedCache = SwiftDataMapper.toStoredCache(from: cache)
             
             modelContext.insert(storedCache)
+            
             try modelContext.save()
         } catch {
             modelContext.rollback()
             throw error
         }
     }
+    
+    // MARK: - Delete
     
     public func delete() async throws {
         do {

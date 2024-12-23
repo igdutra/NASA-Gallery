@@ -26,6 +26,7 @@
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */; };
 		9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */; };
+		9295E5C52D19771D00942553 /* SwiftDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9295E5C42D19771D00942553 /* SwiftDataMapper.swift */; };
 		929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */; };
 		92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737D2B2A141600C37E9E /* HTTPClient.swift */; };
 		92A273802B2A145A00C37E9E /* RemoteGalleryMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */; };
@@ -94,6 +95,7 @@
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GalleryStoreSpecs+Assertions.swift"; sourceTree = "<group>"; };
 		9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheGalleryUseCaseTests.swift; sourceTree = "<group>"; };
+		9295E5C42D19771D00942553 /* SwiftDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMapper.swift; sourceTree = "<group>"; };
 		929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCachePolicy.swift; sourceTree = "<group>"; };
 		92A2737D2B2A141600C37E9E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		92A2737F2B2A145A00C37E9E /* RemoteGalleryMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteGalleryMapper.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			children = (
 				92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */,
 				92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */,
+				9295E5C42D19771D00942553 /* SwiftDataMapper.swift */,
 			);
 			path = "Swift Data Models";
 			sourceTree = "<group>";
@@ -577,6 +580,7 @@
 				92298F092CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift in Sources */,
 				925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */,
 				92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */,
+				9295E5C52D19771D00942553 /* SwiftDataMapper.swift in Sources */,
 				92FD6AAB2CB7F8FC004DFDB8 /* CoreDataStoredGalleryImage.swift in Sources */,
 				92FD6AAD2CB7F93A004DFDB8 /* CoreDataStoredGalleryCache.swift in Sources */,
 				929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */,
