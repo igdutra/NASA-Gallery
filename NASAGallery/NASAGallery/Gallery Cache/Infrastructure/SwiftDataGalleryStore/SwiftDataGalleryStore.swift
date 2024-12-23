@@ -15,8 +15,7 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     
     public func retrieve() async throws -> LocalGalleryCache? {
         do {
-            let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
-            guard let storedCache = try modelContext.fetch(fetchDescriptor).first else {
+            guard let storedCache = try fetchFirstCache() else {
                 return nil
             }
             
@@ -59,11 +58,17 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     
     // MARK: - Private Helpers
     
+    /// Fetches the first stored gallery cache from the context.
+    /// - Returns: The first `SwiftDataStoredGalleryCache`, or `nil` if none exists.
+    private func fetchFirstCache() throws -> SwiftDataStoredGalleryCache? {
+        let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
+        return try modelContext.fetch(fetchDescriptor).first
+    }
+    
     /// Removes all cached gallery objects from the context, but does not call `save()`.
     /// - Throws: An error if the fetch or deletion fails.
     private func deleteAllCachesFromMemory() throws {
-        let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
-        let cache = try modelContext.fetch(fetchDescriptor).first
+        let cache = try fetchFirstCache()
         cache.map(modelContext.delete)
     }
 }
