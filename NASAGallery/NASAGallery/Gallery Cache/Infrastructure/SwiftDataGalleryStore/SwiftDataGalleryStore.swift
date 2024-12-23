@@ -25,6 +25,9 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     }
     
     public func insert(_ cache: LocalGalleryCache) async throws {
+        // Note: make sure to override previous cache
+        try await delete()
+        
         let storedCache = SwiftDataStoredGalleryCache(timestamp: cache.timestamp, gallery: [])
         
         let storedGallery = cache.gallery.enumerated().map { (index, image) in
@@ -48,6 +51,12 @@ public final actor SwiftDataGalleryStore: GalleryStore {
     }
     
     public func delete() async throws {
+        let fetchDescriptor = FetchDescriptor<SwiftDataStoredGalleryCache>()
+        let allCaches = try modelContext.fetch(fetchDescriptor)
+        
+        allCaches.forEach { modelContext.delete($0) }
+        
+        try modelContext.save()
     }
 }
 
