@@ -22,7 +22,7 @@ on:
 jobs:
   build-and-test:
 
-    runs-on: macos-13
+    runs-on: macos-latest
     
     timeout-minutes: 10
 
