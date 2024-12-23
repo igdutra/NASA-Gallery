@@ -53,7 +53,9 @@ final class SwiftDataGalleryStoreTests: XCTestCase, GalleryStoreSpecs {
     }
     
     func test_delete_onEmptyCache_succeeds() async throws {
+        let sut = try makeSUT()
         
+        try await assertThatDeleteSucceedsOnEmptyCache(on: sut)
     }
     
     func test_delete_onNonEmptyCache_succeeds() async throws {
