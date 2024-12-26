@@ -17,7 +17,7 @@
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
         "identifier" : "92CFC41D2B372C8E00DEECF1",
-        "name" : "NASAGalleryEndToEndTests"
+        "name" : "NASAGalleryAPIEndToEndTests"
       }
     },
     {
