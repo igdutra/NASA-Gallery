@@ -91,6 +91,7 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
 private extension NASAGalleryCacheIntegrationTests {
     func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> LocalGalleryLoader {
         let store = try makeSwiftDataTestSpecificStore()
+        // Note: we are able to simply swap the store implementation, and tests will pass (LSP principle).
 //        let store = CodableGalleryStore(storeURL: testSpecificStoreURL())
 //        let store = try makeCoreDataTestSpecificStore()
         let sut = LocalGalleryLoader(store: store)
