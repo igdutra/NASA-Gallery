@@ -35,6 +35,9 @@
          <TestPlanReference
             reference = "container:CI/CI.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:NASAGalleryCacheIntegrationTests/NASAGalleryCacheIntegrationTests.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
