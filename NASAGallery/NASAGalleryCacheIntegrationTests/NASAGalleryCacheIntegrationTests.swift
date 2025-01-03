@@ -38,6 +38,19 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
         
         XCTAssertEqual(cache, [])
     }
+    
+    // NOTE: refactor to separate instance // OnASeparateInstance
+    func test_load_deliversItemsSaved() async throws {
+        let sut = try makeSUT()
+        let expectedImages = uniqueLocalImages()
+        let expectedCache = LocalGalleryCache(gallery: expectedImages.local, timestamp: Date())
+        
+        try await sut.save(gallery: expectedImages.images, timestamp: expectedCache.timestamp)
+        
+        let result = try await sut.load()
+        
+        XCTAssertEqual(result, expectedImages.images)
+    }
 }
 
 // MARK: - Helpers
