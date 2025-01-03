@@ -11,6 +11,8 @@ import SwiftData
 
 /* Author Notes
  
+ - IN INTEGRATION WE TEST ONLY THE HAPPY PATH. Otherwise, tests will grow exponentially.
+ 
  - Compare the initialization from Store at the makeSUT() function from `NASAGalleryCacheIntegrationTests` with `SwiftDataGalleryStoreTests`
  
  */
@@ -31,7 +33,7 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
     
     // MARK: - Tests
     
-    func test_load_deliversNoItemsOnEmptyCache() async throws {
+    func test_load_onEmptyCache_succeeds() async throws {
         let sut = try makeSUT()
         
         let cache = try await sut.load()
@@ -39,17 +41,16 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
         XCTAssertEqual(cache, [])
     }
     
-    // NOTE: refactor to separate instance // OnASeparateInstance
-    func test_load_deliversItemsSaved() async throws {
-        let sut = try makeSUT()
-        let expectedImages = uniqueLocalImages()
-        let expectedCache = LocalGalleryCache(gallery: expectedImages.local, timestamp: Date())
+    func test_load_itemsSavedOnASeparateInstance_succeeds() async throws {
+        let sutToPerformSave = try makeSUT()
+        let sutToPerformLoad = try makeSUT()
+        let expectedGallery = uniqueLocalImages().images
         
-        try await sut.save(gallery: expectedImages.images, timestamp: expectedCache.timestamp)
+        try await sutToPerformSave.save(gallery:expectedGallery, timestamp: Date())
         
-        let result = try await sut.load()
+        let result = try await sutToPerformLoad.load()
         
-        XCTAssertEqual(result, expectedImages.images)
+        XCTAssertEqual(result, expectedGallery)
     }
 }
 
