@@ -214,7 +214,6 @@
 			children = (
 				925D35FB2B08037000FE12DA /* NASAGallery */,
 				9274D9592B3B01BE0090005A /* Tests */,
-				921D2A852B376A5A0047B4B7 /* CI */,
 				925D35FA2B08037000FE12DA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -262,6 +261,7 @@
 		9274D9592B3B01BE0090005A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				921D2A852B376A5A0047B4B7 /* CI */,
 				925D36052B08037000FE12DA /* NASAGalleryTests */,
 				92CFC41F2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */,
 			);
