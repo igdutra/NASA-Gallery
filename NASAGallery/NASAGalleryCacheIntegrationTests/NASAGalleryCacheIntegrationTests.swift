@@ -11,10 +11,26 @@ import SwiftData
 
 /* Author Notes
  
+ - Due to the power of the LSP, ISP and others, simply replace in the makeSUT func the store for the other infrastructure implementations, and tests will pass.
+ 
+ RESULTS:
+ - with SwiftData:
+ Test Suite 'NASAGalleryCacheIntegrationTests' passed at 2025-01-03 10:18:20.047.
+      Executed 3 tests, with 0 failures (0 unexpected) in 0.049 (0.050) seconds
+ 
+ - with FileManager:
+ Test Suite 'NASAGalleryCacheIntegrationTests' passed at 2025-01-03 10:18:52.599.
+      Executed 3 tests, with 0 failures (0 unexpected) in 0.009 (0.010) seconds
+ 
+ - with CoreData:
+ Test Suite 'NASAGalleryCacheIntegrationTests' passed at 2025-01-03 10:20:00.526.
+      Executed 3 tests, with 0 failures (0 unexpected) in 0.062 (0.063) seconds
+ 
+PRETTY COOL!
+ 
  - IN INTEGRATION WE TEST ONLY THE HAPPY PATH. Otherwise, tests will grow exponentially.
  
  - Compare the initialization from Store at the makeSUT() function from `NASAGalleryCacheIntegrationTests` with `SwiftDataGalleryStoreTests`
- 
  */
 
 final class NASAGalleryCacheIntegrationTests: XCTestCase {
@@ -74,7 +90,9 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
 
 private extension NASAGalleryCacheIntegrationTests {
     func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> LocalGalleryLoader {
-        let store = try makeTestSpecificStore()
+        let store = try makeSwiftDataTestSpecificStore()
+//        let store = CodableGalleryStore(storeURL: testSpecificStoreURL())
+//        let store = try makeCoreDataTestSpecificStore()
         let sut = LocalGalleryLoader(store: store)
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -83,12 +101,17 @@ private extension NASAGalleryCacheIntegrationTests {
         return sut
     }
     
-    func makeTestSpecificStore() throws -> SwiftDataGalleryStore {
+    func makeSwiftDataTestSpecificStore() throws -> SwiftDataGalleryStore {
         let config = ModelConfiguration(url: testSpecificStoreURL())
         let container = try ModelContainer(for: SwiftDataStoredGalleryCache.self,
                                            configurations: config)
         
         return SwiftDataGalleryStore(modelContainer: container)
+    }
+    
+    func makeCoreDataTestSpecificStore() throws -> CoreDataGalleryStore {
+        let storeBundle = Bundle(for: CoreDataGalleryStore.self)
+        return try CoreDataGalleryStore(storeBundle: storeBundle, storeURL: testSpecificStoreURL())
     }
     
     func testSpecificStoreURL() -> URL {
