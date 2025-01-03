@@ -19,6 +19,10 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "NASAGalleryCacheIntegrationTests",
+        "NASAGalleryCacheIntegrationTests\/test()"
+      ],
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
         "identifier" : "925D36002B08037000FE12DA",

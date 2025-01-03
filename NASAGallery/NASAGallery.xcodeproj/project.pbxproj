@@ -10,6 +10,8 @@
 		92032A7C2B213423008053C0 /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92032A7B2B213423008053C0 /* Fixtures.swift */; };
 		921A45BD2CBE9C40002875EB /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		921A45BE2CBE9C57002875EB /* Fixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92032A7B2B213423008053C0 /* Fixtures.swift */; };
+		921A6F3A2D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921A6F392D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift */; };
+		921A6F3C2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 921A6F3B2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan */; };
 		92298F092CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */; };
 		92298F0B2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */; };
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
@@ -75,6 +77,8 @@
 
 /* Begin PBXFileReference section */
 		92032A7B2B213423008053C0 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
+		921A6F392D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryCacheIntegrationTests.swift; sourceTree = "<group>"; };
+		921A6F3B2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
 		921D2A832B3768AE0047B4B7 /* NASAGalleryAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		921D2A842B3769C20047B4B7 /* NASAGallery.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGallery.xctestplan; sourceTree = "<group>"; };
 		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
@@ -151,6 +155,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		921A6F382D280D9C00FE4D83 /* NASAGalleryCacheIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				921A6F3B2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan */,
+				921A6F392D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift */,
+			);
+			path = NASAGalleryCacheIntegrationTests;
+			sourceTree = "<group>";
+		};
 		921D2A852B376A5A0047B4B7 /* CI */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,6 +277,7 @@
 				921D2A852B376A5A0047B4B7 /* CI */,
 				925D36052B08037000FE12DA /* NASAGalleryTests */,
 				92CFC41F2B372C8E00DEECF1 /* NASAGalleryAPIEndToEndTests */,
+				921A6F382D280D9C00FE4D83 /* NASAGalleryCacheIntegrationTests */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -559,6 +573,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				921A6F3C2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +623,7 @@
 				92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */,
 				92E2F7CC2C2D7ED4002145F8 /* CodableGalleryStoreTests.swift in Sources */,
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
+				921A6F3A2D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift in Sources */,
 				9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */,
 				927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */,
 				92EADC832CACB10200E9ACF1 /* CoreDataGalleryStoreTests.swift in Sources */,
