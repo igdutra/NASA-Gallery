@@ -16,6 +16,21 @@ import SwiftData
  */
 
 final class NASAGalleryCacheIntegrationTests: XCTestCase {
+    
+    // MARK: - SetUp & TearDown
+    
+    override func setUp() async throws {
+        try await super.setUp()
+        setupEmptyStoreState()
+    }
+    
+    override func tearDown() async throws {
+        undoStoreSideEffects()
+        try await super.tearDown()
+    }
+    
+    // MARK: - Tests
+    
     func test_load_deliversNoItemsOnEmptyCache() async throws {
         let sut = try makeSUT()
         
@@ -52,5 +67,19 @@ private extension NASAGalleryCacheIntegrationTests {
 
     func cachesDirectory() -> URL {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
+    
+    // MARK: Undo side-effects
+    
+    func setupEmptyStoreState() {
+        clearStoreArtifacts()
+    }
+
+    func undoStoreSideEffects() {
+        clearStoreArtifacts()
+    }
+    
+    func clearStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }
