@@ -52,6 +52,22 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
         
         XCTAssertEqual(result, expectedGallery)
     }
+    
+    func test_save_overridingItemsSavedOnASeparateInstance_succeeds() async throws {
+        let sutToPerformFirstSave = try makeSUT()
+        let sutToPerformSecondSave = try makeSUT()
+        let sutToPerformLoad = try makeSUT()
+        let firstSavedGallery = uniqueLocalImages().images
+        let secondSavedGallery = uniqueLocalImages(title: "This is a second gallery").images
+
+        try await sutToPerformFirstSave.save(gallery: firstSavedGallery, timestamp: Date())
+        
+        try await sutToPerformSecondSave.save(gallery: secondSavedGallery, timestamp: Date())
+        
+        let result = try await sutToPerformLoad.load()
+        
+        XCTAssertEqual(result, secondSavedGallery)
+    }
 }
 
 // MARK: - Helpers
