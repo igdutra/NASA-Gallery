@@ -12,7 +12,14 @@ public final class LocalGalleryLoader: GalleryLoader {
     private let cachePolicy: GalleryCachePolicy
     private let store: GalleryStore
     
-    #warning("Verify against Date injection: should it be a closure?")
+    // TODO: move to cons
+    /* Author note on date injection:
+     The essential feed injects a closure "currentDate: () -> Date" in the init, because it uses constructor injection rather then parameter injection (current setup)
+     By doing so, we move away the responsability to dictate the date to the composition root, rather then the caller.
+     
+     When performing composition, revisit this.
+    */
+    
     public init(store: GalleryStore) {
         self.store = store
         self.cachePolicy = GalleryCachePolicy()
@@ -20,7 +27,7 @@ public final class LocalGalleryLoader: GalleryLoader {
     
     // MARK: - Public methods
     
-    // TODO: Verify about injecting closure as date
+    // TODO: Move to constructor injection with closure?
     public func save(gallery: [GalleryImage], timestamp: Date) async throws {
         try await store.delete()
         try await store.insert(LocalGalleryCache(gallery: gallery.toLocal(), timestamp: timestamp))
