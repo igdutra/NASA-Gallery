@@ -8,6 +8,8 @@
 import Foundation
 import SwiftData
 
+// Author note: there's nothing to test with Reentrancy inside this actor, as there's no `await` keyword (thus no suspencion point) in any of the functions below.
+
 @ModelActor
 public final actor SwiftDataGalleryStore: GalleryStore {
     
