@@ -7,9 +7,22 @@
 
 import SwiftUI
 
+// Ref:     https://stackoverflow.com/questions/69489035/how-to-get-a-grid-in-swiftui-with-custom-layout-different-cell-size
+
 struct SwiftUIView: View {
+    let colors: [Color] = [
+        .red,
+        .green,
+        .blue
+    ]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(colors, id: \.self) { color in
+                color
+                    .frame(maxWidth: .infinity, minHeight: 100)
+            }
+        }
     }
 }
 
