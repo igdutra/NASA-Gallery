@@ -18,13 +18,15 @@ struct SwiftUIView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(apodImages, id: \.self) { resource in
+                ForEach(Array(apodImages.enumerated()), id: \.element) { index, resource in
                     Image(resource)
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: .infinity, maxHeight: 200)
+                        .background(Color.black)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .padding(.horizontal, 5)
+                        .offset(y: index % 2 != 0 ? 100 : 0) // Offset second column images
                 }
             }
             .padding()
@@ -36,3 +38,4 @@ struct SwiftUIView: View {
 #Preview {
     SwiftUIView()
 }
+
