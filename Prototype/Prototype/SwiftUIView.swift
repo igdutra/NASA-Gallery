@@ -5,31 +5,23 @@
 //  Created by Ivo on 25/02/25.
 //
 
-import SwiftUI
-
 // Ref:     https://stackoverflow.com/questions/69489035/how-to-get-a-grid-in-swiftui-with-custom-layout-different-cell-size
 
-
+import SwiftUI
 
 struct SwiftUIView: View {
-    let columns = [
-        GridItem(.flexible(), spacing: 10),
-        GridItem(.flexible(), spacing: 10)
-    ]
     
     var body: some View {
         Grid(alignment: .center) {
+            // First row with variation in offset
             GridRow {
                 resizedImage(for : .apod1)
-                resizedImage(for: .apod2)
-                    .offset(y: 100)
-            }
-//            .frame(height: 300)
-            GridRow {
-                resizedImage(for: .apod3)
-                    .gridCellColumns(2)
+                resizedImage(for: .apod5)
+                    .border(.red)
+                    .padding(.top, 100)
             }
         }
+        .clipped()
         .background(Color.black.edgesIgnoringSafeArea(.all))
     }
     
@@ -47,4 +39,3 @@ struct SwiftUIView: View {
 #Preview {
     SwiftUIView()
 }
-
