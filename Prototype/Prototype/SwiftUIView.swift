@@ -9,6 +9,8 @@ import SwiftUI
 
 // Ref:     https://stackoverflow.com/questions/69489035/how-to-get-a-grid-in-swiftui-with-custom-layout-different-cell-size
 
+
+
 struct SwiftUIView: View {
     let columns = [
         GridItem(.flexible(), spacing: 10),
@@ -16,22 +18,29 @@ struct SwiftUIView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(Array(apodImages.enumerated()), id: \.element) { index, resource in
-                    Image(resource)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity, maxHeight: 200)
-                        .background(Color.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(.horizontal, 5)
-                        .offset(y: index % 2 != 0 ? 100 : 0) // Offset second column images
-                }
+        Grid(alignment: .center) {
+            GridRow {
+                resizedImage(for : .apod1)
+                resizedImage(for: .apod2)
+                    .offset(y: 100)
             }
-            .padding()
+//            .frame(height: 300)
+            GridRow {
+                resizedImage(for: .apod3)
+                    .gridCellColumns(2)
+            }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
+    }
+    
+    func resizedImage(for resource: ImageResource) -> some View {
+        Image(resource)
+            .resizable()
+            .scaledToFit()
+            .frame(maxWidth: .infinity, maxHeight: 200)
+            .background(Color.black)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .padding(.horizontal, 5)
     }
 }
 
