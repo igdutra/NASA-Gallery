@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// Note: Using Grids is more useful for layots that DO NOT vary: Always 2 columns, always same width.
+
 struct Columns: View {
     let columns = [
         GridItem(.flexible(), spacing: 10),
