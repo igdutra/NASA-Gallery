@@ -9,21 +9,13 @@
 
 import SwiftUI
 
-//2. veja pinterest
-//3. DEFINA 5 tipos de rows para fazer
-//
-//não vamos usar vgrid
-//
-//VER MEUS DESENHOS! 5 ROWS FECHAdOS! agora só implementar.// MARK: -
-//
-//e depois fazer o mesmo layout em uikit hehehe
-
 struct SwiftUIView: View {
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack {
+                    row5(size: geometry.size)
                     row4(totalHeight: geometry.size.height)
                     row1()
                     row3(totalHeight: geometry.size.height * (1.4)) // Use 2/3 of available space
@@ -110,6 +102,8 @@ struct SwiftUIView: View {
         HStack {
             VStack {
                 resizedImage(for: .apod1)
+                    .frame(maxHeight: totalHeight / 4)
+
                 resizedImage(for: .apod2)
                 resizedImage(for: .apod6)
             }
@@ -123,6 +117,44 @@ struct SwiftUIView: View {
             }
         }
         .frame(height: totalHeight)
+    }
+    
+    func row5(size: CGSize) -> some View {
+        let height = size.height / 3
+        let fifth = size.width / 5
+        
+        return VStack {
+            HStack {
+                resizedImage(for: .apod11)
+                    .frame(maxWidth: fifth * 2.5)
+
+                resizedImage(for: .apod12)
+                    .frame(maxWidth: fifth * 2.5)
+            }
+            HStack {
+                resizedImage(for: .apod1)
+                    .frame(maxWidth: fifth)
+                    .debugBackground()
+
+                resizedImage(for: .apod2)
+                    .frame(maxWidth: fifth * 3)
+                    .debugBackground()
+
+                resizedImage(for: .apod6)
+                    .frame(maxWidth: fifth)
+            }
+            .frame(height: height)
+
+            HStack {
+                resizedImage(for: .apod5)
+                    .frame(maxWidth: fifth * 4)
+
+                resizedImage(for: .apod7)
+                    .frame(maxWidth: fifth)
+            }
+            
+            .frame(maxHeight: height)
+        }
     }
     
     // MARK: - Image Helpers
