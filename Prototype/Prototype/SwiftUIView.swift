@@ -7,6 +7,9 @@
 
 // Reply this with a better solution:    https://stackoverflow.com/questions/69489035/how-to-get-a-grid-in-swiftui-with-custom-layout-different-cell-size
 
+// TODO: fade in
+// TODO: extract Image helpers -> use scale to fit only on big images, smaller ones are fill
+
 import SwiftUI
 
 struct SwiftUIView: View {
@@ -16,11 +19,11 @@ struct SwiftUIView: View {
             ScrollView {
                 VStack {
                     row5(size: geometry.size)
-                    row4(totalHeight: geometry.size.height)
-                    row1()
-                    row3(totalHeight: geometry.size.height * (1.4)) // Use 2/3 of available space
-                    row1()
-                    row2(totalHeight: geometry.size.height * (2/3)) // Use 2/3 of available space
+//                    row4(totalHeight: geometry.size.height)
+//                    row1()
+//                    row3(totalHeight: geometry.size.height * (1.4)) // Use 2/3 of available space
+//                    row1()
+//                    row2(totalHeight: geometry.size.height * (2/3)) // Use 2/3 of available space
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -125,34 +128,62 @@ struct SwiftUIView: View {
         
         return VStack {
             HStack {
-                resizedImage(for: .apod11)
+                Image(.apod11)
+                    .resizable()
+                    .scaledToFill()
                     .frame(maxWidth: fifth * 2.5)
-
-                resizedImage(for: .apod12)
+                    .frame(height: height * 0.6)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+                Image(.apod12)
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .frame(maxWidth: fifth * 2.5)
             }
+            .frame(maxHeight: height)
+            
             HStack {
-                resizedImage(for: .apod1)
+                // FILL
+                Image(.apod1)
+                    .resizable()
+                    .scaledToFill()
                     .frame(maxWidth: fifth)
-                    .debugBackground()
-
-                resizedImage(for: .apod2)
-                    .frame(maxWidth: fifth * 3)
-                    .debugBackground()
-
-                resizedImage(for: .apod6)
+                    .frame(height: height * 0.4)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                
+                // FIT
+                Image(.apod2)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .frame(maxWidth: fifth * 4)
+                
+                Image(.apod6)
+                    .resizable()
+                    .scaledToFill()
                     .frame(maxWidth: fifth)
+                    .frame(height: height * 0.4)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .frame(height: height)
+            .frame(maxHeight: height)
 
             HStack {
-                resizedImage(for: .apod5)
+                Image(.apod5)
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .frame(maxWidth: fifth * 4)
 
-                resizedImage(for: .apod7)
-                    .frame(maxWidth: fifth)
+                Image(.apod7)
+                    .resizable()
+                    .scaledToFill()
+                    .containerRelativeFrame(.horizontal) { size, axis in
+                        size * 0.2
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .frame(maxHeight: height * 0.6)
             }
-            
             .frame(maxHeight: height)
         }
     }
