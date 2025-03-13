@@ -16,11 +16,11 @@ struct SwiftUIView: View {
             ScrollView {
                 // Note: clear difference between LazyVStack and VStack: animation only occurs on LazyVStack
                 LazyVStack {
-//                    row1(with: .apod1)
-//                    row5(size: geometry.size)
-//                    row1(with: .apod15)
-                    
+                    bigRow(with: .apod1)
+                    horizontalRow(size: geometry.size)
+                    bigRow(with: .apod10)
                     columnRow(size: geometry.size)
+                    bigRow(with: .apod13)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -38,40 +38,30 @@ struct SwiftUIView: View {
         let totalHeight = size.height
         let firstColumnWidth = size.width / 3
         let goldenRatio: CGFloat = 1.618
-        let height1 = totalHeight / (1 + goldenRatio)
-        let height2 = totalHeight - height1
+        let tallerImageHeight = totalHeight / goldenRatio
+        let shorterImageHeight = totalHeight - tallerImageHeight
 
-        return HStack(spacing: 100) {
-            VStack {
+        return HStack(spacing: 12) {
+            VStack(spacing: 4) {
                 fillImage(for: .apod2)
-                    .clipped()
-                
                 fillImage(for: .apod3)
-                    .clipped()
-                
                 fillImage(for: .apod6)
-                    .clipped()
                 fillImage(for: .apod8)
-                    .clipped()
                 fillImage(for: .apod9)
-                    .clipped()
             }
             .frame(width: firstColumnWidth)
-            .debugBorder()
+            .smoothEdges()
             
-            VStack {
-                fillImage(for: .apod4)
-                    .smoothEdges()
-                    .debugBorder()
-                
+            VStack(spacing: 12) {
                 fillImage(for: .apod12)
+                    .frame(height: tallerImageHeight)
                     .smoothEdges()
-                    .debugBorder()
-                fillImage(for: .apod13)
+                fillImage(for: .apod14)
+                    .frame(height: shorterImageHeight)
                     .smoothEdges()
-                    .debugBorder()
             }
             .frame(width: firstColumnWidth * 2)
+            .smoothEdges()
         }
         .frame(height: totalHeight)
     }
