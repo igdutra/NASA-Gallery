@@ -7,8 +7,6 @@
 
 // Reply this with a better solution:    https://stackoverflow.com/questions/69489035/how-to-get-a-grid-in-swiftui-with-custom-layout-different-cell-size
 
-// TODO: fade in
-
 import SwiftUI
 
 struct SwiftUIView: View {
@@ -16,7 +14,8 @@ struct SwiftUIView: View {
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack {
+                // Note: clear difference between LazyVStack and VStack: animation only occurs on LazyVStack
+                LazyVStack {
 //                    row1(with: .apod1)
 //                    row5(size: geometry.size)
 //                    row1(with: .apod15)
@@ -130,38 +129,13 @@ struct SwiftUIView: View {
     // MARK: - Image Helpers
     
     func fitImage(for resource: ImageResource) -> some View {
-        Image(resource)
-            .resizable()
+        AsyncImageSimulatorView(resource: resource)
             .scaledToFit()
     }
     
     func fillImage(for resource: ImageResource) -> some View {
-        Image(resource)
-            .resizable()
+        AsyncImageSimulatorView(resource: resource)
             .scaledToFill()
-    }
-    
-    // MARK: - Old Image Helpers
-    
-    func resizedImage(for resource: ImageResource) -> some View {
-        Image(resource)
-            .resizable()
-            .scaledToFit()
-            // .frame(maxWidth: .infinity, maxHeight: 200)
-            .background(.blue)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .padding(.horizontal, 5)
-            .clipped()
-    }
-    
-    func fillBigImage(for resource: ImageResource) -> some View {
-        Image(resource)
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(maxWidth: .infinity, maxHeight: 300)
-            .background(Color.black)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .padding(.horizontal, 5)
     }
 }
 
