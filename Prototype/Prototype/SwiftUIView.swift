@@ -128,61 +128,45 @@ struct SwiftUIView: View {
         
         return VStack {
             HStack {
-                Image(.apod11)
-                    .resizable()
-                    .scaledToFill()
+                fillImage(for: .apod11)
                     .frame(maxWidth: fifth * 2.5)
                     .frame(height: height * 0.6)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .smoothEdges()
                 
-                Image(.apod12)
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                fillImage(for: .apod12)
                     .frame(maxWidth: fifth * 2.5)
+                    .smoothEdges()
             }
             .frame(maxHeight: height)
             
             HStack {
-                // FILL
-                Image(.apod1)
-                    .resizable()
-                    .scaledToFill()
+                fillImage(for: .apod1)
                     .frame(maxWidth: fifth)
                     .frame(height: height * 0.4)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .smoothEdges()
                 
-                // FIT
-                Image(.apod2)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                fitImage(for: .apod4)
                     .frame(maxWidth: fifth * 4)
+                    .smoothEdges()
                 
-                Image(.apod6)
-                    .resizable()
-                    .scaledToFill()
+                fillImage(for: .apod6)
                     .frame(maxWidth: fifth)
                     .frame(height: height * 0.4)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .smoothEdges()
             }
             .frame(maxHeight: height)
 
             HStack {
-                Image(.apod5)
-                    .resizable()
-                    .scaledToFit()
+                fitImage(for: .apod5)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .frame(maxWidth: fifth * 4)
 
-                Image(.apod7)
-                    .resizable()
-                    .scaledToFill()
+                fillImage(for: .apod7)
                     .containerRelativeFrame(.horizontal) { size, axis in
                         size * 0.2
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .frame(maxHeight: height * 0.6)
+                    .smoothEdges()
             }
             .frame(maxHeight: height)
         }
@@ -190,18 +174,32 @@ struct SwiftUIView: View {
     
     // MARK: - Image Helpers
     
+    func fitImage(for resource: ImageResource) -> some View {
+        Image(resource)
+            .resizable()
+            .scaledToFit()
+    }
+    
+    func fillImage(for resource: ImageResource) -> some View {
+        Image(resource)
+            .resizable()
+            .scaledToFill()
+    }
+    
+    // MARK: - Old Image Helpers
+    
     func resizedImage(for resource: ImageResource) -> some View {
         Image(resource)
             .resizable()
             .scaledToFit()
-//            .frame(maxWidth: .infinity, maxHeight: 200)
+            // .frame(maxWidth: .infinity, maxHeight: 200)
             .background(.blue)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .padding(.horizontal, 5)
             .clipped()
     }
     
-    func fillImage(for resource: ImageResource) -> some View {
+    func fillBigImage(for resource: ImageResource) -> some View {
         Image(resource)
             .resizable()
             .aspectRatio(contentMode: .fill)
@@ -209,6 +207,12 @@ struct SwiftUIView: View {
             .background(Color.black)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .padding(.horizontal, 5)
+    }
+}
+
+private extension View {
+    func smoothEdges() -> some View {
+        self.clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
