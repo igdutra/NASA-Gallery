@@ -16,7 +16,7 @@ final class APODImageCell: UICollectionViewCell {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -26,6 +26,7 @@ final class APODImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(imageView)
+
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -38,6 +39,8 @@ final class APODImageCell: UICollectionViewCell {
     
     func configure(with image: ImageResource) {
         imageView.image = UIImage(resource: .apod1)
+        // Useful for debugging
+//        contentView.backgroundColor = .red
     }
 }
 
@@ -59,7 +62,7 @@ final class APODGalleryViewController: UIViewController {
     
     private func setupCollectionView() {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
-            return self.createBigRowLayout()
+            return self.createBigRowLayout(for: UIImage(resource: .apod1))
         }
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -91,13 +94,23 @@ final class APODGalleryViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    private func createBigRowLayout() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+//    Items: Smallest unit, represents a single cell.
+//    Groups: Containers that hold multiple items.
+//    Sections: Containers that hold multiple groups.
+    private func createBigRowLayout(for image: UIImage) -> NSCollectionLayoutSection {
+        let widthScale = UIScreen.main.bounds.width / image.size.width
+
+        // Item will take the total available space by the group
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.5))
+
+        // Group will take full width and
+        // the height WILL be the scaled height image.
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(image.size.height * widthScale))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
+
         let section = NSCollectionLayoutSection(group: group)
         return section
     }
