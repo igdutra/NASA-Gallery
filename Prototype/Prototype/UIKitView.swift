@@ -110,8 +110,8 @@ final class APODGalleryViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Int, ImageResource>()
         snapshot.appendSections([0, 1, 2])
         
-//        snapshot.appendItems([.apod1], toSection: 0) // Big row
-//        snapshot.appendItems([.apod11, .apod12, .apod4, .apod5, .apod6, .apod7, .apod8], toSection: 1) // Horizontal row
+        snapshot.appendItems([.apod1], toSection: 0) // Big row
+        snapshot.appendItems([.apod11, .apod12, .apod4, .apod5, .apod6, .apod7, .apod8], toSection: 1) // Horizontal row
         snapshot.appendItems([.apod2, .apod3, .apod9, .apod10, .apod13, .apod14, .apod15], toSection: 2) // Column row
         
         dataSource.apply(snapshot, animatingDifferences: true)
@@ -139,21 +139,36 @@ final class APODGalleryViewController: UIViewController {
     }
     
     private func createColumnLayout() -> NSCollectionLayoutSection {
-//        let widthScale = UIScreen.main.bounds.width / image.size.width
+        let spacing: CGFloat = 4
+        // First Column
+        let firstColumnItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                         heightDimension: .fractionalHeight(1/5))
+        let firstColumnItem = NSCollectionLayoutItem(layoutSize: firstColumnItemSize)
+        firstColumnItem.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        let firstColumnGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2),
+                                                          heightDimension: .fractionalHeight(1))
+        let firstColumnGroup = NSCollectionLayoutGroup.vertical(layoutSize: firstColumnGroupSize,
+                                                                repeatingSubitem: firstColumnItem,
+                                                                count: 5)
+        // Second Column
+        let secondColumnItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                         heightDimension: .fractionalHeight(1/2))
+        let secondColumnItem = NSCollectionLayoutItem(layoutSize: secondColumnItemSize)
+        secondColumnItem.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        let secondColumnGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2),
+                                                          heightDimension: .fractionalHeight(1))
+        let secondColumnGroup = NSCollectionLayoutGroup.vertical(layoutSize: secondColumnGroupSize,
+                                                                repeatingSubitem: secondColumnItem,
+                                                                count: 2)
+        
+        // 📌 Stack rows horizontally
+        let fullSection = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalHeight(1.0)),
+            subitems: [firstColumnGroup, secondColumnGroup]
+        )
 
-        // Item will take the total available space by the group
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        // Group will take full width and
-        // the height WILL be the scaled height image.
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .fractionalHeight(1))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        return section
+        return NSCollectionLayoutSection(group: fullSection)
     }
     
     private func createHorizontalRowLayout() -> NSCollectionLayoutSection {
