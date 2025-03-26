@@ -90,7 +90,7 @@ struct SwiftUIView: View {
                     .smoothEdges()
                 
                 fitImage(for: .apod4)
-                    .frame(maxWidth: fifth * 4)
+                    .frame(maxWidth: fifth * 3)
                     .smoothEdges()
                 
                 fillImage(for: .apod6)
