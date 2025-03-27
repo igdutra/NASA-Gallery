@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "3934EB69-E3DE-48A0-B316-C01A83FEFA0F",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "922075482D960233000DEDF5",
+        "name" : "NASAGalleryiOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}
