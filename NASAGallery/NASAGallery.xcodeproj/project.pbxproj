@@ -15,8 +15,7 @@
 		9220754A2D960233000DEDF5 /* NASAGalleryiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922075422D960233000DEDF5 /* NASAGalleryiOS.framework */; };
 		9220755A2D96024C000DEDF5 /* NASAGalleryiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */; };
 		9220755F2D9602F4000DEDF5 /* SampleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9220755E2D9602F4000DEDF5 /* SampleFile.swift */; };
-		922075622D960406000DEDF5 /* NASAGalleryiOS.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 922075612D960406000DEDF5 /* NASAGalleryiOS.xctestplan */; };
-		922075632D960406000DEDF5 /* NASAGalleryiOS.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 922075612D960406000DEDF5 /* NASAGalleryiOS.xctestplan */; };
+		922075692D96117C000DEDF5 /* NASAGalleryiOSTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 922075682D96117C000DEDF5 /* NASAGalleryiOSTests.xctestplan */; };
 		92298F092CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */; };
 		92298F0B2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */; };
 		922DF25C2C64D8D50038EEB7 /* GalleryStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */; };
@@ -98,7 +97,7 @@
 		922075492D960233000DEDF5 /* NASAGalleryiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryiOSTests.swift; sourceTree = "<group>"; };
 		9220755E2D9602F4000DEDF5 /* SampleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFile.swift; sourceTree = "<group>"; };
-		922075612D960406000DEDF5 /* NASAGalleryiOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryiOS.xctestplan; sourceTree = "<group>"; };
+		922075682D96117C000DEDF5 /* NASAGalleryiOSTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryiOSTests.xctestplan; sourceTree = "<group>"; };
 		92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataStoredGalleryImage.swift; sourceTree = "<group>"; };
 		92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataStoredGalleryCache.swift; sourceTree = "<group>"; };
 		922DF25B2C64D8D50038EEB7 /* GalleryStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryStoreSpecs.swift; sourceTree = "<group>"; };
@@ -207,7 +206,7 @@
 		922075592D96024C000DEDF5 /* NASAGalleryiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				922075612D960406000DEDF5 /* NASAGalleryiOS.xctestplan */,
+				922075682D96117C000DEDF5 /* NASAGalleryiOSTests.xctestplan */,
 				922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */,
 			);
 			path = NASAGalleryiOSTests;
@@ -674,7 +673,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				922075622D960406000DEDF5 /* NASAGalleryiOS.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,7 +680,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				922075632D960406000DEDF5 /* NASAGalleryiOS.xctestplan in Resources */,
+				922075692D96117C000DEDF5 /* NASAGalleryiOSTests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

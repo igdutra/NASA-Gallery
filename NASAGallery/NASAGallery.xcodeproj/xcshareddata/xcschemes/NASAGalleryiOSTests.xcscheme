@@ -6,22 +6,6 @@
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "922075412D960233000DEDF5"
-               BuildableName = "NASAGalleryiOS.framework"
-               BlueprintName = "NASAGalleryiOS"
-               ReferencedContainer = "container:NASAGallery.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -30,7 +14,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../NASAGalleryiOS.xctestplan"
+            reference = "container:NASAGalleryiOSTests/NASAGalleryiOSTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -65,15 +49,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "922075412D960233000DEDF5"
-            BuildableName = "NASAGalleryiOS.framework"
-            BlueprintName = "NASAGalleryiOS"
-            ReferencedContainer = "container:NASAGallery.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
