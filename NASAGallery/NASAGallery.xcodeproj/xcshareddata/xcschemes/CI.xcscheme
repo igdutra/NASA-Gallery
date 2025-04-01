@@ -72,11 +72,11 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:CI/CI-macOS.xctestplan"
-            default = "YES">
+            reference = "container:CI/CI-macOS.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:CI/CI-iOS.xctestplan">
+            reference = "container:CI/CI-iOS.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
    </TestAction>
