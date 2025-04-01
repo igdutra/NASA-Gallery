@@ -81,7 +81,7 @@
 		921A6F3B2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
 		921D2A832B3768AE0047B4B7 /* NASAGalleryAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGalleryAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		921D2A842B3769C20047B4B7 /* NASAGallery.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NASAGallery.xctestplan; sourceTree = "<group>"; };
-		921D2A862B376A810047B4B7 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		921D2A862B376A810047B4B7 /* CI-macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CI-macOS.xctestplan"; sourceTree = "<group>"; };
 		922075422D960233000DEDF5 /* NASAGalleryiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGalleryiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		922075492D960233000DEDF5 /* NASAGalleryiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryiOSTests.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 		921D2A852B376A5A0047B4B7 /* CI */ = {
 			isa = PBXGroup;
 			children = (
-				921D2A862B376A810047B4B7 /* CI.xctestplan */,
+				921D2A862B376A810047B4B7 /* CI-macOS.xctestplan */,
 			);
 			path = CI;
 			sourceTree = "<group>";
