@@ -16,13 +16,6 @@
     {
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
-        "identifier" : "92CFC41D2B372C8E00DEECF1",
-        "name" : "NASAGalleryAPIEndToEndTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:NASAGallery.xcodeproj",
         "identifier" : "925D36002B08037000FE12DA",
         "name" : "NASAGalleryTests"
       }

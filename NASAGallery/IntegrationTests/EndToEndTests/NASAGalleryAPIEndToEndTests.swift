@@ -8,7 +8,7 @@
 import XCTest
 import NASAGallery
 
-final class NASAGalleryEndToEndTests: XCTestCase {
+final class _NASAGalleryEndToEndTests: XCTestCase {
     
     func test_apiEndToEndTests_matchesFixedTestData() async throws {
         let url = getAPODURL()
@@ -38,7 +38,7 @@ final class NASAGalleryEndToEndTests: XCTestCase {
 
 // MARK: - Helpers
 
-private extension NASAGalleryEndToEndTests {
+private extension _NASAGalleryEndToEndTests {
     
     func makeSUT(url: URL, file: StaticString = #file, line: UInt = #line) -> RemoteGalleryLoader {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
