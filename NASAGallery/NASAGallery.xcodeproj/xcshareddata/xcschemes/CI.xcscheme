@@ -75,6 +75,9 @@
             reference = "container:CI/CI-macOS.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:CI/CI-iOS.xctestplan">
+         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction

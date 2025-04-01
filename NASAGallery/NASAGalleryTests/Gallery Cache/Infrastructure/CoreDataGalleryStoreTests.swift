@@ -7,6 +7,7 @@
 
 import XCTest
 import NASAGallery
+import CoreData
 
 /* Author notes on CoreDataGalleryStoreTests
  
