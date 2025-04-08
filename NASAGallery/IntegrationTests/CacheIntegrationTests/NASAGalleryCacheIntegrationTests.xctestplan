@@ -93,7 +93,9 @@
         "URLSessionHTTPClientTests\/test_getFromURL_performsGETRequestWithURL()",
         "URLSessionHTTPClientTests\/test_getFromURL_withDataOnHTTPURLResponse_succeeds()",
         "URLSessionHTTPClientTests\/test_getFromURL_withNilDataOnHTTPURLResponse_succeedsWithEmptyData()",
-        "ValidateGalleryFromCacheUseCaseTests"
+        "ValidateGalleryFromCacheUseCaseTests",
+        "_NASAGalleryEndToEndTests",
+        "_NASAGalleryEndToEndTests\/test_apiEndToEndTests_matchesFixedTestData()"
       ],
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",

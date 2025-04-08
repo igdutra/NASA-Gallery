@@ -21,7 +21,14 @@
     {
       "skippedTests" : [
         "NASAGalleryCacheIntegrationTests",
-        "NASAGalleryCacheIntegrationTests\/test()"
+        "NASAGalleryCacheIntegrationTests\/test()",
+        "NASAGalleryEndToEndTests",
+        "_NASAGalleryCacheIntegrationTests",
+        "_NASAGalleryCacheIntegrationTests\/test_load_itemsSavedOnASeparateInstance_succeeds()",
+        "_NASAGalleryCacheIntegrationTests\/test_load_onEmptyCache_succeeds()",
+        "_NASAGalleryCacheIntegrationTests\/test_save_overridingItemsSavedOnASeparateInstance_succeeds()",
+        "_NASAGalleryEndToEndTests",
+        "_NASAGalleryEndToEndTests\/test_apiEndToEndTests_matchesFixedTestData()"
       ],
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",

@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1510"
+   LastUpgradeVersion = "1620"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "922075412D960233000DEDF5"
+               BuildableName = "NASAGalleryiOS.framework"
+               BlueprintName = "NASAGalleryiOS"
+               ReferencedContainer = "container:NASAGallery.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -13,18 +30,19 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:NASAGalleryEndToEndTests/NASAGalleryEndToEndTests.xctestplan"
+            reference = "container:NASAGalleryiOSTests/NASAGalleryiOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "92CFC41D2B372C8E00DEECF1"
-               BuildableName = "NASAGalleryAPIEndToEndTests.xctest"
-               BlueprintName = "NASAGalleryAPIEndToEndTests"
+               BlueprintIdentifier = "922075482D960233000DEDF5"
+               BuildableName = "NASAGalleryiOSTests.xctest"
+               BlueprintName = "NASAGalleryiOSTests"
                ReferencedContainer = "container:NASAGallery.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -47,6 +65,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "922075412D960233000DEDF5"
+            BuildableName = "NASAGalleryiOS.framework"
+            BlueprintName = "NASAGalleryiOS"
+            ReferencedContainer = "container:NASAGallery.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

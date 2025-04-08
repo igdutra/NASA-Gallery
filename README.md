@@ -5,6 +5,7 @@
 </p>
 
 [![CI-macOS](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml/badge.svg)](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-macOS.yml)
+[![CI-iOS](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-iOS.yml/badge.svg)](https://github.com/igdutra/NASA-Gallery/actions/workflows/CI-iOS.yml)
 
 ## BDD Specs
 

@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "EDCC580C-4C64-41F9-A511-199985FED163",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:NASAGallery.xcodeproj",
+        "identifier" : "922075482D960233000DEDF5",
+        "name" : "NASAGalleryiOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

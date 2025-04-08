@@ -14,13 +14,15 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
-        "identifier" : "92CFC41D2B372C8E00DEECF1",
-        "name" : "NASAGalleryAPIEndToEndTests"
+        "identifier" : "922075482D960233000DEDF5",
+        "name" : "NASAGalleryiOSTests"
       }
     },
     {
+      "parallelizable" : false,
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
         "identifier" : "925D36002B08037000FE12DA",

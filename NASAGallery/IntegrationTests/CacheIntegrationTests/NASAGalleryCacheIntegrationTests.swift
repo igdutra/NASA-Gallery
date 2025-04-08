@@ -33,7 +33,7 @@ PRETTY COOL!
  - Compare the initialization from Store at the makeSUT() function from `NASAGalleryCacheIntegrationTests` with `SwiftDataGalleryStoreTests`
  */
 
-final class NASAGalleryCacheIntegrationTests: XCTestCase {
+final class _NASAGalleryCacheIntegrationTests: XCTestCase {
     
     // MARK: - SetUp & TearDown
     
@@ -88,7 +88,7 @@ final class NASAGalleryCacheIntegrationTests: XCTestCase {
 
 // MARK: - Helpers
 
-private extension NASAGalleryCacheIntegrationTests {
+private extension _NASAGalleryCacheIntegrationTests {
     func makeSUT(file: StaticString = #file, line: UInt = #line) throws -> LocalGalleryLoader {
         let store = try makeSwiftDataTestSpecificStore()
         // Note: we are able to simply swap the store implementation, and tests will pass (LSP principle).
