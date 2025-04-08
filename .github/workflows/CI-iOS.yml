@@ -1,6 +1,8 @@
 # This workflow will build a Swift project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
 
+# Available images and SDKs, simulators: https://github.com/actions/runner-images?tab=readme-ov-file
+
 # For the terminal to test
 # xcodebuild clean build test \
 #   -project NASAGallery/NASAGallery.xcodeproj/ \
@@ -36,4 +38,4 @@ jobs:
       run: /usr/bin/xcodebuild -version
 
     - name: Build and Test MacOS CI
-      run: xcodebuild clean build test -project NASAGallery/NASAGallery.xcodeproj/ -scheme "CI" -sdk macosx15.2 -destination "platform=macOS,arch=x86_64" -testPlan "CI_macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      run: xcodebuild clean build test -project NASAGallery/NASAGallery.xcodeproj/ -scheme "CI" -sdk iphonesimulator18.2 -destination "platform=iOS Simulator,OS=18.2,name=iPhone 16" -testPlan "CI_iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
