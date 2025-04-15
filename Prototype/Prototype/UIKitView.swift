@@ -46,18 +46,38 @@ final class APODImageCell: UICollectionViewCell {
 
 // MARK: - CONTROLLER
 
+// Note: Do it with native UICollectionViewController (the refreshcontrol should be for free)
 final class APODGalleryViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Int, ImageResource>!
-    
+    private let refreshControl = UIRefreshControl()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         
         setupCollectionView()
+        setUpRefresh()
         setupDataSource()
-        applySnapshot()
+//        applySnapshot()
+    }
+    
+    private func setUpRefresh() {
+        refreshControl.backgroundColor = .white
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh(_:)), for: .valueChanged)
+        collectionView.alwaysBounceVertical = true
+        collectionView.refreshControl = refreshControl
+    }
+    
+    @objc
+    private func didPullToRefresh(_ sender: Any) {
+        refreshControl.beginRefreshing()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.applySnapshot()
+            self.refreshControl.endRefreshing()
+        }
     }
     
     private func setupCollectionView() {
