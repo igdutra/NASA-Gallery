@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		922DCB832DADF5EB0027E0C9 /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922DCB822DADF5EB0027E0C9 /* UIView+Shimmer.swift */; };
 		925BBA302D726F5200930E3B /* Columns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925BBA2F2D726F5200930E3B /* Columns.swift */; };
 		927046312D78EDE600580222 /* View+Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927046302D78EDE600580222 /* View+Debugging.swift */; };
 		927046332D79E56600580222 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927046322D79E56600580222 /* Grid.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		922DCB822DADF5EB0027E0C9 /* UIView+Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmer.swift"; sourceTree = "<group>"; };
 		925BBA2F2D726F5200930E3B /* Columns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Columns.swift; sourceTree = "<group>"; };
 		927046302D78EDE600580222 /* View+Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Debugging.swift"; sourceTree = "<group>"; };
 		927046322D79E56600580222 /* Grid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				929CFB092D6F2B2000942359 /* ContentView.swift */,
 				929CFB0B2D6F2B2000942359 /* SwiftUIView.swift */,
 				929CFB0C2D6F2B2000942359 /* UIKitView.swift */,
+				922DCB822DADF5EB0027E0C9 /* UIView+Shimmer.swift */,
 				925BBA2E2D726F4700930E3B /* Components */,
 			);
 			path = Prototype;
@@ -177,6 +180,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				922DCB832DADF5EB0027E0C9 /* UIView+Shimmer.swift in Sources */,
 				927DF66A2D839101008A1E91 /* AsyncImageSimulatorView.swift in Sources */,
 				929CFB102D6F2B2000942359 /* ContentView.swift in Sources */,
 				925BBA302D726F5200930E3B /* Columns.swift in Sources */,
