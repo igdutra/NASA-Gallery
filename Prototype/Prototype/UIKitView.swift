@@ -10,37 +10,111 @@ import DeveloperToolsSupport
 
 // MARK: - CELL
 
+// Author note: need to revist this.
+// Apperently there's a difference calling UIAnimate inside a HostingController (maybe)
+// Check runloops
+// And new chatGPT shimmer effect does not move.
+
 final class APODImageCell: UICollectionViewCell {
     
     static let reuseIdentifier = "APODImageCell"
+    
+    private let imageViewContainer: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 8
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 8
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.alpha = 0
         return imageView
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.addSubview(imageView)
-
+        contentView.addSubview(imageViewContainer)
+        imageViewContainer.addSubview(imageView)
+        
+        imageView.image = nil
+        imageView.alpha = 0
+        
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            imageViewContainer.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageViewContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageViewContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageViewContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            imageView.topAnchor.constraint(equalTo: imageViewContainer.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: imageViewContainer.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: imageViewContainer.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: imageViewContainer.bottomAnchor)
         ])
     }
     
     required init?(coder: NSCoder) { nil }
     
     func configure(with image: ImageResource, contentMode: UIView.ContentMode) {
-        imageView.image = UIImage(resource: image)
         imageView.contentMode = contentMode
-        // Useful for debugging
-//        contentView.backgroundColor = .red
+        fadeIn(UIImage(resource: image))
+    }
+    
+    private var hasStartedShimmering = false
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // This guarantees bounds are valid and avoids duplicate shimmers
+        if !hasStartedShimmering, window != nil {
+            hasStartedShimmering = true
+            imageViewContainer.startShimmering()
+        }
+    }
+    
+    private func fadeIn(_ image: UIImage?) {
+        imageView.image = image
+        // Note: this print proved the completion block was being invoked right afterwards.
+        // Without the DispatchQueue.main, this is what happens:
+//        started 2025-04-15 23:18:02 +0000
+//        completed at 2025-04-15 23:18:03 +0000
+//        print("started", Date())
+
+        // Dispatching to main ensures UIKit layout is done, avoiding skipped animations
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            UIView.animate(withDuration: 3,
+                           delay: 1.5,
+                           options: [],
+                           animations: {
+                self.imageView.alpha = 1
+            }, completion: { completed in
+                if completed {
+//                    print("completed at", Date())
+                    self.imageViewContainer.stopShimmering()
+                }
+            })
+        }
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        guard window != nil else { return }
+
+        // Ensures shimmer only starts once the view is attached to window (critical in SwiftUI embedding)
+        imageViewContainer.startShimmering()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        imageView.alpha = 0
+        imageViewContainer.startShimmering()
+        hasStartedShimmering = false // ✅ reset shimmer state so it will start again on reuse
     }
 }
 
@@ -52,7 +126,7 @@ final class APODGalleryViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Int, ImageResource>!
     private let refreshControl = UIRefreshControl()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -60,7 +134,7 @@ final class APODGalleryViewController: UIViewController {
         setupCollectionView()
         setUpRefresh()
         setupDataSource()
-//        applySnapshot()
+        applySnapshot()
     }
     
     private func setUpRefresh() {
@@ -136,24 +210,24 @@ final class APODGalleryViewController: UIViewController {
         
         dataSource.apply(snapshot, animatingDifferences: true)
     }
-
-//    Items: Smallest unit, represents a single cell.
-//    Groups: Containers that hold multiple items.
-//    Sections: Containers that hold multiple groups.
+    
+    //    Items: Smallest unit, represents a single cell.
+    //    Groups: Containers that hold multiple items.
+    //    Sections: Containers that hold multiple groups.
     private func createBigRowLayout(for image: UIImage) -> NSCollectionLayoutSection {
         let widthScale = UIScreen.main.bounds.width / image.size.width
-
+        
         // Item will take the total available space by the group
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
+        
         // Group will take full width and
         // the height WILL be the scaled height image.
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(image.size.height * widthScale))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
+        
         let section = NSCollectionLayoutSection(group: group)
         return section
     }
@@ -172,14 +246,14 @@ final class APODGalleryViewController: UIViewController {
                                                                 count: 5)
         // Second Column
         let secondColumnItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                         heightDimension: .fractionalHeight(1/2))
+                                                          heightDimension: .fractionalHeight(1/2))
         let secondColumnItem = NSCollectionLayoutItem(layoutSize: secondColumnItemSize)
         secondColumnItem.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         let secondColumnGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2),
-                                                          heightDimension: .fractionalHeight(1))
+                                                           heightDimension: .fractionalHeight(1))
         let secondColumnGroup = NSCollectionLayoutGroup.vertical(layoutSize: secondColumnGroupSize,
-                                                                repeatingSubitem: secondColumnItem,
-                                                                count: 2)
+                                                                 repeatingSubitem: secondColumnItem,
+                                                                 count: 2)
         
         // 📌 Stack rows horizontally
         let fullSection = NSCollectionLayoutGroup.horizontal(
@@ -187,7 +261,7 @@ final class APODGalleryViewController: UIViewController {
                                                heightDimension: .fractionalHeight(1.0)),
             subitems: [firstColumnGroup, secondColumnGroup]
         )
-
+        
         return NSCollectionLayoutSection(group: fullSection)
     }
     
@@ -262,10 +336,10 @@ final class APODGalleryViewController: UIViewController {
                                                heightDimension: .fractionalHeight(0.8)), // Dynamically adjusts),
             subitems: [firstRow, secondRow, thirdRow]
         )
-
+        
         return NSCollectionLayoutSection(group: fullSection)
     }
-
+    
 }
 
 // MARK: - Preview
