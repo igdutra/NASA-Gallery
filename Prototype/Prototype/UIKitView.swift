@@ -125,7 +125,11 @@ final class APODGalleryViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Int, ImageResource>!
-    private let refreshControl = UIRefreshControl()
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .white
+        return refreshControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,6 +146,7 @@ final class APODGalleryViewController: UIViewController {
         refreshControl.addTarget(self, action: #selector(didPullToRefresh(_:)), for: .valueChanged)
         collectionView.alwaysBounceVertical = true
         collectionView.refreshControl = refreshControl
+        collectionView.refreshControl?.backgroundColor = .black
     }
     
     @objc
