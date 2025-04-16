@@ -12,7 +12,6 @@
 		921A6F3A2D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921A6F392D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift */; };
 		921A6F3C2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 921A6F3B2D280E6500FE4D83 /* NASAGalleryCacheIntegrationTests.xctestplan */; };
 		9220754A2D960233000DEDF5 /* NASAGalleryiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 922075422D960233000DEDF5 /* NASAGalleryiOS.framework */; };
-		9220755A2D96024C000DEDF5 /* NASAGalleryiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */; };
 		9220755F2D9602F4000DEDF5 /* SampleFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9220755E2D9602F4000DEDF5 /* SampleFile.swift */; };
 		92298F092CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */; };
 		92298F0B2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */; };
@@ -30,6 +29,10 @@
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */; };
 		9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */; };
+		929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */; };
+		929598CC2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */; };
+		929598CE2DAFB37600744B04 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
+		929598CF2DAFB37600744B04 /* NASAGallery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9295E5C52D19771D00942553 /* SwiftDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9295E5C42D19771D00942553 /* SwiftDataMapper.swift */; };
 		929CFC6E2BB7007800A34D5D /* GalleryCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */; };
 		92A2737E2B2A141600C37E9E /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2737D2B2A141600C37E9E /* HTTPClient.swift */; };
@@ -72,7 +75,28 @@
 			remoteGlobalIDString = 925D35F82B08037000FE12DA;
 			remoteInfo = NASAGallery;
 		};
+		929598D02DAFB37600744B04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 925D35F02B08037000FE12DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 925D35F82B08037000FE12DA;
+			remoteInfo = NASAGallery;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		929598D22DAFB37600744B04 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				929598CF2DAFB37600744B04 /* NASAGallery.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		92032A7B2B213423008053C0 /* Fixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fixtures.swift; sourceTree = "<group>"; };
@@ -85,7 +109,6 @@
 		921D2A862B376A810047B4B7 /* CI-macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CI-macOS.xctestplan"; sourceTree = "<group>"; };
 		922075422D960233000DEDF5 /* NASAGalleryiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NASAGalleryiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		922075492D960233000DEDF5 /* NASAGalleryiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NASAGalleryiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NASAGalleryiOSTests.swift; sourceTree = "<group>"; };
 		9220755E2D9602F4000DEDF5 /* SampleFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleFile.swift; sourceTree = "<group>"; };
 		92298F082CEE109A00AC6756 /* SwiftDataStoredGalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataStoredGalleryImage.swift; sourceTree = "<group>"; };
 		92298F0A2CEE125800AC6756 /* SwiftDataStoredGalleryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataStoredGalleryCache.swift; sourceTree = "<group>"; };
@@ -104,6 +127,7 @@
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GalleryStoreSpecs+Assertions.swift"; sourceTree = "<group>"; };
 		9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheGalleryUseCaseTests.swift; sourceTree = "<group>"; };
+		929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewControllerTests.swift; sourceTree = "<group>"; };
 		9295E5C42D19771D00942553 /* SwiftDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMapper.swift; sourceTree = "<group>"; };
 		929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCachePolicy.swift; sourceTree = "<group>"; };
 		92A2737D2B2A141600C37E9E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
@@ -137,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				929598CE2DAFB37600744B04 /* NASAGallery.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				9213E7602D9C8C3C0032A846 /* NASAGalleryiOS.xctestplan */,
-				922075582D96024C000DEDF5 /* NASAGalleryiOSTests.swift */,
+				929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */,
 			);
 			path = NASAGalleryiOSTests;
 			sourceTree = "<group>";
@@ -275,6 +300,7 @@
 				925D35FB2B08037000FE12DA /* NASAGallery */,
 				9220755C2D96024F000DEDF5 /* NASAGalleryiOS */,
 				9274D9592B3B01BE0090005A /* Tests */,
+				929598CD2DAFB37600744B04 /* Frameworks */,
 				925D35FA2B08037000FE12DA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -339,6 +365,13 @@
 				9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */,
 			);
 			path = "Gallery Store Specs";
+			sourceTree = "<group>";
+		};
+		929598CD2DAFB37600744B04 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		929CFC6C2BB7005600A34D5D /* Domain Models - Application-Agnostic Business Logic */ = {
@@ -519,10 +552,12 @@
 				9220753E2D960233000DEDF5 /* Sources */,
 				9220753F2D960233000DEDF5 /* Frameworks */,
 				922075402D960233000DEDF5 /* Resources */,
+				929598D22DAFB37600744B04 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				929598D12DAFB37600744B04 /* PBXTargetDependency */,
 			);
 			name = NASAGalleryiOS;
 			packageProductDependencies = (
@@ -680,7 +715,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9220755A2D96024C000DEDF5 /* NASAGalleryiOSTests.swift in Sources */,
+				929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,6 +754,7 @@
 			files = (
 				92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */,
 				92E2F7CC2C2D7ED4002145F8 /* CodableGalleryStoreTests.swift in Sources */,
+				929598CC2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */,
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
 				921A6F3A2D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift in Sources */,
 				9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */,
@@ -753,6 +789,11 @@
 			target = 925D35F82B08037000FE12DA /* NASAGallery */;
 			targetProxy = 925D36032B08037000FE12DA /* PBXContainerItemProxy */;
 		};
+		929598D12DAFB37600744B04 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 925D35F82B08037000FE12DA /* NASAGallery */;
+			targetProxy = 929598D02DAFB37600744B04 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -772,7 +813,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -813,7 +854,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1019,6 +1060,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1058,6 +1100,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
