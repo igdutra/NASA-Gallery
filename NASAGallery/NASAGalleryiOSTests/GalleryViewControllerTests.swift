@@ -34,16 +34,23 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 0)
     }
     
-    func test_viewDidLoad_loadGallery() {
-        let expectation = expectation(description: "Wait for loader.load()")
-        let loader = GalleryLoaderSpy(onLoad: { spy in
-            expectation.fulfill()
-        })
-
-        let sut = GalleryViewController(loader: loader)
-        sut.loadViewIfNeeded()
+    func test_viewDidLoad_loadGallery() async throws {
+        // This test verifies that the view controller correctly triggers a gallery load operation
+        // when its view is loaded (i.e., `viewDidLoad` is called).
+        //
+        // We use async/await to precisely await the completion of the loader's `load()` method.
+        // This gives us more accurate control over test timing compared to XCTestExpectation,
+        // and ensures the assertion is evaluated only after the async loading has finished.
         
-        wait(for: [expectation], timeout: 0.5)
+        let loader = GalleryLoaderSpy()
+        let sut = await GalleryViewController(loader: loader)
+        
+        await sut.loadViewIfNeeded()
+        
+        // Wait until the loader's load() method is actually called.
+        // This bridges the async Task launched in viewDidLoad and our test's execution flow.
+        await loader.awaitUntilCompletion()
+        
         XCTAssertEqual(loader.loadCallCount, 1)
     }
 }
@@ -51,16 +58,24 @@ final class GalleryViewControllerTests: XCTestCase {
 // MARK: - Spy
 
 final class GalleryLoaderSpy: GalleryLoader {
-    var loadCallCount = 0
-    private let onLoad: (GalleryLoaderSpy) -> Void
+    private(set) var loadCallCount = 0
+    private var continuation: CheckedContinuation<Void, Never>?
 
-    init(onLoad: @escaping (GalleryLoaderSpy) -> Void = { _ in }) {
-        self.onLoad = onLoad
+    // This method suspends the test execution until `load()` is called,
+    // allowing us to synchronize test assertions with async behavior.
+    func awaitUntilCompletion() async {
+        await withCheckedContinuation { continuation in
+            self.continuation = continuation
+        }
     }
 
     func load() async throws -> [GalleryImage] {
         loadCallCount += 1
-        onLoad(self)
+        
+        // Resume any suspended test waiting for this call.
+        continuation?.resume()
+        continuation = nil
+        
         return []
     }
 }
