@@ -34,12 +34,16 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 0)
     }
     
-    func failingTest_test_viewDidLoad_loadGallery() {
-        let loader = GalleryLoaderSpy()
+    func test_viewDidLoad_loadGallery() {
+        let expectation = expectation(description: "Wait for loader.load()")
+        let loader = GalleryLoaderSpy(onLoad: { spy in
+            expectation.fulfill()
+        })
+
         let sut = GalleryViewController(loader: loader)
-        
         sut.loadViewIfNeeded()
         
+        wait(for: [expectation], timeout: 0.5)
         XCTAssertEqual(loader.loadCallCount, 1)
     }
 }
@@ -48,9 +52,15 @@ final class GalleryViewControllerTests: XCTestCase {
 
 final class GalleryLoaderSpy: GalleryLoader {
     var loadCallCount = 0
-    
+    private let onLoad: (GalleryLoaderSpy) -> Void
+
+    init(onLoad: @escaping (GalleryLoaderSpy) -> Void = { _ in }) {
+        self.onLoad = onLoad
+    }
+
     func load() async throws -> [GalleryImage] {
         loadCallCount += 1
+        onLoad(self)
         return []
     }
 }
