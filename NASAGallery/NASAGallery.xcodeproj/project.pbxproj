@@ -30,7 +30,6 @@
 		9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */; };
 		9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */; };
 		929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */; };
-		929598CC2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */; };
 		929598CE2DAFB37600744B04 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		929598CF2DAFB37600744B04 /* NASAGallery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9295E5C52D19771D00942553 /* SwiftDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9295E5C42D19771D00942553 /* SwiftDataMapper.swift */; };
@@ -754,7 +753,6 @@
 			files = (
 				92EF7CDE2BA4BD4800F19C34 /* CacheHelpers.swift in Sources */,
 				92E2F7CC2C2D7ED4002145F8 /* CodableGalleryStoreTests.swift in Sources */,
-				929598CC2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */,
 				9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */,
 				921A6F3A2D280DFC00FE4D83 /* NASAGalleryCacheIntegrationTests.swift in Sources */,
 				9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */,
