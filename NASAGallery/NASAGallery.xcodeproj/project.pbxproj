@@ -220,8 +220,8 @@
 		921D2A852B376A5A0047B4B7 /* CI */ = {
 			isa = PBXGroup;
 			children = (
-				921D2A862B376A810047B4B7 /* CI-macOS.xctestplan */,
 				9213E7612D9C8DF50032A846 /* CI-iOS.xctestplan */,
+				921D2A862B376A810047B4B7 /* CI-macOS.xctestplan */,
 			);
 			path = CI;
 			sourceTree = "<group>";
@@ -889,6 +889,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "ivo-nasa.NASAGalleryiOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -907,6 +911,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "ivo-nasa.NASAGalleryiOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
