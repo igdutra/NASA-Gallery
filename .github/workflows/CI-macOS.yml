@@ -35,5 +35,5 @@ jobs:
     - name: Xcode version
       run: /usr/bin/xcodebuild -version
 
-    - name: Build and Test MacOS CI
-      run: xcodebuild clean build test -project NASAGallery/NASAGallery.xcodeproj/ -scheme "CI" -sdk macosx15.2 -destination "platform=macOS,arch=x86_64" -testPlan "CI-macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+    - name: Build and Test CI macOS
+      run: xcodebuild clean build test -project NASAGallery/NASAGallery.xcodeproj/ -scheme "CI-macOS" -sdk macosx15.2 -destination "platform=macOS,arch=x86_64" -testPlan "CI-macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
