@@ -29,37 +29,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "922075412D960233000DEDF5"
-               BuildableName = "NASAGalleryiOS.framework"
-               BlueprintName = "NASAGalleryiOS"
-               ReferencedContainer = "container:NASAGallery.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "925D36002B08037000FE12DA"
                BuildableName = "NASAGalleryTests.xctest"
                BlueprintName = "NASAGalleryTests"
-               ReferencedContainer = "container:NASAGallery.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "922075482D960233000DEDF5"
-               BuildableName = "NASAGalleryiOSTests.xctest"
-               BlueprintName = "NASAGalleryiOSTests"
                ReferencedContainer = "container:NASAGallery.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -72,10 +44,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:CI/CI-macOS.xctestplan">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:CI/CI-iOS.xctestplan"
+            reference = "container:CI/CI-macOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
