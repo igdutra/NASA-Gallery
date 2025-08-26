@@ -42,8 +42,7 @@ final class GalleryViewControllerTests: XCTestCase {
         // This gives us more accurate control over test timing compared to XCTestExpectation,
         // and ensures the assertion is evaluated only after the async loading has finished.
         
-        let loader = GalleryLoaderSpy()
-        let sut = await GalleryViewController(loader: loader)
+        let (sut, loader) = makeSUT()
         
         await sut.loadViewIfNeeded()
         
@@ -52,6 +51,24 @@ final class GalleryViewControllerTests: XCTestCase {
         await loader.awaitUntilCompletion()
         
         XCTAssertEqual(loader.loadCallCount, 1)
+    }
+    
+    func test_pullToRefresh_loadsFeed() {
+        
+    }
+}
+
+// MARK: - Helpers
+
+private extension GalleryViewControllerTests {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: GalleryViewController, loader: GalleryLoaderSpy) {
+        let loader = GalleryLoaderSpy()
+        let sut = GalleryViewController(loader: loader)
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loader, file: file, line: line)
+
+        return (sut, loader)
     }
 }
 

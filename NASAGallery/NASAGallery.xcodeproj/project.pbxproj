@@ -23,6 +23,7 @@
 		925D36022B08037000FE12DA /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		925D36122B08037A00FE12DA /* GalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36112B08037A00FE12DA /* GalleryImage.swift */; };
 		925D36142B0804A900FE12DA /* GalleryLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925D36132B0804A900FE12DA /* GalleryLoader.swift */; };
+		9265BB092E5D402D00C542AE /* XCTestCase+MemoryLeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBF2732B2CF8E20037094F /* XCTestCase+MemoryLeak.swift */; };
 		9269EEB82BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9269EEB72BAE6C1500F68429 /* ValidateGalleryFromCacheUseCaseTests.swift */; };
 		927D81C62C9D8244005ED010 /* GalleryStoreSpecs+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927D81C52C9D8244005ED010 /* GalleryStoreSpecs+Helpers.swift */; };
 		927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */; };
@@ -714,6 +715,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9265BB092E5D402D00C542AE /* XCTestCase+MemoryLeak.swift in Sources */,
 				929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
