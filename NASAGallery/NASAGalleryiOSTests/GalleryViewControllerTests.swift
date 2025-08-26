@@ -9,23 +9,31 @@ import XCTest
 import UIKit
 import NASAGallery
 
-final class GalleryViewController: UIViewController {
+final class GalleryViewController: UITableViewController {
     private var loader: GalleryLoader?
     
     convenience init(loader: GalleryLoader) {
         self.init()
         self.loader = loader
+        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(load), for: .touchUpInside)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        load()
+    }
+    
+    @objc
+    func load() {
         Task {
             try await loader?.load()
         }
     }
 }
 
+@MainActor
 final class GalleryViewControllerTests: XCTestCase {
     func test_init_doesNotLoadGallery() {
         let loader = GalleryLoaderSpy()
@@ -44,7 +52,7 @@ final class GalleryViewControllerTests: XCTestCase {
         
         let (sut, loader) = makeSUT()
         
-        await sut.loadViewIfNeeded()
+        sut.loadViewIfNeeded()
         
         // Wait until the loader's load() method is actually called.
         // This bridges the async Task launched in viewDidLoad and our test's execution flow.
@@ -53,8 +61,19 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_pullToRefresh_loadsFeed() {
+    func test_pullToRefresh_loadsFeed() async throws {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
         
+        await loader.awaitUntilCompletion() // Note: Not calling awaitUntilCompletion will cause the test to fail: instances won't be deallocated.
+        
+        // FIXME: here, watch the simulate pull to refresh fix on iOS 17
+        
+//        sut.refreshControl?.simulatePullToRefresh()
+//        
+//        await loader.awaitUntilCompletion()
+//
+//        XCTAssertEqual(loader.loadCallCount, 2)
     }
 }
 
@@ -94,5 +113,17 @@ final class GalleryLoaderSpy: GalleryLoader {
         continuation = nil
         
         return []
+    }
+}
+
+// MARK: - DSLs
+
+private extension UIControl {
+    func simulatePullToRefresh() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+                (target as NSObject).perform(Selector($0))
+            }
+        }
     }
 }
