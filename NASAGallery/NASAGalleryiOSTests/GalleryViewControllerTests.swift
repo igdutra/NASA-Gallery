@@ -139,3 +139,35 @@ final class GalleryLoaderSpyWithContinuation: GalleryLoader {
         return []
     }
 }
+
+// MARK: - For Swift Testing referece: use .timeLimit trait + confirmation
+
+//@MainActor
+//final class GalleryLoaderSpy: GalleryLoader {
+//    var onLoad: (() -> Void)?
+//    private(set) var loadCallCount = 0
+//
+//    func load() async throws -> [GalleryImage] {
+//        loadCallCount += 1
+//        onLoad?()   // trigger confirmation
+//        return []
+//    }
+//}
+//
+//@Suite
+//struct GalleryViewControllerTests {
+//
+//    @Test(.timeLimit(.seconds(1))) @MainActor
+//    func viewDidLoad_triggersLoaderLoad() async {
+//        let loader = GalleryLoaderSpy()
+//        let sut = GalleryViewController(loader: loader)
+//
+//        // confirmation ensures this closure *must* be called during the test.
+//        await confirmation("loader.load() was called") { confirm in
+//            loader.onLoad = { confirm() }
+//            sut.loadViewIfNeeded()
+//        }
+//
+//        #expect(loader.loadCallCount == 1)
+//    }
+//}
