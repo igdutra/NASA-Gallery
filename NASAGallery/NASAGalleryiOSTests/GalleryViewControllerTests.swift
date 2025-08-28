@@ -15,9 +15,6 @@ final class GalleryViewController: UITableViewController {
     convenience init(loader: GalleryLoader) {
         self.init()
         self.loader = loader
-        
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .touchUpInside)
     }
 
     override func viewDidLoad() {
@@ -43,38 +40,32 @@ final class GalleryViewControllerTests: XCTestCase {
     }
     
     func test_viewDidLoad_loadGallery() async throws {
-        // This test verifies that the view controller correctly triggers a gallery load operation
-        // when its view is loaded (i.e., `viewDidLoad` is called).
-        //
-        // We use async/await to precisely await the completion of the loader's `load()` method.
-        // This gives us more accurate control over test timing compared to XCTestExpectation,
-        // and ensures the assertion is evaluated only after the async loading has finished.
-        
         let (sut, loader) = makeSUT()
-        
+        let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
+        loader.setLoadExpectation(loadExpectation)
         sut.loadViewIfNeeded()
         
         // Wait until the loader's load() method is actually called.
         // This bridges the async Task launched in viewDidLoad and our test's execution flow.
-        await loader.awaitUntilCompletion()
+        await fulfillment(of: [loadExpectation], timeout: 0.5)
         
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_pullToRefresh_loadsFeed() async throws {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        
-        await loader.awaitUntilCompletion() // Note: Not calling awaitUntilCompletion will cause the test to fail: instances won't be deallocated.
-        
-        // FIXME: here, watch the simulate pull to refresh fix on iOS 17
-        
-//        sut.refreshControl?.simulatePullToRefresh()
+//    func test_pullToRefresh_loadsFeed() async throws {
+//        let (sut, loader) = makeSUT()
+//        sut.loadViewIfNeeded()
 //        
-//        await loader.awaitUntilCompletion()
-//
-//        XCTAssertEqual(loader.loadCallCount, 2)
-    }
+//        await loader.awaitUntilCompletion() // Note: Not calling awaitUntilCompletion will cause the test to fail: instances won't be deallocated.
+//        
+//        // FIXME: here, watch the simulate pull to refresh fix on iOS 17
+//        
+////        sut.refreshControl?.simulatePullToRefresh()
+////        
+////        await loader.awaitUntilCompletion()
+////
+////        XCTAssertEqual(loader.loadCallCount, 2)
+//    }
 }
 
 // MARK: - Helpers
@@ -95,6 +86,39 @@ private extension GalleryViewControllerTests {
 
 final class GalleryLoaderSpy: GalleryLoader {
     private(set) var loadCallCount = 0
+    private var loadExpectation: XCTestExpectation?
+
+    func setLoadExpectation(_ expectation: XCTestExpectation) {
+        loadExpectation = expectation
+    }
+
+    func load() async throws -> [GalleryImage] {
+        loadCallCount += 1
+        
+        // Resume any suspended test waiting for this call.
+        loadExpectation?.fulfill()
+        
+        return []
+    }
+}
+
+// MARK: - DSLs
+
+private extension UIControl {
+    func simulatePullToRefresh() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+                (target as NSObject).perform(Selector($0))
+            }
+        }
+    }
+}
+
+// MARK: - Spy with Continuation - Reference
+
+/// Author Note: Trying some different setups to assert that the loader was called on viewDidLoad
+final class GalleryLoaderSpyWithContinuation: GalleryLoader {
+    private(set) var loadCallCount = 0
     private var continuation: CheckedContinuation<Void, Never>?
 
     // This method suspends the test execution until `load()` is called,
@@ -113,17 +137,5 @@ final class GalleryLoaderSpy: GalleryLoader {
         continuation = nil
         
         return []
-    }
-}
-
-// MARK: - DSLs
-
-private extension UIControl {
-    func simulatePullToRefresh() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
-                (target as NSObject).perform(Selector($0))
-            }
-        }
     }
 }
