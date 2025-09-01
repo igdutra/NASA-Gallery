@@ -19,7 +19,16 @@ final class GalleryViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(load), for: .touchUpInside)
+        
         load()
+    }
+    
+    // FIXME: don't initiate refreshControl animation here.
+    override func viewIsAppearing(_ animated: Bool) {
+        refreshControl?.beginRefreshing()
     }
     
     @objc
@@ -52,20 +61,22 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-//    func test_pullToRefresh_loadsFeed() async throws {
-//        let (sut, loader) = makeSUT()
-//        sut.loadViewIfNeeded()
-//        
-//        await loader.awaitUntilCompletion() // Note: Not calling awaitUntilCompletion will cause the test to fail: instances won't be deallocated.
-//        
-//        // FIXME: here, watch the simulate pull to refresh fix on iOS 17
-//        
-////        sut.refreshControl?.simulatePullToRefresh()
-////        
-////        await loader.awaitUntilCompletion()
-////
-////        XCTAssertEqual(loader.loadCallCount, 2)
-//    }
+    func test_viewIsAppering_beginsRefreshing() async throws {
+        let (sut, loader) = makeSUT()
+        let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
+        loader.setLoadExpectation(loadExpectation)
+        sut.loadViewIfNeeded()
+        
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        
+        sut.simulateAnimationLifeCycle()
+       
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+        
+        await fulfillment(of: [loadExpectation], timeout: 0.5)
+    }
 }
 
 // MARK: - Helpers
@@ -111,6 +122,44 @@ private extension UIControl {
                 (target as NSObject).perform(Selector($0))
             }
         }
+    }
+}
+
+private extension UIViewController {
+    // TODO: annotate here the reason why we need to simulate both methods
+    func simulateAnimationLifeCycle() {
+        beginAppearanceTransition(true, animated: false) // viewWillAppear
+        endAppearanceTransition() // viewIsAppering + viewDidAppear
+    }
+}
+
+// MARK: - iOS 17 Fake support
+
+private extension GalleryViewController {
+    func replaceRefreshControlWithFakeForiOS17Support() {
+        let fake = FakeRefreshControl()
+        
+        refreshControl?.allTargets.forEach { target in
+            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                fake.addTarget(target, action: Selector(action), for: .valueChanged)
+            }
+        }
+        
+        refreshControl = fake
+    }
+}
+
+private final class FakeRefreshControl: UIRefreshControl {
+    private var _isRefreshing: Bool = false
+    
+    override var isRefreshing: Bool { _isRefreshing }
+    
+    override func beginRefreshing() {
+        _isRefreshing = true
+    }
+    
+    override func endRefreshing() {
+        _isRefreshing = false
     }
 }
 
