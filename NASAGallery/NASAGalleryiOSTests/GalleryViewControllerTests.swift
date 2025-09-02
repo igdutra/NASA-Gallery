@@ -71,7 +71,7 @@ final class GalleryViewControllerTests: XCTestCase {
         
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
         
-        sut.simulateAnimationLifeCycle()
+        sut.simulateLifeCycle()
        
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
         
@@ -126,8 +126,10 @@ private extension UIControl {
 }
 
 private extension UIViewController {
-    // TODO: annotate here the reason why we need to simulate both methods
-    func simulateAnimationLifeCycle() {
+    /// Note: If we simply called sut.viewIsAppearing we would let our view in a weird state.
+    /// Thus, we should trigger all he lifeCycle methods, in order, and we can do so by triggering transitions.
+    func simulateLifeCycle() {
+        loadViewIfNeeded() // viewDidLoad
         beginAppearanceTransition(true, animated: false) // viewWillAppear
         endAppearanceTransition() // viewIsAppering + viewDidAppear
     }
@@ -135,6 +137,17 @@ private extension UIViewController {
 
 // MARK: - iOS 17 Fake support
 
+/* Author note:
+ 
+ Alternative for this would be to
+ let window = UIWindow()
+ window.rootViewController = sut
+ window.makeKeyAndVisible()
+ RunLoop.current.run(until: Date()+1)
+ 
+ not reliable and slow. Also, if running on target with no host application, that won't work.
+
+ */
 private extension GalleryViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
