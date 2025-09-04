@@ -11,6 +11,7 @@ import NASAGallery
 
 final class GalleryViewController: UITableViewController {
     private var loader: GalleryLoader?
+    private var onViewIsAppearing: ((GalleryViewController) -> Void)?
     
     convenience init(loader: GalleryLoader) {
         self.init()
@@ -20,19 +21,30 @@ final class GalleryViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .touchUpInside)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
+        self.refreshControl = refreshControl
         
+        // Fixme: loading 2x
         load()
+        
+        onViewIsAppearing = { vc in
+            vc.load()
+            vc.onViewIsAppearing = nil
+        }
     }
     
     // FIXME: don't initiate refreshControl animation here.
     override func viewIsAppearing(_ animated: Bool) {
-        refreshControl?.beginRefreshing()
+        super.viewIsAppearing(animated)
+        
+        onViewIsAppearing?(self)
     }
     
     @objc
     func load() {
+        refreshControl?.beginRefreshing()
+
         Task {
             try await loader?.load()
         }
@@ -61,20 +73,23 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_viewIsAppering_beginsRefreshing() async throws {
+    func test_refreshControl() async throws {
         let (sut, loader) = makeSUT()
         let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
         loader.setLoadExpectation(loadExpectation)
-        sut.loadViewIfNeeded()
         
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-        
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
-        
-        sut.simulateLifeCycle()
-       
+        // On Appear
+        sut.simulateAppearance()
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
         
+        // Manually stop and continue
+        sut.refreshControl?.endRefreshing()
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        
+        // Force with the closure system that loading on ViewIsAppering happens only once
+        sut.simulateAppearance()
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+
         await fulfillment(of: [loadExpectation], timeout: 0.5)
     }
 }
@@ -116,6 +131,7 @@ final class GalleryLoaderSpy: GalleryLoader {
 // MARK: - DSLs
 
 private extension UIControl {
+    // Note: Not working unfortunately for iOS 17 and above.
     func simulatePullToRefresh() {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
@@ -125,11 +141,14 @@ private extension UIControl {
     }
 }
 
-private extension UIViewController {
+private extension GalleryViewController {
     /// Note: If we simply called sut.viewIsAppearing we would let our view in a weird state.
     /// Thus, we should trigger all he lifeCycle methods, in order, and we can do so by triggering transitions.
-    func simulateLifeCycle() {
-        loadViewIfNeeded() // viewDidLoad
+    func simulateAppearance() {
+        if !isViewLoaded {
+            loadViewIfNeeded() // viewDidLoad
+            replaceRefreshControlWithFakeForiOS17Support()
+        }
         beginAppearanceTransition(true, animated: false) // viewWillAppear
         endAppearanceTransition() // viewIsAppering + viewDidAppear
     }
