@@ -32,7 +32,6 @@ final class GalleryViewController: UITableViewController {
         }
     }
     
-    // FIXME: don't initiate refreshControl animation here.
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         
@@ -44,7 +43,8 @@ final class GalleryViewController: UITableViewController {
         refreshControl?.beginRefreshing()
 
         Task {
-            try await loader?.load()
+            _ = try await loader?.load()
+            refreshControl?.endRefreshing()
         }
     }
 }
@@ -58,7 +58,7 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 0)
     }
     
-    func test_viewDidLoad_loadGallery() async throws {
+    func test_viewAppearance_loadGallery() async throws {
         let (sut, loader) = makeSUT()
         let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
         loader.setLoadExpectation(loadExpectation)
@@ -89,6 +89,18 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 
         await fulfillment(of: [loadExpectation], timeout: 0.5)
+    }
+    
+    func test_viewAppearance_hidesLoadingIndicatorOnLoadCompletion() async throws {
+        let (sut, loader) = makeSUT()
+        let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
+        loader.setLoadExpectation(loadExpectation)
+        
+        // On Appear
+        sut.simulateAppearance()
+        
+        await fulfillment(of: [loadExpectation], timeout: 0.5)
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
     }
 }
 
