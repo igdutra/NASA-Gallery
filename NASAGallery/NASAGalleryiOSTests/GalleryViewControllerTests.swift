@@ -71,7 +71,7 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_pullToRefresh_loadsGallery() async throws {
+    func test_userInitiatedGalleryLoad_loadsGallery() async throws {
         let (sut, loader) = makeSUT()
         let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
         loader.setLoadExpectation(loadExpectation)
@@ -85,7 +85,7 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
         
         // Force with the closure system that loading on ViewIsAppering happens only once
-        sut.refreshControl?.simulatePullToRefresh()
+        sut.simulateUserInitiatedRefresh()
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 
         await fulfillment(of: [loadExpectation], timeout: 0.5)
@@ -160,6 +160,10 @@ private extension GalleryViewController {
         }
         beginAppearanceTransition(true, animated: false) // viewWillAppear
         endAppearanceTransition() // viewIsAppering + viewDidAppear
+    }
+    
+    func simulateUserInitiatedRefresh() {
+        refreshControl?.simulatePullToRefresh()
     }
 }
 
