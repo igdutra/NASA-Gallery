@@ -29,8 +29,9 @@
 		927D81C82C9D91A6005ED010 /* XCTestCase+Throws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */; };
 		9282C93A2B1A932900D564DE /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9282C9392B1A932900D564DE /* SharedTestHelpers.swift */; };
 		9285CD582CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */; };
+		928928FF2E6F182200B43403 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928928FE2E6F182200B43403 /* GalleryViewControllerTests.swift */; };
 		9289F58F2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */; };
-		929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */; };
+		929598CB2DAFB31000744B04 /* GalleryViewControllerXCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929598CA2DAFB31000744B04 /* GalleryViewControllerXCTests.swift */; };
 		929598CE2DAFB37600744B04 /* NASAGallery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; };
 		929598CF2DAFB37600744B04 /* NASAGallery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 925D35F92B08037000FE12DA /* NASAGallery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9295E5C52D19771D00942553 /* SwiftDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9295E5C42D19771D00942553 /* SwiftDataMapper.swift */; };
@@ -126,8 +127,9 @@
 		927D81C72C9D91A6005ED010 /* XCTestCase+Throws.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Throws.swift"; sourceTree = "<group>"; };
 		9282C9392B1A932900D564DE /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		9285CD572CA7668D0092B853 /* GalleryStoreSpecs+Assertions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GalleryStoreSpecs+Assertions.swift"; sourceTree = "<group>"; };
+		928928FE2E6F182200B43403 /* GalleryViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewControllerTests.swift; sourceTree = "<group>"; };
 		9289F58E2B9939B600FBB279 /* CacheGalleryUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheGalleryUseCaseTests.swift; sourceTree = "<group>"; };
-		929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewControllerTests.swift; sourceTree = "<group>"; };
+		929598CA2DAFB31000744B04 /* GalleryViewControllerXCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewControllerXCTests.swift; sourceTree = "<group>"; };
 		9295E5C42D19771D00942553 /* SwiftDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMapper.swift; sourceTree = "<group>"; };
 		929CFC6D2BB7007800A34D5D /* GalleryCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCachePolicy.swift; sourceTree = "<group>"; };
 		92A2737D2B2A141600C37E9E /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
@@ -231,7 +233,8 @@
 			isa = PBXGroup;
 			children = (
 				9213E7602D9C8C3C0032A846 /* NASAGalleryiOS.xctestplan */,
-				929598CA2DAFB31000744B04 /* GalleryViewControllerTests.swift */,
+				929598CA2DAFB31000744B04 /* GalleryViewControllerXCTests.swift */,
+				928928FE2E6F182200B43403 /* GalleryViewControllerTests.swift */,
 			);
 			path = NASAGalleryiOSTests;
 			sourceTree = "<group>";
@@ -716,7 +719,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9265BB092E5D402D00C542AE /* XCTestCase+MemoryLeak.swift in Sources */,
-				929598CB2DAFB31000744B04 /* GalleryViewControllerTests.swift in Sources */,
+				929598CB2DAFB31000744B04 /* GalleryViewControllerXCTests.swift in Sources */,
+				928928FF2E6F182200B43403 /* GalleryViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
