@@ -78,15 +78,15 @@ final class GalleryViewControllerTests: XCTestCase {
         
         // On Appear
         sut.simulateAppearance()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
         
         // Manually stop and continue
         sut.refreshControl?.endRefreshing()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
         
         // Force with the closure system that loading on ViewIsAppering happens only once
         sut.simulateUserInitiatedRefresh()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
 
         await fulfillment(of: [loadExpectation], timeout: 0.5)
     }
@@ -100,7 +100,7 @@ final class GalleryViewControllerTests: XCTestCase {
         sut.simulateAppearance()
         
         await fulfillment(of: [loadExpectation], timeout: 0.5)
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
     }
 }
 
@@ -164,6 +164,10 @@ private extension GalleryViewController {
     
     func simulateUserInitiatedRefresh() {
         refreshControl?.simulatePullToRefresh()
+    }
+
+    var isShowingLoadingIndicator: Bool {
+        refreshControl?.isRefreshing == true
     }
 }
 
