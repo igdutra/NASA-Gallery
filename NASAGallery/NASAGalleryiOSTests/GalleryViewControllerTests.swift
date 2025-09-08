@@ -25,10 +25,8 @@ final class GalleryViewController: UITableViewController {
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         self.refreshControl = refreshControl
         
-        // Fixme: loading 2x
-        load()
-        
         onViewIsAppearing = { vc in
+            // Author note: not ideal, moving forward for now.
             vc.load()
             vc.onViewIsAppearing = nil
         }
@@ -64,7 +62,7 @@ final class GalleryViewControllerTests: XCTestCase {
         let (sut, loader) = makeSUT()
         let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
         loader.setLoadExpectation(loadExpectation)
-        sut.loadViewIfNeeded()
+        sut.simulateAppearance()
         
         // Wait until the loader's load() method is actually called.
         // This bridges the async Task launched in viewDidLoad and our test's execution flow.
@@ -73,7 +71,7 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    func test_refreshControl() async throws {
+    func test_pullToRefresh_loadsGallery() async throws {
         let (sut, loader) = makeSUT()
         let loadExpectation = XCTestExpectation(description: "Wait for load to complete")
         loader.setLoadExpectation(loadExpectation)
@@ -87,8 +85,8 @@ final class GalleryViewControllerTests: XCTestCase {
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
         
         // Force with the closure system that loading on ViewIsAppering happens only once
-        sut.simulateAppearance()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        sut.refreshControl?.simulatePullToRefresh()
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
 
         await fulfillment(of: [loadExpectation], timeout: 0.5)
     }
@@ -131,7 +129,6 @@ final class GalleryLoaderSpy: GalleryLoader {
 // MARK: - DSLs
 
 private extension UIControl {
-    // Note: Not working unfortunately for iOS 17 and above.
     func simulatePullToRefresh() {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
