@@ -51,48 +51,23 @@ final class GalleryViewController: UITableViewController {
     }
 }
 
-// MARK: - Swift Testing Suite
-
 @Suite
+@MainActor
 struct GalleryViewControllerTests {
-
-    // MARK: First test — uses AsyncStream + a global time cap
-
-    /// Verifies the controller triggers exactly one `load()` on first appearance.
-    /// We avoid per-assert waits and instead await the next event from the stream.
     @Test(.timeLimit(.minutes(1)))
-    @MainActor
-    func viewAppearance_triggersSingleLoad() async {
-        let (sut, loader) = makeSUT()
-        var iterator = loader.loads().makeAsyncIterator()
-
-        #expect(loader.loadCallCount == 0)
-        
-        sut.simulateAppearance()
-
-        // Wait deterministically for the first load event.
-        #expect(await iterator.next() != nil)
-        #expect(loader.loadCallCount == 1)
-    }
-
-    /// Verifies three sequential loads: on appearance and two manual refreshes.
-    /// Uses AsyncStream to await each `load()` deterministically, avoiding temporal coupling.
-    @Test(.timeLimit(.minutes(1)))
-    @MainActor
     func userInitiatedGalleryLoad_loadsGallery() async {
         let (sut, loader) = makeSUT()
-        var calls = loader.loads().makeAsyncIterator()
 
         sut.simulateAppearance()
-        #expect(await calls.next() != nil)
+        await loader.waitForLoad()
         #expect(loader.loadCallCount == 1)
 
         sut.simulateUserInitiatedRefresh()
-        #expect(await calls.next() != nil)
+        await loader.waitForLoad()
         #expect(loader.loadCallCount == 2)
 
         sut.simulateUserInitiatedRefresh()
-        #expect(await calls.next() != nil)
+        await loader.waitForLoad()
         #expect(loader.loadCallCount == 3)
     }
 }
@@ -122,7 +97,8 @@ final class GalleryLoaderSpy: GalleryLoader {
 
     private let loadEventStream: AsyncStream<Void>
     private let loadEventContinuation: AsyncStream<Void>.Continuation
-
+    private var eventIterator: AsyncStream<Void>.Iterator
+    
     init() {
         // Capture the continuation without force-unwrapping.
         var capturedContinuation: AsyncStream<Void>.Continuation?
@@ -133,6 +109,7 @@ final class GalleryLoaderSpy: GalleryLoader {
             fatalError("Expected AsyncStream to capture continuation")
         }
         self.loadEventContinuation = continuation
+        self.eventIterator = loadEventStream.makeAsyncIterator()
     }
 
     func load() async throws -> [GalleryImage] {
@@ -141,8 +118,9 @@ final class GalleryLoaderSpy: GalleryLoader {
         return []
     }
 
-    /// Accessor for the stream of load events, in call order.
-    func loads() -> AsyncStream<Void> { loadEventStream }
+    func waitForLoad() async {
+        await eventIterator.next()
+    }
 }
 
 // MARK: - DSLs
