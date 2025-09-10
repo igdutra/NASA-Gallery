@@ -51,12 +51,72 @@ final class GalleryViewController: UITableViewController {
     }
 }
 
+// MARK: - Swift Testing Suite
+
+@Suite
+struct GalleryViewControllerTests {
+
+    // MARK: First test — uses AsyncStream + a global time cap
+
+    /// Verifies the controller triggers exactly one `load()` on first appearance.
+    /// We avoid per-assert waits and instead await the next event from the stream.
+    @Test(.timeLimit(.minutes(1)))
+    @MainActor
+    func viewAppearance_triggersSingleLoad() async {
+        let (sut, loader) = makeSUT()
+        var iterator = loader.loads().makeAsyncIterator()
+
+        #expect(loader.loadCallCount == 0)
+        
+        sut.simulateAppearance()
+
+        // Wait deterministically for the first load event.
+        #expect(await iterator.next() != nil)
+        #expect(loader.loadCallCount == 1)
+    }
+
+    /// Verifies three sequential loads: on appearance and two manual refreshes.
+    /// Uses AsyncStream to await each `load()` deterministically, avoiding temporal coupling.
+    @Test(.timeLimit(.minutes(1)))
+    @MainActor
+    func userInitiatedGalleryLoad_loadsGallery() async {
+        let (sut, loader) = makeSUT()
+        var calls = loader.loads().makeAsyncIterator()
+
+        sut.simulateAppearance()
+        #expect(await calls.next() != nil)
+        #expect(loader.loadCallCount == 1)
+
+        sut.simulateUserInitiatedRefresh()
+        #expect(await calls.next() != nil)
+        #expect(loader.loadCallCount == 2)
+
+        sut.simulateUserInitiatedRefresh()
+        #expect(await calls.next() != nil)
+        #expect(loader.loadCallCount == 3)
+    }
+}
+
+// MARK: - Helpers
+
+@MainActor
+private extension GalleryViewControllerTests {
+    func makeSUT() -> (sut: GalleryViewController, loader: GalleryLoaderSpy) {
+        let loader = GalleryLoaderSpy()
+        let sut = GalleryViewController(loader: loader)
+        return (sut, loader)
+    }
+
+}
 
 // MARK: - Spy
 
-/// A spy that records calls to `load()` and exposes them
-/// as an async sequence of events. Each invocation yields once.
-/// This avoids temporal coupling and flaky per-step timeouts.
+/// Spy for `GalleryLoader` that exposes **deterministic** observation of `load()` calls via `AsyncStream`.
+///
+/// Why AsyncStream?
+/// - Each invocation of `load()` yields one event through an internally captured continuation, making call order explicit.
+/// - Tests can `await` the next event instead of sleeping/polling, which **removes temporal coupling** and flakiness.
+/// - This follows Apple’s async sequence model. See: https://developer.apple.com/documentation/swift/asyncstream/iterator
 final class GalleryLoaderSpy: GalleryLoader {
     private(set) var loadCallCount = 0
 
@@ -85,88 +145,40 @@ final class GalleryLoaderSpy: GalleryLoader {
     func loads() -> AsyncStream<Void> { loadEventStream }
 }
 
-// MARK: - Swift Testing Suite
-
-@Suite
-struct GalleryViewControllerTests {
-
-    // Minimal composition root for SUT + Spy
-    @MainActor
-    private func makeSUT() -> (sut: GalleryViewController, loader: GalleryLoaderSpy) {
-        let loader = GalleryLoaderSpy()
-        let sut = GalleryViewController(loader: loader)
-        return (sut, loader)
-    }
-
-    // Trigger the same sequence UIKit would: viewDidLoad → viewIsAppearing
-    @MainActor
-    private func simulateAppearance(of sut: GalleryViewController) {
-        if !sut.isViewLoaded {
-            sut.loadViewIfNeeded() // viewDidLoad (sets up refreshControl)
-            sut.replaceRefreshControlWithFakeForiOS17Support()
-        }
-        sut.beginAppearanceTransition(true, animated: false) // will appear
-        sut.endAppearanceTransition()                        // is appearing + did appear
-    }
-
-    @MainActor
-    private func simulateUserInitiatedRefresh(on sut: GalleryViewController) {
-        sut.refreshControl?.simulatePullToRefresh()
-    }
-
-    // MARK: First test — uses AsyncStream + a global time cap
-
-    /// Verifies the controller triggers exactly one `load()` on first appearance.
-    /// We avoid per-assert waits and instead await the next event from the stream.
-    @Test(.timeLimit(.minutes(1)))
-    @MainActor
-    func viewAppearance_triggersSingleLoad() async {
-        let (sut, loader) = makeSUT()
-        var iterator = loader.loads().makeAsyncIterator()
-
-        #expect(loader.loadCallCount == 0)
-
-        simulateAppearance(of: sut)
-
-        // Wait deterministically for the first load event.
-        await #expect(await iterator.next() != nil)
-        #expect(loader.loadCallCount == 1)
-    }
-
-    /// Verifies three sequential loads: on appearance and two manual refreshes.
-    /// Uses AsyncStream to await each `load()` deterministically, avoiding temporal coupling.
-    @Test(.timeLimit(.minutes(1)))
-    @MainActor
-    func load_requestsGallery_threeTimes() async {
-        let (sut, loader) = makeSUT()
-        var calls = loader.loads().makeAsyncIterator()
-
-        simulateAppearance(of: sut)
-        #expect(await calls.next() != nil)
-        #expect(loader.loadCallCount == 1)
-
-        simulateUserInitiatedRefresh(on: sut)
-        #expect(await calls.next() != nil)
-        #expect(loader.loadCallCount == 2)
-
-        simulateUserInitiatedRefresh(on: sut)
-        #expect(await calls.next() != nil)
-        #expect(loader.loadCallCount == 3)
-    }
-}
-
-// MARK: - Test DSL / UIControl helpers
+// MARK: - DSLs
 
 private extension UIControl {
     func simulatePullToRefresh() {
         allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?
-                .forEach { (target as NSObject).perform(Selector($0)) }
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+                (target as NSObject).perform(Selector($0))
+            }
         }
     }
 }
 
-// MARK: - iOS17-friendly RefreshControl shim (test-only)
+private extension GalleryViewController {
+    /// Note: If we simply called sut.viewIsAppearing we would let our view in a weird state.
+    /// Thus, we should trigger all he lifeCycle methods, in order, and we can do so by triggering transitions.
+    func simulateAppearance() {
+        if !isViewLoaded {
+            loadViewIfNeeded() // viewDidLoad
+            replaceRefreshControlWithFakeForiOS17Support()
+        }
+        beginAppearanceTransition(true, animated: false) // viewWillAppear
+        endAppearanceTransition() // viewIsAppering + viewDidAppear
+    }
+    
+    func simulateUserInitiatedRefresh() {
+        refreshControl?.simulatePullToRefresh()
+    }
+
+    var isShowingLoadingIndicator: Bool {
+        refreshControl?.isRefreshing == true
+    }
+}
+
+// MARK: - iOS17 Support
 
 private extension GalleryViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
@@ -197,3 +209,4 @@ private final class FakeRefreshControl: UIRefreshControl {
         _isRefreshing = false
     }
 }
+
