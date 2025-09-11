@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import NASAGallery
+import NASAGallery
 import UIKit
 
 // 1- move to production and use ACCESS CONTROL!
@@ -69,6 +69,21 @@ struct GalleryViewControllerTests {
         sut.simulateUserInitiatedRefresh()
         await loader.waitForLoad()
         #expect(loader.loadCallCount == 3)
+    }
+    
+    @Test(.timeLimit(.minutes(1)))
+    func loadingIndicator_isVisibleWhenLoadingGallery() async {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        #expect(sut.isShowingLoadingIndicator == true)
+        await loader.waitForLoad()
+        #expect(sut.isShowingLoadingIndicator == false)
+        
+        sut.simulateUserInitiatedRefresh()
+        #expect(sut.isShowingLoadingIndicator == true)
+        await loader.waitForLoad()
+        #expect(sut.isShowingLoadingIndicator == false)
     }
 }
 
