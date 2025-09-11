@@ -7,51 +7,9 @@
 
 import Testing
 import NASAGallery
+import NASAGalleryiOS
 import UIKit
 
-// 1- move to production and use ACCESS CONTROL!
-
-final class GalleryViewController: UITableViewController {
-    private var loader: GalleryLoader?
-    private var onViewIsAppearing: ((GalleryViewController) -> Void)?
-    
-    convenience init(loader: GalleryLoader) {
-        self.init()
-        self.loader = loader
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
-        self.refreshControl = refreshControl
-        
-        onViewIsAppearing = { vc in
-            // Author note: not ideal, moving forward for now.
-            vc.load()
-            vc.onViewIsAppearing = nil
-        }
-    }
-    
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        
-        onViewIsAppearing?(self)
-    }
-    
-    @objc
-    func load() {
-        refreshControl?.beginRefreshing()
-
-        Task {
-            _ = try await loader?.load()
-            refreshControl?.endRefreshing()
-        }
-    }
-}
-
-@Suite
 @MainActor
 struct GalleryViewControllerTests {
     @Test(.timeLimit(.minutes(1)))
@@ -202,4 +160,3 @@ private final class FakeRefreshControl: UIRefreshControl {
         _isRefreshing = false
     }
 }
-

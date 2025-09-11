@@ -8,7 +8,13 @@
 import XCTest
 import UIKit
 import NASAGallery
+import NASAGalleryiOS
 
+/*
+ 
+ Author Note: this XCTest was kept as reference but deprecated in favor of its SwiftTesting Version
+ 
+ */
 @MainActor
 final class GalleryViewControllerXCTests: XCTestCase {
     func test_init_doesNotLoadGallery() {
@@ -80,7 +86,7 @@ private extension GalleryViewControllerXCTests {
 
 // MARK: - Spy
 
-final class GalleryLoaderSpyXCTest: GalleryLoader {
+private final class GalleryLoaderSpyXCTest: GalleryLoader {
     private(set) var loadCallCount = 0
     private var loadExpectation: XCTestExpectation?
 
@@ -175,7 +181,7 @@ private final class FakeRefreshControl: UIRefreshControl {
 // MARK: - Spy with Continuation - Reference
 
 /// Author Note: Trying some different setups to assert that the loader was called on viewDidLoad
-final class GalleryLoaderSpyWithContinuation: GalleryLoader {
+private final class GalleryLoaderSpyWithContinuation: GalleryLoader {
     private(set) var loadCallCount = 0
     private var continuation: CheckedContinuation<Void, Never>?
 
@@ -197,35 +203,3 @@ final class GalleryLoaderSpyWithContinuation: GalleryLoader {
         return []
     }
 }
-
-// MARK: - For Swift Testing referece: use .timeLimit trait + confirmation
-
-//@MainActor
-//final class GalleryLoaderSpy: GalleryLoader {
-//    var onLoad: (() -> Void)?
-//    private(set) var loadCallCount = 0
-//
-//    func load() async throws -> [GalleryImage] {
-//        loadCallCount += 1
-//        onLoad?()   // trigger confirmation
-//        return []
-//    }
-//}
-//
-//@Suite
-//struct GalleryViewControllerTests {
-//
-//    @Test(.timeLimit(.seconds(1))) @MainActor
-//    func viewDidLoad_triggersLoaderLoad() async {
-//        let loader = GalleryLoaderSpy()
-//        let sut = GalleryViewController(loader: loader)
-//
-//        // confirmation ensures this closure *must* be called during the test.
-//        await confirmation("loader.load() was called") { confirm in
-//            loader.onLoad = { confirm() }
-//            sut.loadViewIfNeeded()
-//        }
-//
-//        #expect(loader.loadCallCount == 1)
-//    }
-//}
