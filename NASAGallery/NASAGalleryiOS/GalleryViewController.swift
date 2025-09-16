@@ -6,7 +6,6 @@
 //
 
 import Foundation
-// FIXME: check what this warning means
 import NASAGallery
 import UIKit
 
