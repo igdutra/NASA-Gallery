@@ -121,11 +121,11 @@ private extension GalleryViewController {
     }
     
     func simulateUserInitiatedRefresh() {
-        refreshControl?.simulatePullToRefresh()
+        collectionView.refreshControl?.simulatePullToRefresh()
     }
 
     var isShowingLoadingIndicator: Bool {
-        refreshControl?.isRefreshing == true
+        collectionView.refreshControl?.isRefreshing == true
     }
 }
 
@@ -133,7 +133,7 @@ private extension GalleryViewController {
 
 private extension GalleryViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
-        guard let real = refreshControl else { return }
+        guard let real = collectionView.refreshControl else { return }
         let fake = FakeRefreshControl()
 
         real.allTargets.forEach { target in
@@ -142,7 +142,7 @@ private extension GalleryViewController {
                     fake.addTarget(target, action: Selector(action), for: .valueChanged)
                 }
         }
-        refreshControl = fake
+        collectionView.refreshControl = fake
     }
 }
 

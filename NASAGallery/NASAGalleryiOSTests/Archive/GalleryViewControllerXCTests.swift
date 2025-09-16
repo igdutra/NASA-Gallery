@@ -47,7 +47,7 @@ final class GalleryViewControllerXCTests: XCTestCase {
         XCTAssertEqual(sut.isShowingLoadingIndicator, true)
         
         // Manually stop and continue
-        sut.refreshControl?.endRefreshing()
+        sut.collectionView.refreshControl?.endRefreshing()
         XCTAssertEqual(sut.isShowingLoadingIndicator, false)
         
         // Force with the closure system that loading on ViewIsAppering happens only once
@@ -129,11 +129,11 @@ private extension GalleryViewController {
     }
     
     func simulateUserInitiatedRefresh() {
-        refreshControl?.simulatePullToRefresh()
+        collectionView.refreshControl?.simulatePullToRefresh()
     }
 
     var isShowingLoadingIndicator: Bool {
-        refreshControl?.isRefreshing == true
+        collectionView.refreshControl?.isRefreshing == true
     }
 }
 
@@ -154,13 +154,13 @@ private extension GalleryViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
         
-        refreshControl?.allTargets.forEach { target in
-            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+        collectionView.refreshControl?.allTargets.forEach { target in
+            collectionView.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
                 fake.addTarget(target, action: Selector(action), for: .valueChanged)
             }
         }
         
-        refreshControl = fake
+        collectionView.refreshControl = fake
     }
 }
 

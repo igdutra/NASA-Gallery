@@ -9,12 +9,12 @@ import Foundation
 import NASAGallery
 import UIKit
 
-public final class GalleryViewController: UITableViewController {
+public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
     private var onViewIsAppearing: ((GalleryViewController) -> Void)?
     
     public convenience init(loader: GalleryLoader) {
-        self.init()
+        self.init(collectionViewLayout: Self.makeLayout())
         self.loader = loader
     }
 
@@ -23,7 +23,7 @@ public final class GalleryViewController: UITableViewController {
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
-        self.refreshControl = refreshControl
+        self.collectionView.refreshControl = refreshControl
         
         onViewIsAppearing = { vc in
             // Author note: not ideal, moving forward for now.
@@ -40,11 +40,22 @@ public final class GalleryViewController: UITableViewController {
     
     @objc
     private func load() {
-        refreshControl?.beginRefreshing()
+        self.collectionView.refreshControl?.beginRefreshing()
 
         Task {
             _ = try await loader?.load()
-            refreshControl?.endRefreshing()
+            self.collectionView.refreshControl?.endRefreshing()
+        }
+    }
+}
+
+// MARK: - Layout
+
+private extension GalleryViewController {
+    static func makeLayout() -> UICollectionViewCompositionalLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, environment in
+            let config = UICollectionLayoutListConfiguration(appearance: .plain)
+            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
         }
     }
 }
