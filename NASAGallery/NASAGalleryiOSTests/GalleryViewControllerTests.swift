@@ -10,10 +10,12 @@ import NASAGallery
 import NASAGalleryiOS
 import UIKit
 
+// TODO: add UX goals table.
+
 @MainActor
+@Suite(.timeLimit(.minutes(1)))
 struct GalleryViewControllerTests {
-    @Test(.timeLimit(.minutes(1)))
-    func userInitiatedGalleryLoad_loadsGallery() async {
+    @Test func userInitiatedGalleryLoad_loadsGallery() async {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -29,8 +31,7 @@ struct GalleryViewControllerTests {
         #expect(loader.loadCallCount == 3)
     }
     
-    @Test(.timeLimit(.minutes(1)))
-    func loadingIndicator_isVisibleWhenLoadingGallery() async {
+    @Test func loadingIndicator_isVisibleWhenLoadingGallery() async {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -43,12 +44,17 @@ struct GalleryViewControllerTests {
         await loader.waitForLoad()
         #expect(sut.isShowingLoadingIndicator == false)
     }
+    
+//    @Test func galleryLoad_renderGalleryAsExpected() {
+//        
+//    }
 }
 
 // MARK: - Helpers
 
 @MainActor
 private extension GalleryViewControllerTests {
+    // TODO: add memory leak tracking
     func makeSUT() -> (sut: GalleryViewController, loader: GalleryLoaderSpy) {
         let loader = GalleryLoaderSpy()
         let sut = GalleryViewController(loader: loader)
@@ -92,6 +98,7 @@ final class GalleryLoaderSpy: GalleryLoader {
     }
 
     func waitForLoad() async {
+        // We will await for the next load to occur and protect the entire test suite with
         await eventIterator.next()
     }
 }
