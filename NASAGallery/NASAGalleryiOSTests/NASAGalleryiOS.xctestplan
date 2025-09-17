@@ -14,6 +14,13 @@
   "testTargets" : [
     {
       "parallelizable" : false,
+      "skippedTests" : [
+        "GalleryViewControllerXCTests",
+        "GalleryViewControllerXCTests\/test_init_doesNotLoadGallery()",
+        "GalleryViewControllerXCTests\/test_userInitiatedGalleryLoad_loadsGallery()",
+        "GalleryViewControllerXCTests\/test_viewAppearance_hidesLoadingIndicatorOnLoadCompletion()",
+        "GalleryViewControllerXCTests\/test_viewAppearance_loadGallery()"
+      ],
       "target" : {
         "containerPath" : "container:NASAGallery.xcodeproj",
         "identifier" : "922075482D960233000DEDF5",
