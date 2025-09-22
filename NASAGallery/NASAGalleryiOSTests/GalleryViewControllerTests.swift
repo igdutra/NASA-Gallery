@@ -65,6 +65,11 @@ private extension GalleryViewControllerTests {
 
 // MARK: - Spy
 
+// FIXME: FLAKYNESS. unfortunately, after testing with the power of test plans, making these tests to run until failure we saw that they can fail.
+// The reson is how the async/await will occur, suspending and resuming thread execution, once we await for the loader to load, the check if the spinner is spinning happens in the other theread before we call end refreshing.
+
+// Not blocking for now, lets move on with the MVC approach, but I'll dig into the community how to better fix this, most likely will not envolve Continuations.
+
 /// Spy for `GalleryLoader` that exposes **deterministic** observation of `load()` calls via `AsyncStream`.
 ///
 /// Why AsyncStream?
