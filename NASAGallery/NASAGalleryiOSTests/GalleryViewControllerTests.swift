@@ -85,6 +85,7 @@ final class GalleryLoaderSpy: GalleryLoader {
             capturedContinuation = continuation
         }
         guard let continuation = capturedContinuation else {
+            // Note: could make it throw, however it should work.
             fatalError("Expected AsyncStream to capture continuation")
         }
         self.loadEventContinuation = continuation
@@ -93,13 +94,42 @@ final class GalleryLoaderSpy: GalleryLoader {
 
     func load() async throws -> [GalleryImage] {
         loadCallCount += 1
-        loadEventContinuation.yield() // signal that load() was called
-        return []
+        defer {
+            loadEventContinuation.yield()
+        }
+        
+        // signal that load() was called
+
+        if let error = stub?.error {
+            throw error
+        } else if let gallery = stub?.gallery {
+            return gallery
+        }
+        
+        throw Error.notStubbed
     }
 
     func waitForLoad() async {
         // We will await for the next load to occur and protect the entire test suite with
         await eventIterator.next()
+    }
+    
+    // MARK: - Stub
+    
+    private var stub: Stub?
+    
+    private struct Stub {
+        let error: Error?
+        let gallery: [GalleryImage]?
+    }
+    
+    func stub(error: Error? = nil,
+              gallery: [GalleryImage]? = nil) {
+        stub = Stub(error: error, gallery: gallery)
+    }
+    
+    enum Error: Swift.Error {
+        case notStubbed
     }
 }
 
