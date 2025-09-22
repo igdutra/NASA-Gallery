@@ -43,7 +43,7 @@ public final class GalleryViewController: UICollectionViewController {
         self.collectionView.refreshControl?.beginRefreshing()
 
         Task {
-            _ = try await loader?.load()
+            _ = try? await loader?.load()
             self.collectionView.refreshControl?.endRefreshing()
         }
     }
