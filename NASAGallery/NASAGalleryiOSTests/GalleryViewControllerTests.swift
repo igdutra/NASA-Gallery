@@ -45,9 +45,17 @@ struct GalleryViewControllerTests {
         #expect(sut.isShowingLoadingIndicator == false)
     }
     
-//    @Test func galleryLoad_renderGalleryAsExpected() {
-//        
-//    }
+    // TODO: respect the dont talk to neiborhts and write DSLs to protect tests.
+    
+    @Test func galleryLoad_renderGalleryAsExpected() async {
+        let (sut, loader) = makeSUT()
+        loader.stub(gallery: [])
+        
+        sut.simulateAppearance()
+        #expect(sut.collectionView.numberOfItems(inSection: 0) == 0)
+
+        await loader.waitForLoad()
+    }
 }
 
 // MARK: - Helpers

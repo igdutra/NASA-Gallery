@@ -18,13 +18,13 @@ import NASAGallery
 
 #if DEBUG
 #Preview {
-    var view = UIViewController()
-    view.view.backgroundColor = .red
+    var view = GalleryViewController(loader: GalleryLoaderPreview())
+    view.collectionView.backgroundColor = .purple
     return view
 }
 
 final class GalleryLoaderPreview: GalleryLoader {
-    func load() async throws -> [NASAGallery.GalleryImage] {
+    func load() async throws -> [GalleryImage] {
         [.fixture()]
     }
 }
