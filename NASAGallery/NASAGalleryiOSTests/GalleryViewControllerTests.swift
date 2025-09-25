@@ -49,12 +49,13 @@ struct GalleryViewControllerTests {
     
     @Test func galleryLoad_renderGalleryAsExpected() async {
         let (sut, loader) = makeSUT()
-        loader.stub(gallery: [])
+        loader.stub(gallery: [makeGalleryImageFixture()])
         
         sut.simulateAppearance()
         #expect(sut.collectionView.numberOfItems(inSection: 0) == 0)
 
         await loader.waitForLoad()
+        #expect(sut.collectionView.numberOfItems(inSection: 0) == 1)
     }
 }
 

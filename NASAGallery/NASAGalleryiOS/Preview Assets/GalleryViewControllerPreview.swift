@@ -18,14 +18,14 @@ import NASAGallery
 
 #if DEBUG
 #Preview {
-    var view = GalleryViewController(loader: GalleryLoaderPreview())
+    let view = GalleryViewController(loader: GalleryLoaderPreview())
     view.collectionView.backgroundColor = .purple
     return view
 }
 
 final class GalleryLoaderPreview: GalleryLoader {
     func load() async throws -> [GalleryImage] {
-        [.fixture()]
+        [.preview()]
     }
 }
 #endif
@@ -34,7 +34,7 @@ final class GalleryLoaderPreview: GalleryLoader {
 
 #if DEBUG
 extension GalleryImage {
-    static func fixture(
+    static func preview(
         title: String = "Big Dipper over Pyramid Mountain",
         url: URL = URL(string: "https://apod.nasa.gov/apod/image/2312/BigDipperMt2_Cullen_960.jpg")!,
         date: Date = .now,
