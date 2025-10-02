@@ -56,6 +56,14 @@ struct GalleryViewControllerTests {
 
         await loader.waitForLoad()
         #expect(sut.collectionView.numberOfItems(inSection: 0) == 1)
+        
+        guard let cell = sut.cell(row: 0, section: 0) as? GalleryImageCell else {
+            Issue.record("Cell should be of type GalleryImageCell")
+            return
+        }
+        let config = cell.contentConfiguration as? UIListContentConfiguration
+        
+        #expect(config?.text == makeGalleryImageFixture().title)
     }
 }
 

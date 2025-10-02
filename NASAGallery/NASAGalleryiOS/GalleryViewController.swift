@@ -24,6 +24,23 @@ import UIKit
 //https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
 //
 
+public final class GalleryImageCell: UICollectionViewCell {
+    // Configure content using UIListContentConfiguration to keep the same subtitle style
+    func apply(model: GalleryImage) {
+        var content = UIListContentConfiguration.subtitleCell()
+        content.text = model.title
+        content.secondaryText = model.date.formatted(date: .abbreviated, time: .omitted)
+        self.contentConfiguration = content
+    }
+
+    // Note: this will be used later on as TDD flow
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        // Reset any previous content/accessories
+        self.contentConfiguration = nil
+    }
+}
+
 
 public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
@@ -66,21 +83,14 @@ public final class GalleryViewController: UICollectionViewController {
     
     // MARK: - Layout
     
-    static let reuseIdentifier = "GalleryCell"
-    
     private func setupCollectionView() {
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: Self.reuseIdentifier)
     }
     
     // MARK: - Datasource
     
     private func setupDataSource() {
-        let registration = UICollectionView.CellRegistration<UICollectionViewListCell, GalleryImage> { cell, _, model in
-            var content = UIListContentConfiguration.subtitleCell()
-            content.text = model.title
-            content.secondaryText = model.date.formatted(date: .abbreviated, time: .omitted)
-            cell.contentConfiguration = content
-            cell.accessories = [.disclosureIndicator()]
+        let registration = UICollectionView.CellRegistration<GalleryImageCell, GalleryImage> { cell, _, model in
+            cell.apply(model: model)
         }
 
         dataSource = UICollectionViewDiffableDataSource<Section, GalleryImage>(collectionView: collectionView) { collectionView, indexPath, galleryImage in
