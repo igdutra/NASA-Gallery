@@ -178,6 +178,17 @@ private extension GalleryViewController {
     var isShowingLoadingIndicator: Bool {
         collectionView.refreshControl?.isRefreshing == true
     }
+    
+    func cell(row: Int, section: Int) -> UICollectionViewCell? {
+        guard numberOfRows(in: section) > row else { return nil }
+        let ds = collectionView.dataSource
+        let index = IndexPath(row: row, section: section)
+        return ds?.collectionView(collectionView, cellForItemAt: index)
+    }
+    
+    func numberOfRows(in section: Int) -> Int {
+        collectionView.numberOfSections > section ? collectionView.numberOfItems(inSection: section) : 0
+    }
 }
 
 // MARK: - iOS17 Support
