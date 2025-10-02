@@ -62,6 +62,7 @@
 		92F4B5DC2C381CE2003919E2 /* CodableGalleryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */; };
 		92FD6AAB2CB7F8FC004DFDB8 /* CoreDataStoredGalleryImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD6AAA2CB7F8FC004DFDB8 /* CoreDataStoredGalleryImage.swift */; };
 		92FD6AAD2CB7F93A004DFDB8 /* CoreDataStoredGalleryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD6AAC2CB7F93A004DFDB8 /* CoreDataStoredGalleryCache.swift */; };
+		92FD78DF2E8F3EB4003BD34C /* GalleryImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FD78DE2E8F3EB4003BD34C /* GalleryImageCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +161,7 @@
 		92F4B5DB2C381CE2003919E2 /* CodableGalleryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableGalleryStore.swift; sourceTree = "<group>"; };
 		92FD6AAA2CB7F8FC004DFDB8 /* CoreDataStoredGalleryImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStoredGalleryImage.swift; sourceTree = "<group>"; };
 		92FD6AAC2CB7F93A004DFDB8 /* CoreDataStoredGalleryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStoredGalleryCache.swift; sourceTree = "<group>"; };
+		92FD78DE2E8F3EB4003BD34C /* GalleryImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryImageCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				922AA5852E73602E0040E589 /* GalleryViewController.swift */,
+				92FD78DE2E8F3EB4003BD34C /* GalleryImageCell.swift */,
 				9236497A2E8417DC008C6BBE /* Preview Assets */,
 			);
 			path = NASAGalleryiOS;
@@ -732,6 +735,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9236497C2E841881008C6BBE /* GalleryViewControllerPreview.swift in Sources */,
+				92FD78DF2E8F3EB4003BD34C /* GalleryImageCell.swift in Sources */,
 				922AA5862E73602E0040E589 /* GalleryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
