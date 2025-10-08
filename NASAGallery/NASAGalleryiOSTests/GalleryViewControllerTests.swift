@@ -64,6 +64,11 @@ struct GalleryViewControllerTests {
         let config = cell.contentConfiguration as? UIListContentConfiguration
         
         #expect(config?.text == makeGalleryImageFixture().title)
+
+        loader.stub(gallery: [makeGalleryImageFixture(), makeGalleryImageFixture(title: "2nd title"), makeGalleryImageFixture(title: "3rd title")])
+        sut.simulateUserInitiatedRefresh()
+        await loader.waitForLoad()
+        #expect(sut.collectionView.numberOfItems(inSection: 0) == 3)
     }
 }
 

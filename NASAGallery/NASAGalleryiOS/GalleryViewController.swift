@@ -91,7 +91,7 @@ public final class GalleryViewController: UICollectionViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, GalleryImage>()
         snapshot.appendSections([.main])
         snapshot.appendItems(gallery, toSection: .main)
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource?.applySnapshotUsingReloadData(snapshot)
     }
     
     // MARK: - Load
