@@ -49,13 +49,16 @@ struct GalleryViewControllerTests {
     
     @Test func galleryLoad_renderGalleryAsExpected() async {
         let (sut, loader) = makeSUT()
-        loader.stub(gallery: [makeGalleryImageFixture()])
+        let fixture1 = makeGalleryImageFixture()
+        let fixture2 = makeGalleryImageFixture(title: "2nd title")
+        let fixture3 = makeGalleryImageFixture(title: "3rd title")
+        loader.stub(gallery: [fixture1])
         
         sut.simulateAppearance()
-        #expect(sut.collectionView.numberOfItems(inSection: 0) == 0)
+        #expect(sut.numberOfGalleryImages() == 0)
 
         await loader.waitForLoad()
-        #expect(sut.collectionView.numberOfItems(inSection: 0) == 1)
+        #expect(sut.numberOfGalleryImages() == 1)
         
         guard let cell = sut.cell(row: 0, section: 0) as? GalleryImageCell else {
             Issue.record("Cell should be of type GalleryImageCell")
@@ -65,7 +68,7 @@ struct GalleryViewControllerTests {
         
         #expect(config?.text == makeGalleryImageFixture().title)
 
-        loader.stub(gallery: [makeGalleryImageFixture(), makeGalleryImageFixture(title: "2nd title"), makeGalleryImageFixture(title: "3rd title")])
+        loader.stub(gallery: [fixture1, fixture2, fixture3])
         sut.simulateUserInitiatedRefresh()
         await loader.waitForLoad()
         #expect(sut.collectionView.numberOfItems(inSection: 0) == 3)
@@ -83,6 +86,9 @@ private extension GalleryViewControllerTests {
         return (sut, loader)
     }
 
+    func assertThat(_ sut: GalleryViewController, isRendering gallery: [GalleryImage]) {
+        
+    }
 }
 
 // MARK: - Spy
@@ -201,6 +207,10 @@ private extension GalleryViewController {
     
     func numberOfRows(in section: Int) -> Int {
         collectionView.numberOfSections > section ? collectionView.numberOfItems(inSection: section) : 0
+    }
+    
+    func numberOfGalleryImages(in section: Int = 0) -> Int {
+        collectionView.numberOfItems(inSection: section)
     }
 }
 
