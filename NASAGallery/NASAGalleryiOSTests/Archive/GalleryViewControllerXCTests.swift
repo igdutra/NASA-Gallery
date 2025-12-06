@@ -18,7 +18,7 @@ import NASAGalleryiOS
 @MainActor
 final class GalleryViewControllerXCTests: XCTestCase {
     func test_init_doesNotLoadGallery() {
-        let loader = GalleryLoaderSpy()
+        let loader = GalleryLoaderSpyXCTest()
         _ = GalleryViewController(loader: loader)
         
         XCTAssertEqual(loader.loadCallCount, 0)
