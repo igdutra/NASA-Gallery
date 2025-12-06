@@ -47,6 +47,30 @@ struct GalleryViewControllerTests {
         }
         #expect(loader.loadCallCount == 3)
     }
+    
+    @Test func loadingIndicator_isVisibleWhenLoadingGallery() async {
+        let (sut, loader) = makeSUT()
+        
+        await withCheckedContinuation { continuation in
+            loader.onComplete = {
+                continuation.resume()
+            }
+            
+            sut.simulateAppearance()
+            #expect(sut.isShowingLoadingIndicator == true)
+        }
+        #expect(sut.isShowingLoadingIndicator == false)
+        
+        await withCheckedContinuation { continuation in
+            loader.onComplete = {
+                continuation.resume()
+            }
+            
+            sut.simulateUserInitiatedRefresh()
+            #expect(sut.isShowingLoadingIndicator == true)
+        }
+        #expect(sut.isShowingLoadingIndicator == false)
+    }
 }
 
 // MARK: - Helpers
