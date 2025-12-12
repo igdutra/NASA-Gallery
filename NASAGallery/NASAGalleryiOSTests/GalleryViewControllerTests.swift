@@ -15,60 +15,33 @@ import UIKit
 struct GalleryViewControllerTests {
     @Test func userInitiatedGalleryLoad_loadsGallery() async {
         let (sut, loader) = makeSUT()
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
-            sut.simulateAppearance()
-        }
-        
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
         #expect(loader.loadCallCount == 1)
-        loader.onComplete = nil
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
-            sut.simulateUserInitiatedRefresh()
-        }
+
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForRefreshToEnd()
         #expect(loader.loadCallCount == 2)
-        
-        loader.onComplete = nil
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
-            sut.simulateUserInitiatedRefresh()
-        }
+
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForRefreshToEnd()
         #expect(loader.loadCallCount == 3)
     }
     
     @Test func loadingIndicator_isVisibleWhenLoadingGallery() async {
-        let (sut, loader) = makeSUT()
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
-            sut.simulateAppearance()
-            #expect(sut.isShowingLoadingIndicator == true)
-        }
+        let (sut, _) = makeSUT()
+
+        sut.simulateAppearance()
+        await sut.waitForBeginRefreshing()
+        #expect(sut.isShowingLoadingIndicator == true)
+        await sut.waitForRefreshToEnd()
         #expect(sut.isShowingLoadingIndicator == false)
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
-            sut.simulateUserInitiatedRefresh()
-            #expect(sut.isShowingLoadingIndicator == true)
-        }
+
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForBeginRefreshing()
+        #expect(sut.isShowingLoadingIndicator == true)
+        await sut.waitForRefreshToEnd()
         #expect(sut.isShowingLoadingIndicator == false)
     }
 }
@@ -149,6 +122,16 @@ private extension GalleryViewController {
         collectionView.refreshControl?.isRefreshing == true
     }
     
+    func waitForBeginRefreshing() async {
+        guard let fake = collectionView.refreshControl as? FakeRefreshControl else { return }
+        await fake.waitForBeginRefreshing()
+    }
+
+    func waitForRefreshToEnd() async {
+        guard let fake = collectionView.refreshControl as? FakeRefreshControl else { return }
+        await fake.waitForEndRefreshing()
+    }
+    
     func cell(row: Int, section: Int) -> UICollectionViewCell? {
         guard numberOfRows(in: section) > row else { return nil }
         let ds = collectionView.dataSource
@@ -186,14 +169,38 @@ private final class FakeRefreshControl: UIRefreshControl {
     private var _isRefreshing = false
     override var isRefreshing: Bool { _isRefreshing }
 
+    private var beginContinuations: [CheckedContinuation<Void, Never>] = []
+    private var endContinuations: [CheckedContinuation<Void, Never>] = []
+
     override func beginRefreshing() {
         _isRefreshing = true
+        // Resume any waiters for begin
+        let continuations = beginContinuations
+        beginContinuations.removeAll()
+        continuations.forEach { $0.resume() }
         // mirror UIKit behavior in tests if something depends on the event
         sendActions(for: .valueChanged)
     }
 
     override func endRefreshing() {
         _isRefreshing = false
+        // Resume any waiters for end
+        let continuations = endContinuations
+        endContinuations.removeAll()
+        continuations.forEach { $0.resume() }
+    }
+
+    func waitForBeginRefreshing() async {
+        if _isRefreshing { return }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            beginContinuations.append(continuation)
+        }
+    }
+
+    func waitForEndRefreshing() async {
+        if !_isRefreshing { return }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            endContinuations.append(continuation)
+        }
     }
 }
-
