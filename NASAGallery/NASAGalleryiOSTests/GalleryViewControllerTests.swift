@@ -15,17 +15,36 @@ import UIKit
 struct GalleryViewControllerTests {
     @Test func userInitiatedGalleryLoad_loadsGallery() async {
         let (sut, loader) = makeSUT()
-
-        sut.simulateAppearance()
-        await sut.waitForRefreshToEnd()
+        
+        await withCheckedContinuation { continuation in
+            loader.onComplete = {
+                continuation.resume()
+            }
+            
+            sut.simulateAppearance()
+        }
+        
         #expect(loader.loadCallCount == 1)
-
-        sut.simulateUserInitiatedRefresh()
-        await sut.waitForRefreshToEnd()
+        loader.onComplete = nil
+        
+        await withCheckedContinuation { continuation in
+            loader.onComplete = {
+                continuation.resume()
+            }
+            
+            sut.simulateUserInitiatedRefresh()
+        }
         #expect(loader.loadCallCount == 2)
-
-        sut.simulateUserInitiatedRefresh()
-        await sut.waitForRefreshToEnd()
+        
+        loader.onComplete = nil
+        
+        await withCheckedContinuation { continuation in
+            loader.onComplete = {
+                continuation.resume()
+            }
+            
+            sut.simulateUserInitiatedRefresh()
+        }
         #expect(loader.loadCallCount == 3)
     }
     
@@ -82,9 +101,6 @@ private final class GalleryLoaderSpy: GalleryLoader {
         defer { onComplete?() }
         
         loadCallCount += 1
-        print(loadCallCount)
-        
-        print("HEREERERPIEDPAOSUDPASID")
         
         return []
     }
