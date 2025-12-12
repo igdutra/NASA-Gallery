@@ -81,6 +81,14 @@ private extension GalleryViewControllerTests {
         return (sut, loader)
     }
 
+    /// Performs an action and suspends until the loader completes.
+    ///
+    /// Uses `withCheckedContinuation` (NOT `confirmation`) to properly suspend and wait
+    /// for the loader's async work to finish. The continuation resumes when loader.onComplete is called.
+    ///
+    /// - Parameters:
+    ///   - loader: The spy that will call onComplete when load() finishes
+    ///   - action: The action that triggers the load (e.g., simulateAppearance())
     func performAndWaitForLoad(
         _ loader: GalleryLoaderSpy,
         action: () -> Void
@@ -109,15 +117,41 @@ private extension GalleryViewControllerTests {
 
 // MARK: - Spy
 
+/*
+ IMPORTANT: Continuation vs Confirmation
+
+ This spy uses a completion handler pattern (onComplete) to signal when async work finishes.
+ When testing async code, we need to wait for this completion before making assertions.
+
+ ✅ CORRECT: Use withCheckedContinuation (Swift Concurrency)
+    - Suspends execution and waits for continuation.resume() to be called
+    - Works with unstructured Tasks that complete "later"
+    - See performAndWaitForLoad() helper below
+
+ ❌ WRONG: Use confirmation (Swift Testing)
+    - Does NOT suspend - expects confirmation BEFORE the confirmation() block returns
+    - Fails when used with unstructured Tasks (like our GalleryViewController.load())
+    - The test exits before the async work completes → flaky tests
+
+ From Apple's Migration Guide:
+ "For a function that takes a completion handler but which doesn't use await,
+  a Swift continuation can be used to convert the call into an async-compatible one."
+
+ Reference: https://developer.apple.com/documentation/testing/migratingfromxctest
+
+ Note: Easy to confuse "continuation" and "confirmation" - they're very close in name but fundamentally different!
+ */
 private final class GalleryLoaderSpy: GalleryLoader {
     private(set) var loadCallCount: Int = 0
+
+    /// Completion handler called when load() finishes. Used with withCheckedContinuation for async waiting.
     var onComplete: (() -> Void)?
-    
+
     func load() async throws -> [GalleryImage] {
         defer { onComplete?() }
-        
+
         loadCallCount += 1
-        
+
         return []
     }
 }
