@@ -6,16 +6,22 @@
 //
 
 import Foundation
-// FIXME: check what this warning means
 import NASAGallery
 import UIKit
 
-public final class GalleryViewController: UITableViewController {
+public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
     private var onViewIsAppearing: ((GalleryViewController) -> Void)?
     
+    private enum Section {
+        case main
+    }
+    
+    private var dataSource: UICollectionViewDiffableDataSource<Section, GalleryImage>?
+    private var gallery: [GalleryImage] = []
+    
     public convenience init(loader: GalleryLoader) {
-        self.init()
+        self.init(collectionViewLayout: Self.makeLayout())
         self.loader = loader
     }
 
@@ -24,7 +30,10 @@ public final class GalleryViewController: UITableViewController {
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
-        self.refreshControl = refreshControl
+        self.collectionView.refreshControl = refreshControl
+        
+        setupCollectionView()
+        setupDataSource()
         
         onViewIsAppearing = { vc in
             // Author note: not ideal, moving forward for now.
@@ -39,13 +48,63 @@ public final class GalleryViewController: UITableViewController {
         onViewIsAppearing?(self)
     }
     
+    // MARK: - Layout
+    
+    private func setupCollectionView() {
+    }
+    
+    // MARK: - Datasource
+    
+    private func setupDataSource() {
+        let registration = UICollectionView.CellRegistration<GalleryImageCell, GalleryImage> { cell, _, model in
+            cell.apply(model: model)
+        }
+
+        dataSource = UICollectionViewDiffableDataSource<Section, GalleryImage>(collectionView: collectionView) { collectionView, indexPath, galleryImage in
+            collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: galleryImage)
+        }
+
+        var snapshot = NSDiffableDataSourceSnapshot<Section, GalleryImage>()
+        snapshot.appendSections([.main])
+        dataSource?.apply(snapshot, animatingDifferences: false)
+    }
+    
+    @MainActor
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, GalleryImage>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(gallery, toSection: .main)
+        dataSource?.applySnapshotUsingReloadData(snapshot)
+    }
+    
+    // MARK: - Load
+    
     @objc
     private func load() {
-        refreshControl?.beginRefreshing()
+        collectionView.refreshControl?.beginRefreshing()
 
-        Task {
-            _ = try await loader?.load()
-            refreshControl?.endRefreshing()
+        Task { @MainActor in
+            defer { self.collectionView.refreshControl?.endRefreshing() }
+            
+            do {
+                if let gallery = try await loader?.load() {
+                    self.gallery = gallery
+                    applySnapshot()
+                }
+            } catch {
+                
+            }
+        }
+    }
+}
+
+// MARK: - Layout
+
+private extension GalleryViewController {
+    static func makeLayout() -> UICollectionViewCompositionalLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, environment in
+            let config = UICollectionLayoutListConfiguration(appearance: .plain)
+            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
         }
     }
 }

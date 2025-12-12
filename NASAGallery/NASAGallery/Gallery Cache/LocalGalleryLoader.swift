@@ -27,7 +27,8 @@ public final class LocalGalleryLoader: GalleryLoader {
     
     // MARK: - Public methods
     
-    // TODO: Move to constructor injection with closure?
+    // FIXME: Move to constructor injection with closure?
+    // The date() there in the load and the gallery, I wonder the necessity of injecting the Date()
     public func save(gallery: [GalleryImage], timestamp: Date) async throws {
         try await store.delete()
         try await store.insert(LocalGalleryCache(gallery: gallery.toLocal(), timestamp: timestamp))

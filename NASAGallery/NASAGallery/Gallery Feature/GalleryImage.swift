@@ -42,3 +42,7 @@ public struct GalleryImage: Equatable {
         self.thumbnailUrl = thumbnailUrl
     }
 }
+
+// TODO: when creating a new ViewData that the view will actually consume, make that hashable and sendable
+
+extension GalleryImage: Hashable, Sendable { }
