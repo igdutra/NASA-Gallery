@@ -15,34 +15,18 @@ import UIKit
 struct GalleryViewControllerTests {
     @Test func userInitiatedGalleryLoad_loadsGallery() async {
         let (sut, loader) = makeSUT()
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
+
+        await performAndWaitForLoad(loader) {
             sut.simulateAppearance()
         }
-        
         #expect(loader.loadCallCount == 1)
-        loader.onComplete = nil
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
+
+        await performAndWaitForLoad(loader) {
             sut.simulateUserInitiatedRefresh()
         }
         #expect(loader.loadCallCount == 2)
-        
-        loader.onComplete = nil
-        
-        await withCheckedContinuation { continuation in
-            loader.onComplete = {
-                continuation.resume()
-            }
-            
+
+        await performAndWaitForLoad(loader) {
             sut.simulateUserInitiatedRefresh()
         }
         #expect(loader.loadCallCount == 3)
@@ -75,7 +59,18 @@ private extension GalleryViewControllerTests {
         let sut = GalleryViewController(loader: loader)
         return (sut, loader)
     }
-    
+
+    func performAndWaitForLoad(
+        _ loader: GalleryLoaderSpy,
+        action: () -> Void
+    ) async {
+        await withCheckedContinuation { continuation in
+            loader.onComplete = { continuation.resume() }
+            action()
+        }
+        loader.onComplete = nil
+    }
+
     func assertThat(_ sut: GalleryViewController, isRendering gallery: [GalleryImage], inSection section: Int = 0, sourceLocation: SourceLocation = #_sourceLocation) {
         #expect(sut.numberOfGalleryImages() == gallery.count, sourceLocation: sourceLocation)
         

@@ -9,7 +9,9 @@
     }
   ],
   "defaultOptions" : {
-    "testExecutionOrdering" : "random"
+    "maximumTestRepetitions" : 100,
+    "testExecutionOrdering" : "random",
+    "testRepetitionMode" : "untilFailure"
   },
   "testTargets" : [
     {
