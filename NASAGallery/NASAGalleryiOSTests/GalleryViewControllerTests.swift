@@ -12,6 +12,8 @@ import UIKit
 
 
 /*
+ // possibly read https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
+ 
  > Load feed automatically when view is presented
 
  > Allow customer to manually reload feed (pull to refresh)

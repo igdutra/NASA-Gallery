@@ -9,23 +9,6 @@ import Foundation
 import NASAGallery
 import UIKit
 
-//https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
-//
-//BELEZA MEUS CUMPADRES TAMO NO JOGO! VAMO SIMBORA.
-//
-//agora proximo passo: eu tenho aque implementar, TUDO kkkk
-//
-//implementar que a célula tá visivel
-//
-//-> pra isso tenho que fazer o datasource, passar o datasource pra CELULA
-//
-//E IMPLEMENTAR O FETCH IMAGE LOADER
-//
-//https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
-//
-
-
-
 public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
     private var onViewIsAppearing: ((GalleryViewController) -> Void)?
