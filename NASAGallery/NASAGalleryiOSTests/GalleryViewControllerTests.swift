@@ -68,6 +68,29 @@ struct GalleryViewControllerTests {
         await sut.waitForRefreshToEnd()
         #expect(sut.isShowingLoadingIndicator == false)
     }
+
+    @Test func galleryLoad_renderGalleryAsExpected() async {
+        let (sut, loader) = makeSUT()
+        let fixture1 = makeGalleryImageFixture()
+        let fixture2 = makeGalleryImageFixture(title: "2nd title")
+        let fixture3 = makeGalleryImageFixture(title: "3rd title")
+        
+        loader.stub(gallery: [])
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        loader.stub(gallery: [fixture1])
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForRefreshToEnd()
+
+        assertThat(sut, isRendering: [fixture1])
+        
+        loader.stub(gallery: [fixture1, fixture2, fixture3])
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForRefreshToEnd()
+
+        assertThat(sut, isRendering: [fixture1, fixture2, fixture3])
+    }
 }
 
 // MARK: - Helpers
@@ -143,16 +166,22 @@ private extension GalleryViewControllerTests {
  */
 private final class GalleryLoaderSpy: GalleryLoader {
     private(set) var loadCallCount: Int = 0
+    private var stubbedGallery: [GalleryImage] = []
 
     /// Completion handler called when load() finishes. Used with withCheckedContinuation for async waiting.
     var onComplete: (() -> Void)?
+
+    /// Stubs the gallery items that will be returned by load()
+    func stub(gallery: [GalleryImage]) {
+        stubbedGallery = gallery
+    }
 
     func load() async throws -> [GalleryImage] {
         defer { onComplete?() }
 
         loadCallCount += 1
 
-        return []
+        return stubbedGallery
     }
 }
 
