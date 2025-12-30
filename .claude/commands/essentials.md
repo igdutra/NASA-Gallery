@@ -58,7 +58,12 @@ For each test, create an entry:
 
 #### 3. Implementation Plan (Per Test)
 
-Important: do NOT run the tests. Tell the user to try it locally.
+**CRITICAL**: This is a PLANNING session. Do NOT:
+- Implement any code
+- Run any tests
+- Execute any commands
+
+A fresh Claude Code session will handle implementation using this plan.
 
 For each NEW test needed:
 
@@ -106,7 +111,28 @@ Before planning each test:
 3. Mark tests as [ALREADY IMPLEMENTED] if found
 4. Only plan NEW tests that don't exist yet
 
+### Phase 5: Write Plan to Markdown File
+
+**FINAL STEP**: Write the complete analysis to a markdown file:
+
+1. **Generate filename** from PR title (kebab-case, e.g., `image-loading-with-combine.md`)
+2. **Write to root folder** of NASA Gallery project
+3. **Include all sections**:
+   - Executive Summary
+   - Test Extraction Checklist
+   - Implementation Plan (per-test breakdown)
+   - Test-by-Test Implementation Workflow
+   - Key Insights for tips.md
+4. **Inform user** that the file is ready for a fresh implementation session
+
 ## Output Format
+
+**IMPORTANT**: Write the complete analysis to a markdown file in the root folder:
+- Filename: `<PR-title-kebab-case>.md` (e.g., `image-loading-with-combine.md`)
+- Location: Root of the NASA Gallery project
+- This saves context window for a fresh implementation session
+
+File contents:
 
 ```markdown
 # Essential Feed PR Analysis: <PR Title>
@@ -131,6 +157,33 @@ Before planning each test:
 ### New Tests Needed 📝
 <Per-test breakdown with test + production code>
 
+## Test-by-Test Implementation Workflow
+
+**IMPORTANT FOR IMPLEMENTATION SESSION:**
+
+This plan will be implemented in a FRESH Claude Code session to save context.
+
+Follow this strict TDD workflow for EACH test:
+
+1. **IMPLEMENT** (Test + Production Code)
+   - Claude implements the test code
+   - Claude implements the minimal production code
+   - DO NOT run tests - User will run them locally
+
+2. **USER TESTS**
+   - User runs tests locally to verify RED → GREEN
+   - User confirms test passes
+
+3. **COMMIT**
+   - Claude commits the changes with clear message
+   - One commit per test
+
+4. **NEXT TEST**
+   - Move to the next test in the plan
+   - Repeat the workflow
+
+**DO NOT batch multiple tests together** - implement one at a time, commit, then proceed.
+
 ## Key Insights for tips.md
 
 <Condensed bullet points>
@@ -141,13 +194,16 @@ Before planning each test:
 
 ## Important Notes
 
-- **Plan first, execute later** - Create the plan for user review before implementing
+- **THIS IS A PLANNING SESSION ONLY** - DO NOT implement or run any tests
+- **Write the plan to a markdown file** - Save to root folder with PR title as filename
+- **Fresh session will implement** - A new Claude Code session will execute the plan
 - **Both test + production together** - Show both code blocks for each test
 - **Check for duplicates** - Search NASA Gallery before planning new tests
 - **Adapt, don't copy** - Translate callback patterns to async/await
 - **Account for differences** - UICollectionView vs UITableView, Task cancellation, etc.
 - **Be thorough** - Extract EVERY test, even trivial ones
 - **Be concise in tips.md** - Only the most valuable insights
+- **Emphasize test-by-test workflow** - Make it crystal clear for the implementation session
 
 ## Success Criteria
 
@@ -156,4 +212,6 @@ Before planning each test:
 3. New tests have both test + production code outlined
 4. Async/await adaptations are clearly explained
 5. Insights are condensed and actionable for tips.md
-6. User can review and approve before implementation begins
+6. **Complete plan is written to a markdown file in the root folder**
+7. Test-by-test implementation workflow is clearly documented
+8. User can open the file in a fresh Claude Code session to begin implementation
