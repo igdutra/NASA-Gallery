@@ -86,6 +86,25 @@ This project follows strict TDD (Test-Driven Development). For every feature:
 - ALWAYS ask user before proceeding to next test
 - User runs all tests (Claude does not run test commands)
 
+## Testing Async Code: NEVER Use `Task.yield()`
+
+### The Problem with `Task.yield()`
+
+**WRONG approach:**
+```swift
+imageLoader.completeImageLoading(at: 0)
+await Task.yield()  // ❌ WRONG! Not waiting for actual work!
+#expect(cell?.isLoading == false)
+```
+
+**Why this fails:**
+- `Task.yield()` only suspends and resumes on the next tick
+- It does NOT wait for the ViewController's unstructured Task to complete
+- The async work (`task.value`, `cell.stopLoading()`) may not have run yet
+- Results in flaky tests that sometimes pass, sometimes fail
+
+**Key principle:** Tests must wait for actual work completion, not arbitrary delays or yields. Continuations provide deterministic synchronization.
+
 ## Swift Task Capture and Cancellation Patterns
 
 This section documents best practices for working with Swift's `Task` type, specifically around capturing, storing, and cancelling them properly.
