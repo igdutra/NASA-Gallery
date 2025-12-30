@@ -117,12 +117,13 @@ public final class GalleryViewController: UICollectionViewController {
         cell.startLoading()
 
         Task { @MainActor in
-            defer {  cell.stopLoading() }
             do {
                 _ = try await task.value
                 // TODO: display image with the data
+                cell.stopLoading()
             } catch {
-                // Handle error in the future
+                cell.stopLoading()
+                cell.showRetry()
             }
         }
     }

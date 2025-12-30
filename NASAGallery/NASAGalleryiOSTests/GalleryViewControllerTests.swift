@@ -149,7 +149,7 @@ struct GalleryViewControllerTests {
 
         // DURING loading - indicator should be animating
         #expect(cell0?.isLoading == true)
-        
+
         // Wait for stopLoading() to be called after the ViewController's Task completes
         // This ensures we don't assert before the async UI update finishes
         await withCheckedContinuation { continuation in
@@ -159,6 +159,29 @@ struct GalleryViewControllerTests {
 
         // AFTER loading - indicator should stop animating
         #expect(cell0?.isLoading == false)
+    }
+
+    @Test func galleryImageView_displaysRetryOnImageLoadError() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+
+        // BEFORE error - no retry button
+        #expect(cell0?.isShowingRetry == false)
+
+        // Wait for error handling to complete and retry button to be shown
+        await withCheckedContinuation { continuation in
+            cell0?.onShowRetry = { continuation.resume() }
+            imageLoader.completeImageLoadingWithError(anyNSError(), at: 0)
+        }
+
+        // AFTER error - retry button appears
+        #expect(cell0?.isShowingRetry == true)
     }
 }
 
@@ -172,6 +195,10 @@ private extension GalleryViewControllerTests {
         let imageLoader = GalleryImageDataLoaderSpy()
         let sut = GalleryViewController(loader: loader, imageLoader: imageLoader)
         return (sut, loader, imageLoader)
+    }
+
+    func anyNSError() -> NSError {
+        NSError(domain: "any error", code: 0)
     }
 
     /// Performs an action and suspends until the loader completes.
