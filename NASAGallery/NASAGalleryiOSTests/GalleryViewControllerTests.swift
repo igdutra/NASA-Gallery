@@ -35,7 +35,7 @@ import UIKit
 @Suite(.timeLimit(.minutes(1)))
 struct GalleryViewControllerTests {
     @Test func userInitiatedGalleryLoad_loadsGallery() async {
-        let (sut, loader) = makeSUT()
+        let (sut, loader, _) = makeSUT()
 
         await performAndWaitForLoad(loader) {
             sut.simulateAppearance()
@@ -54,7 +54,7 @@ struct GalleryViewControllerTests {
     }
     
     @Test func loadingIndicator_isVisibleWhenLoadingGallery() async {
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
 
         sut.simulateAppearance()
         await sut.waitForBeginRefreshing()
@@ -70,11 +70,11 @@ struct GalleryViewControllerTests {
     }
 
     @Test func galleryLoad_renderGalleryAsExpected() async {
-        let (sut, loader) = makeSUT()
+        let (sut, loader, _) = makeSUT()
         let fixture1 = makeGalleryImageFixture()
         let fixture2 = makeGalleryImageFixture(title: "2nd title")
         let fixture3 = makeGalleryImageFixture(title: "3rd title")
-        
+
         loader.stub(gallery: [])
         sut.simulateAppearance()
         await sut.waitForRefreshToEnd()
@@ -84,12 +84,35 @@ struct GalleryViewControllerTests {
         await sut.waitForRefreshToEnd()
 
         assertThat(sut, isRendering: [fixture1])
-        
+
         loader.stub(gallery: [fixture1, fixture2, fixture3])
         sut.simulateUserInitiatedRefresh()
         await sut.waitForRefreshToEnd()
 
         assertThat(sut, isRendering: [fixture1, fixture2, fixture3])
+    }
+
+    // MARK: - Image Loading Experience
+
+    @Test func galleryImageView_loadsImageURLWhenVisible() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0, fixture1])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+        #expect(imageLoader.loadedImageURLs.isEmpty)
+
+        await performAndWaitForImageLoad(imageLoader) {
+            sut.simulateGalleryImageViewVisible(at: 0)
+        }
+        #expect(imageLoader.loadedImageURLs == [fixture0.url])
+
+        await performAndWaitForImageLoad(imageLoader) {
+            sut.simulateGalleryImageViewVisible(at: 1)
+        }
+        #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture1.url])
     }
 }
 
@@ -98,10 +121,11 @@ struct GalleryViewControllerTests {
 @MainActor
 private extension GalleryViewControllerTests {
     // TODO: add memory leak tracking
-    func makeSUT() -> (sut: GalleryViewController, loader: GalleryLoaderSpy) {
+    func makeSUT() -> (sut: GalleryViewController, loader: GalleryLoaderSpy, imageLoader: GalleryImageDataLoaderSpy) {
         let loader = GalleryLoaderSpy()
-        let sut = GalleryViewController(loader: loader)
-        return (sut, loader)
+        let imageLoader = GalleryImageDataLoaderSpy()
+        let sut = GalleryViewController(loader: loader, imageLoader: imageLoader)
+        return (sut, loader, imageLoader)
     }
 
     /// Performs an action and suspends until the loader completes.
@@ -123,6 +147,24 @@ private extension GalleryViewControllerTests {
         loader.onComplete = nil
     }
 
+    /// Performs an action and suspends until the image loader completes.
+    ///
+    /// Same continuation pattern as performAndWaitForLoad but for image loading.
+    ///
+    /// - Parameters:
+    ///   - imageLoader: The spy that will call onComplete when loadImageData() finishes
+    ///   - action: The action that triggers the image load (e.g., simulateGalleryImageViewVisible())
+    func performAndWaitForImageLoad(
+        _ imageLoader: GalleryImageDataLoaderSpy,
+        action: () -> Void
+    ) async {
+        await withCheckedContinuation { continuation in
+            imageLoader.onComplete = { continuation.resume() }
+            action()
+        }
+        imageLoader.onComplete = nil
+    }
+
     func assertThat(_ sut: GalleryViewController, isRendering gallery: [GalleryImage], inSection section: Int = 0, sourceLocation: SourceLocation = #_sourceLocation) {
         #expect(sut.numberOfGalleryImages() == gallery.count, sourceLocation: sourceLocation)
         
@@ -138,7 +180,21 @@ private extension GalleryViewControllerTests {
     }
 }
 
-// MARK: - Spy
+// MARK: - Spies
+
+private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
+    private(set) var loadedImageURLs: [URL] = []
+
+    /// Completion handler called when loadImageData() finishes. Used with withCheckedContinuation for async waiting.
+    var onComplete: (() -> Void)?
+
+    func loadImageData(from url: URL) async throws -> Data {
+        defer { onComplete?() }
+
+        loadedImageURLs.append(url)
+        return Data()
+    }
+}
 
 /*
  IMPORTANT: Continuation vs Confirmation
@@ -240,6 +296,18 @@ private extension GalleryViewController {
     
     func numberOfGalleryImages(in section: Int = 0) -> Int {
         collectionView.numberOfItems(inSection: section)
+    }
+
+    @discardableResult
+    func simulateGalleryImageViewVisible(at index: Int, section: Int = 0) -> GalleryImageCell? {
+        let indexPath = IndexPath(row: index, section: section)
+        guard let cell = cell(row: index, section: section) as? GalleryImageCell else { return nil }
+
+        // Simulate UIKit calling willDisplay delegate method
+        let delegate = collectionView.delegate
+        delegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
+
+        return cell
     }
 }
 

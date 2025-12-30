@@ -43,3 +43,11 @@ Bash tool with:
 
 Then use BashOutput tool to monitor results.
 ```
+
+## Git Commits
+
+When creating commit messages:
+- Use clear, concise language describing what was changed
+- DO NOT include "Co-Authored-By: Claude" or similar attribution
+- DO NOT include emoji or "Generated with Claude Code" footers
+- Keep commits focused and follow conventional commit style

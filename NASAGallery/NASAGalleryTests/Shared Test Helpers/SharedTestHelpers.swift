@@ -10,10 +10,18 @@ import NASAGallery
 
 // MARK: - Free Funcs
 
-func anyURL(_ host: String = "a-url.com") -> URL {
+func anyURL(_ string: String = "a-url.com") -> URL {
+    // If the input is already a full URL (has a scheme), return it as-is.
+    if let url = URL(string: string), url.scheme != nil {
+        return url
+    }
+    // Otherwise, treat the input as a host and build an https URL.
+    if let url = URL(string: "https://\(string)") {
+        return url
+    }
     var components = URLComponents()
     components.scheme = "https"
-    components.host = host
+    components.host = string
     return components.url ?? URL(string: "https://default-url.com")!
 }
 

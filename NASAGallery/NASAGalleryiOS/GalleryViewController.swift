@@ -11,30 +11,34 @@ import UIKit
 
 public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
+    private var imageLoader: GalleryImageDataLoader?
     private var onViewIsAppearing: ((GalleryViewController) -> Void)?
-    
+
     private enum Section {
         case main
     }
-    
+
     private var dataSource: UICollectionViewDiffableDataSource<Section, GalleryImage>?
     private var gallery: [GalleryImage] = []
-    
-    public convenience init(loader: GalleryLoader) {
+
+    public convenience init(loader: GalleryLoader, imageLoader: GalleryImageDataLoader? = nil) {
         self.init(collectionViewLayout: Self.makeLayout())
         self.loader = loader
+        self.imageLoader = imageLoader
     }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        collectionView.delegate = self
+
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
         self.collectionView.refreshControl = refreshControl
-        
+
         setupCollectionView()
         setupDataSource()
-        
+
         onViewIsAppearing = { vc in
             // Author note: not ideal, moving forward for now.
             vc.load()
@@ -94,6 +98,19 @@ public final class GalleryViewController: UICollectionViewController {
             } catch {
                 
             }
+        }
+    }
+
+    // MARK: - UICollectionViewDelegate
+
+    public override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let imageLoader = imageLoader,
+              indexPath.row < gallery.count else { return }
+
+        let galleryImage = gallery[indexPath.row]
+
+        Task {
+            _ = try? await imageLoader.loadImageData(from: galleryImage.url)
         }
     }
 }
