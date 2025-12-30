@@ -52,14 +52,18 @@ import UIKit
     public var isLoading: Bool {
         activityIndicator.isAnimating
     }
-    
+
+    /// Test hook: Called when stopLoading() executes. Allows tests to wait for async loading to complete.
+    public var onStopLoading: (() -> Void)?
+
     public func startLoading() {
         activityIndicator.startAnimating()
         bringSpinnerToFront()
     }
-    
+
     public func stopLoading() {
         activityIndicator.stopAnimating()
+        onStopLoading?()
     }
     
     // Configure content using UIListContentConfiguration to keep the same subtitle style

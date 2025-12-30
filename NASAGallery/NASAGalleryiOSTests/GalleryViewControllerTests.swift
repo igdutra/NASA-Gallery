@@ -136,18 +136,30 @@ struct GalleryViewControllerTests {
         #expect(imageLoader.cancelledImageURLs == [fixture0.url, fixture1.url])
     }
 
-    // NOTE: test not yet passing.
-//    @Test func galleryImageView_showsLoadingIndicatorWhenVisible() async {
-//        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
-//        let (sut, loader, imageLoader) = makeSUT()
-//        loader.stub(gallery: [fixture0])
-//
-//        sut.simulateAppearance()
-//        await sut.waitForRefreshToEnd()
-//
-//        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
-//        #expect(cell0?.isLoading == true)
-//    }
+    // Note how for this test, as we first complete THEN stop the loading as last, we need to inject a closure in production code..
+    @Test func galleryImageView_showsLoadingIndicatorWhileLoadingImage() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+
+        // DURING loading - indicator should be animating
+        #expect(cell0?.isLoading == true)
+        
+        // Wait for stopLoading() to be called after the ViewController's Task completes
+        // This ensures we don't assert before the async UI update finishes
+        await withCheckedContinuation { continuation in
+            cell0?.onStopLoading = { continuation.resume() }
+            imageLoader.completeImageLoading(with: Data(), at: 0)
+        }
+
+        // AFTER loading - indicator should stop animating
+        #expect(cell0?.isLoading == false)
+    }
 }
 
 // MARK: - Helpers
@@ -202,6 +214,9 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
     private(set) var loadedImageURLs: [URL] = []
     private(set) var cancelledImageURLs: [URL] = []
     private var spyTasks: [SpyTask] = []
+    
+    /// Completion handler called when any image task completes. Used with withCheckedContinuation for async waiting.
+    var onComplete: (() -> Void)?
 
     /// Synchronously creates and tracks an image loading task.
     /// The URL is recorded immediately in loadedImageURLs.
@@ -209,9 +224,14 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
     func loadImageData(from url: URL) -> GalleryImageDataLoaderTask {
         loadedImageURLs.append(url)  // SYNCHRONOUS tracking
 
-        let spyTask = SpyTask(onCancel: { [weak self] in
-            self?.cancelledImageURLs.append(url)
-        })
+        let spyTask = SpyTask(
+            onCancel: { [weak self] in
+                self?.cancelledImageURLs.append(url)
+            },
+            onComplete: { [weak self] in
+                self?.onComplete?()
+            }
+        )
         spyTasks.append(spyTask)
 
         return spyTask
@@ -241,10 +261,12 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
         private var result: Result<Data, Error>?
         private var continuation: CheckedContinuation<Data, Error>?
         private let onCancel: () -> Void
+        private let onComplete: () -> Void
         private var isCancelled = false
 
-        init(onCancel: @escaping () -> Void) {
+        init(onCancel: @escaping () -> Void, onComplete: @escaping () -> Void) {
             self.onCancel = onCancel
+            self.onComplete = onComplete
         }
 
         var value: Data {
@@ -267,6 +289,7 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
             } else {
                 result = .success(data)
             }
+            onComplete()
         }
 
         func complete(with error: Error) {
@@ -275,6 +298,7 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
             } else {
                 result = .failure(error)
             }
+            onComplete()
         }
 
         func cancel() {
@@ -464,3 +488,4 @@ private final class FakeRefreshControl: UIRefreshControl {
         }
     }
 }
+
