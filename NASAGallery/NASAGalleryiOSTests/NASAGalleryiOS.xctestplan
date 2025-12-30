@@ -8,6 +8,7 @@
       }
     },
     {
+      "enabled" : false,
       "id" : "67D6BA9B-971E-459F-9A67-B4A14E421939",
       "name" : "Run Until Failure",
       "options" : {
