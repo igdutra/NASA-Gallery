@@ -51,3 +51,37 @@ When creating commit messages:
 - DO NOT include "Co-Authored-By: Claude" or similar attribution
 - DO NOT include emoji or "Generated with Claude Code" footers
 - Keep commits focused and follow conventional commit style
+
+## TDD Workflow
+
+This project follows strict TDD (Test-Driven Development). For every feature:
+
+### Step-by-Step Process:
+1. **RED** - Write the test first
+   - Write test that describes the desired behavior
+   - Add any necessary test helpers/spies
+   - User runs tests to confirm they FAIL
+   - DO NOT proceed until user confirms RED
+
+2. **GREEN** - Write minimal implementation
+   - Write the simplest code to make the test pass
+   - Focus on making it work, not making it perfect
+   - User runs tests to confirm they PASS
+   - DO NOT proceed until user confirms GREEN
+
+3. **COMMIT** - Commit immediately when GREEN
+   - Commit as soon as tests pass
+   - Use clear, descriptive commit message
+   - DO NOT batch multiple features into one commit
+
+4. **ASK** - Ask before proceeding to next test
+   - Always ask user before writing the next test
+   - User may want to review, refactor, or change direction
+   - DO NOT automatically proceed to the next feature
+
+### Important Rules:
+- NEVER skip the RED phase - always confirm tests fail first
+- NEVER commit before tests are GREEN
+- ALWAYS commit immediately after tests pass
+- ALWAYS ask user before proceeding to next test
+- User runs all tests (Claude does not run test commands)
