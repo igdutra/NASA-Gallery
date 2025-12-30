@@ -92,6 +92,27 @@ struct GalleryViewControllerTests {
         assertThat(sut, isRendering: [fixture1, fixture2, fixture3])
     }
 
+    @Test func galleryLoad_onError_doesNotAlterCurrentlyRenderedGallery() async {
+        let (sut, loader, _) = makeSUT()
+        let fixture1 = makeGalleryImageFixture()
+        let fixture2 = makeGalleryImageFixture(title: "2nd title")
+
+        // Load initial gallery successfully
+        loader.stub(gallery: [fixture1, fixture2])
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        assertThat(sut, isRendering: [fixture1, fixture2])
+
+        // Trigger refresh that fails with error
+        loader.stub(error: anyNSError())
+        sut.simulateUserInitiatedRefresh()
+        await sut.waitForRefreshToEnd()
+
+        // Should still render the previously loaded gallery
+        assertThat(sut, isRendering: [fixture1, fixture2])
+    }
+
     // MARK: - Image Loading Experience
 
     @Test func galleryImageView_loadsImageURLWhenVisible() async {
@@ -380,14 +401,19 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
  */
 private final class GalleryLoaderSpy: GalleryLoader {
     private(set) var loadCallCount: Int = 0
-    private var stubbedGallery: [GalleryImage] = []
+    private var stubbedResult: Result<[GalleryImage], Error> = .success([])
 
     /// Completion handler called when load() finishes. Used with withCheckedContinuation for async waiting.
     var onComplete: (() -> Void)?
 
     /// Stubs the gallery items that will be returned by load()
     func stub(gallery: [GalleryImage]) {
-        stubbedGallery = gallery
+        stubbedResult = .success(gallery)
+    }
+
+    /// Stubs an error that will be thrown by load()
+    func stub(error: Error) {
+        stubbedResult = .failure(error)
     }
 
     func load() async throws -> [GalleryImage] {
@@ -395,7 +421,7 @@ private final class GalleryLoaderSpy: GalleryLoader {
 
         loadCallCount += 1
 
-        return stubbedGallery
+        return try stubbedResult.get()
     }
 }
 
