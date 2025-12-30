@@ -239,7 +239,7 @@ private extension LoadGalleryFromRemoteUseCaseTests {
 
 // MARK: - Error Extension
 
-extension RemoteGalleryLoader.Error: Equatable {
+extension RemoteGalleryLoader.Error: @retroactive Equatable {
     // Note: TradeOff: compare in the tests just the type, but for debugging this is helpful information
     public static func == (lhs: RemoteGalleryLoader.Error, rhs: RemoteGalleryLoader.Error) -> Bool {
         switch (lhs, rhs) {
