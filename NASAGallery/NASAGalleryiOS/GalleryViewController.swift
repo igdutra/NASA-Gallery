@@ -127,8 +127,10 @@ public final class GalleryViewController: UICollectionViewController {
 
         Task { @MainActor in
             do {
-                _ = try await task.value
-                // TODO: display image with the data
+                let data = try await task.value
+                if let image = UIImage(data: data) {
+                    cell.display(image)
+                }
                 cell.stopLoading()
             } catch {
                 cell.stopLoading()
@@ -148,8 +150,24 @@ public final class GalleryViewController: UICollectionViewController {
 private extension GalleryViewController {
     static func makeLayout() -> UICollectionViewCompositionalLayout {
         UICollectionViewCompositionalLayout { sectionIndex, environment in
-            let config = UICollectionLayoutListConfiguration(appearance: .plain)
-            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+            // Create a full-width item with automatic height
+            let itemSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(300)
+            )
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .estimated(300)
+            )
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 16
+            section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0)
+
+            return section
         }
     }
 }

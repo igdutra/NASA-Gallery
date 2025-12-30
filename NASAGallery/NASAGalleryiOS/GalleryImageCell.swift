@@ -12,6 +12,8 @@ import UIKit
 @MainActor public final class GalleryImageCell: UICollectionViewCell {
     // MARK: - Components
 
+    private let imageView = UIImageView()
+    private let titleLabel = UILabel()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private let retryButton = UIButton(type: .system)
 
@@ -20,6 +22,8 @@ import UIKit
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        setupImageView()
+        setupTitleLabel()
         setupActivityIndicator()
         setupRetryButton()
     }
@@ -30,11 +34,42 @@ import UIKit
         super.prepareForReuse()
         stopLoading()
         hideRetry()
-        self.contentConfiguration = nil
+        imageView.image = nil
+        titleLabel.text = nil
     }
     
     // MARK: - Methods
-    
+
+    private func setupImageView() {
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .systemGray6
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(imageView)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 9/16) // 16:9 aspect ratio
+        ])
+    }
+
+    private func setupTitleLabel() {
+        titleLabel.font = .preferredFont(forTextStyle: .headline)
+        titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(titleLabel)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+        ])
+    }
+
     private func setupActivityIndicator() {
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -74,6 +109,10 @@ import UIKit
         !retryButton.isHidden
     }
 
+    public var titleText: String? {
+        titleLabel.text
+    }
+
     /// Test hook: Called when stopLoading() executes. Allows tests to wait for async loading to complete.
     public var onStopLoading: (() -> Void)?
 
@@ -99,12 +138,11 @@ import UIKit
         retryButton.isHidden = true
     }
 
-    // Configure content using UIListContentConfiguration to keep the same subtitle style
     func apply(model: GalleryImage) {
-        var content = UIListContentConfiguration.subtitleCell()
-        content.text = model.title
-        content.secondaryText = model.date.formatted(date: .abbreviated, time: .omitted)
-        self.contentConfiguration = content
+        titleLabel.text = model.title
+    }
 
+    public func display(_ image: UIImage) {
+        imageView.image = image
     }
 }
