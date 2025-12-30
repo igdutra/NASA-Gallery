@@ -20,6 +20,7 @@ public final class GalleryViewController: UICollectionViewController {
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, GalleryImage>?
     private var gallery: [GalleryImage] = []
+    private var imageLoadingTasks: [IndexPath: GalleryImageDataLoaderTask] = [:]
 
     public convenience init(loader: GalleryLoader, imageLoader: GalleryImageDataLoader? = nil) {
         self.init(collectionViewLayout: Self.makeLayout())
@@ -109,9 +110,13 @@ public final class GalleryViewController: UICollectionViewController {
 
         let galleryImage = gallery[indexPath.row]
 
-        Task {
-            _ = try? await imageLoader.loadImageData(from: galleryImage.url)
-        }
+        let task = imageLoader.loadImageData(from: galleryImage.url)
+        imageLoadingTasks[indexPath] = task
+    }
+
+    public override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        imageLoadingTasks[indexPath]?.cancel()
+        imageLoadingTasks[indexPath] = nil
     }
 }
 

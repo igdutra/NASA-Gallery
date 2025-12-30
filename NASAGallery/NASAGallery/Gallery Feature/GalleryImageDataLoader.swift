@@ -7,6 +7,11 @@
 
 import Foundation
 
+public protocol GalleryImageDataLoaderTask {
+    func cancel()
+}
+
 public protocol GalleryImageDataLoader {
     func loadImageData(from url: URL) async throws -> Data
+    func loadImageData(from url: URL) -> GalleryImageDataLoaderTask
 }

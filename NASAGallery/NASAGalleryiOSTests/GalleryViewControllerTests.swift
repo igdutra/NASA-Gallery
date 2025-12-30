@@ -114,6 +114,32 @@ struct GalleryViewControllerTests {
         }
         #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture1.url])
     }
+
+    @Test func galleryImageView_cancelsImageLoadWhenNotVisibleAnymore() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0, fixture1])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        await performAndWaitForImageLoad(imageLoader) {
+            sut.simulateGalleryImageViewVisible(at: 0)
+        }
+        #expect(imageLoader.cancelledImageURLs.isEmpty)
+
+        sut.simulateGalleryImageViewNotVisible(at: 0)
+        #expect(imageLoader.cancelledImageURLs == [fixture0.url])
+
+        await performAndWaitForImageLoad(imageLoader) {
+            sut.simulateGalleryImageViewVisible(at: 1)
+        }
+        #expect(imageLoader.cancelledImageURLs == [fixture0.url])
+
+        sut.simulateGalleryImageViewNotVisible(at: 1)
+        #expect(imageLoader.cancelledImageURLs == [fixture0.url, fixture1.url])
+    }
 }
 
 // MARK: - Helpers
@@ -184,6 +210,8 @@ private extension GalleryViewControllerTests {
 
 private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
     private(set) var loadedImageURLs: [URL] = []
+    private(set) var cancelledImageURLs: [URL] = []
+    private var tasks: [URL: Task<Data, Error>] = [:]
 
     /// Completion handler called when loadImageData() finishes. Used with withCheckedContinuation for async waiting.
     var onComplete: (() -> Void)?
@@ -193,6 +221,32 @@ private final class GalleryImageDataLoaderSpy: GalleryImageDataLoader {
 
         loadedImageURLs.append(url)
         return Data()
+    }
+
+    func loadImageData(from url: URL) -> GalleryImageDataLoaderTask {
+        let task = Task {
+            try await loadImageData(from: url)
+        }
+        tasks[url] = task
+        return TaskWrapper(task: task, onCancel: { [weak self] in
+            self?.cancelledImageURLs.append(url)
+            self?.tasks[url] = nil
+        })
+    }
+
+    private class TaskWrapper: GalleryImageDataLoaderTask {
+        private let task: Task<Data, Error>
+        private let onCancel: () -> Void
+
+        init(task: Task<Data, Error>, onCancel: @escaping () -> Void) {
+            self.task = task
+            self.onCancel = onCancel
+        }
+
+        func cancel() {
+            task.cancel()
+            onCancel()
+        }
     }
 }
 
@@ -308,6 +362,15 @@ private extension GalleryViewController {
         delegate?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
 
         return cell
+    }
+
+    func simulateGalleryImageViewNotVisible(at index: Int, section: Int = 0) {
+        let indexPath = IndexPath(row: index, section: section)
+        guard let cell = cell(row: index, section: section) as? GalleryImageCell else { return }
+
+        // Simulate UIKit calling didEndDisplaying delegate method
+        let delegate = collectionView.delegate
+        delegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
     }
 }
 
