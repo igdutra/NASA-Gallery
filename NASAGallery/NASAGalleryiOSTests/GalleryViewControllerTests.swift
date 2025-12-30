@@ -225,6 +225,28 @@ struct GalleryViewControllerTests {
         #expect(imageLoader.loadedImageURLs == [fixture1.url, fixture2.url])
     }
 
+    @Test func galleryImageView_cancelsPrefetchWhenCellMovesAway() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0, fixture1])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        // Start prefetching for indices 0 and 1
+        sut.simulatePrefetchImages(at: [0, 1])
+        #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture1.url])
+        #expect(imageLoader.cancelledImageURLs.isEmpty)
+
+        // User scrolls quickly - cells 0 and 1 move away before becoming visible
+        sut.simulateCancelPrefetchImages(at: [0])
+        #expect(imageLoader.cancelledImageURLs == [fixture0.url])
+
+        sut.simulateCancelPrefetchImages(at: [1])
+        #expect(imageLoader.cancelledImageURLs == [fixture0.url, fixture1.url])
+    }
+
     @Test func galleryImageView_rendersImageLoadedFromURL() async {
         let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
         let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")

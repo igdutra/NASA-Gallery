@@ -201,4 +201,11 @@ extension GalleryViewController: UICollectionViewDataSourcePrefetching {
             }
         }
     }
+
+    public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            imageLoadingTasks[indexPath]?.cancel()
+            imageLoadingTasks[indexPath] = nil
+        }
+    }
 }
