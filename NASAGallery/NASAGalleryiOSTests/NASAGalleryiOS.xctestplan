@@ -2,9 +2,18 @@
   "configurations" : [
     {
       "id" : "EDCC580C-4C64-41F9-A511-199985FED163",
-      "name" : "Configuration 1",
+      "name" : "Default Configuration",
       "options" : {
 
+      }
+    },
+    {
+      "enabled" : false,
+      "id" : "67D6BA9B-971E-459F-9A67-B4A14E421939",
+      "name" : "Run Until Failure",
+      "options" : {
+        "maximumTestRepetitions" : 100,
+        "testRepetitionMode" : "untilFailure"
       }
     }
   ],
