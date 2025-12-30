@@ -205,41 +205,41 @@ struct GalleryViewControllerTests {
         #expect(cell0?.isShowingRetry == true)
     }
 
-//    @Test func galleryImageView_retriesImageLoadOnRetryButtonTap() async {
-//        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
-//        let (sut, loader, imageLoader) = makeSUT()
-//        loader.stub(gallery: [fixture0])
-//
-//        sut.simulateAppearance()
-//        await sut.waitForRefreshToEnd()
-//
-//        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
-//
-//        // Trigger first load failure
-//        await withCheckedContinuation { continuation in
-//            cell0?.onShowRetry = { continuation.resume() }
-//            imageLoader.completeImageLoadingWithError(anyNSError(), at: 0)
-//        }
-//
-//        #expect(cell0?.isShowingRetry == true)
-//        #expect(imageLoader.loadedImageURLs == [fixture0.url])
-//
-//        // User taps retry button
-//        cell0?.simulateRetryAction()
-//
-//        // Should trigger NEW image load attempt
-//        #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture0.url])
-//
-//        // Complete successfully this time
-//        let imageData = UIImage(data: UIImage.make(withColor: .red).pngData()!)?.pngData()
-//        await withCheckedContinuation { continuation in
-//            cell0?.onDisplayImage = { continuation.resume() }
-//            imageLoader.completeImageLoading(with: imageData!, at: 1)  // Index 1 for second load
-//        }
-//
-//        #expect(cell0?.renderedImage == imageData)
-//        #expect(cell0?.isShowingRetry == false)
-//    }
+    @Test func galleryImageView_retriesImageLoadOnRetryButtonTap() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+
+        // Trigger first load failure
+        await withCheckedContinuation { continuation in
+            cell0?.onShowRetry = { continuation.resume() }
+            imageLoader.completeImageLoadingWithError(anyNSError(), at: 0)
+        }
+
+        #expect(cell0?.isShowingRetry == true)
+        #expect(imageLoader.loadedImageURLs == [fixture0.url])
+
+        // User taps retry button
+        cell0?.simulateRetryAction()
+
+        // Should trigger NEW image load attempt
+        #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture0.url])
+
+        // Complete successfully this time
+        let imageData = UIImage(data: UIImage.make(withColor: .red).pngData()!)?.pngData()
+        await withCheckedContinuation { continuation in
+            cell0?.onDisplayImage = { continuation.resume() }
+            imageLoader.completeImageLoading(with: imageData!, at: 1)  // Index 1 for second load
+        }
+
+        #expect(cell0?.renderedImage == imageData)
+        #expect(cell0?.isShowingRetry == false)
+    }
 
     @Test func galleryImageView_displaysRetryOnInvalidImageData() async {
         let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
@@ -326,6 +326,7 @@ struct GalleryViewControllerTests {
 
         // Create image data and normalize through the same pipeline as production code
         // This ensures PNG encoding is identical (UIImage(data:) -> pngData() round-trip)
+        // FIXME: get back to this, there's something wrong with coding it 2x
         let imageData0 = UIImage(data: UIImage.make(withColor: .red).pngData()!)?.pngData()
         await withCheckedContinuation { continuation in
             cell0?.onDisplayImage = { continuation.resume() }
@@ -553,6 +554,14 @@ private extension UIControl {
             }
         }
     }
+
+    func simulateTap() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach {
+                (target as NSObject).perform(Selector($0))
+            }
+        }
+    }
 }
 
 private extension GalleryImageCell {
@@ -570,6 +579,10 @@ private extension GalleryImageCell {
 
     var renderedImage: Data? {
         imageView.image?.pngData()
+    }
+
+    func simulateRetryAction() {
+        retryButton.simulateTap()
     }
 }
 
@@ -656,6 +669,12 @@ private extension GalleryViewController {
         let indexPaths = indices.map { IndexPath(row: $0, section: section) }
         let prefetchDataSource = collectionView.prefetchDataSource
         prefetchDataSource?.collectionView(collectionView, prefetchItemsAt: indexPaths)
+    }
+
+    func simulateCancelPrefetchImages(at indices: [Int], section: Int = 0) {
+        let indexPaths = indices.map { IndexPath(row: $0, section: section) }
+        let prefetchDataSource = collectionView.prefetchDataSource
+        prefetchDataSource?.collectionView?(collectionView, cancelPrefetchingForItemsAt: indexPaths)
     }
 }
 

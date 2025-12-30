@@ -105,14 +105,26 @@ public final class GalleryViewController: UICollectionViewController {
 
     // MARK: - UICollectionViewDelegate
     
-    // TODO: should that be here? i think we should use diffable datasource! not willDisplay! but fine for now. will display and didEndDisplaying
+    // FIXME: should that be here? i think we should use diffable datasource! not willDisplay! but fine for now. will display and didEndDisplaying
 
     public override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? GalleryImageCell,
-              let imageLoader = imageLoader,
               indexPath.row < gallery.count else { return }
 
         let galleryImage = gallery[indexPath.row]
+
+        // Set retry callback
+        cell.onRetry = { [weak self] in
+            // Clear the old failed task so we create a fresh one
+            self?.imageLoadingTasks[indexPath] = nil
+            self?.loadImage(for: galleryImage, into: cell, at: indexPath)
+        }
+
+        loadImage(for: galleryImage, into: cell, at: indexPath)
+    }
+
+    private func loadImage(for galleryImage: GalleryImage, into cell: GalleryImageCell, at indexPath: IndexPath) {
+        guard let imageLoader = imageLoader else { return }
 
         // Check if we already have a task (from prefetch or previous load)
         let task: GalleryImageDataLoaderTask
@@ -125,8 +137,8 @@ public final class GalleryViewController: UICollectionViewController {
             imageLoadingTasks[indexPath] = task
         }
 
+        cell.hideRetry()
         cell.startLoading()
-        // FIXME: reset the states here
         cell.imageView.image = nil
 
         Task { @MainActor in

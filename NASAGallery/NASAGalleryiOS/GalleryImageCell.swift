@@ -88,12 +88,17 @@ import UIKit
         retryButton.titleLabel?.font = .systemFont(ofSize: 32)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
         retryButton.isHidden = true
+        retryButton.addTarget(self, action: #selector(retryButtonTapped), for: .touchUpInside)
         contentView.addSubview(retryButton)
 
         NSLayoutConstraint.activate([
             retryButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             retryButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+    }
+
+    @objc private func retryButtonTapped() {
+        onRetry?()
     }
 
     private func bringSpinnerToFront() {
@@ -108,6 +113,9 @@ import UIKit
 
     /// Test hook: Called when display(_:) executes. Allows tests to wait for async image rendering to complete.
     public var onDisplayImage: (() -> Void)?
+
+    /// Callback invoked when user taps the retry button. Set by the ViewController to reload the image.
+    public var onRetry: (() -> Void)?
 
     public func startLoading() {
         activityIndicator.startAnimating()
