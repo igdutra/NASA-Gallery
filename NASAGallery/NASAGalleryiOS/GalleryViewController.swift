@@ -132,9 +132,13 @@ public final class GalleryViewController: UICollectionViewController {
         Task { @MainActor in
             do {
                 let data = try await task.value
-                if let image = UIImage(data: data) {
-                    cell.display(image)
+                guard let image = UIImage(data: data) else {
+                    // Invalid image data - treat as error
+                    cell.stopLoading()
+                    cell.showRetry()
+                    return
                 }
+                cell.display(image)
                 cell.stopLoading()
             } catch {
                 cell.stopLoading()

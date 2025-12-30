@@ -35,6 +35,7 @@ import UIKit
         hideRetry()
         imageView.image = nil
         titleLabel.text = nil
+        onRetry = nil
     }
     
     // MARK: - Methods

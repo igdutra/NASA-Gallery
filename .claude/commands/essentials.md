@@ -58,6 +58,8 @@ For each test, create an entry:
 
 #### 3. Implementation Plan (Per Test)
 
+Important: do NOT run the tests. Tell the user to try it locally.
+
 For each NEW test needed:
 
 ```markdown

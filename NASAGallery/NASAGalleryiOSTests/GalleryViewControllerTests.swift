@@ -205,6 +205,69 @@ struct GalleryViewControllerTests {
         #expect(cell0?.isShowingRetry == true)
     }
 
+//    @Test func galleryImageView_retriesImageLoadOnRetryButtonTap() async {
+//        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+//        let (sut, loader, imageLoader) = makeSUT()
+//        loader.stub(gallery: [fixture0])
+//
+//        sut.simulateAppearance()
+//        await sut.waitForRefreshToEnd()
+//
+//        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+//
+//        // Trigger first load failure
+//        await withCheckedContinuation { continuation in
+//            cell0?.onShowRetry = { continuation.resume() }
+//            imageLoader.completeImageLoadingWithError(anyNSError(), at: 0)
+//        }
+//
+//        #expect(cell0?.isShowingRetry == true)
+//        #expect(imageLoader.loadedImageURLs == [fixture0.url])
+//
+//        // User taps retry button
+//        cell0?.simulateRetryAction()
+//
+//        // Should trigger NEW image load attempt
+//        #expect(imageLoader.loadedImageURLs == [fixture0.url, fixture0.url])
+//
+//        // Complete successfully this time
+//        let imageData = UIImage(data: UIImage.make(withColor: .red).pngData()!)?.pngData()
+//        await withCheckedContinuation { continuation in
+//            cell0?.onDisplayImage = { continuation.resume() }
+//            imageLoader.completeImageLoading(with: imageData!, at: 1)  // Index 1 for second load
+//        }
+//
+//        #expect(cell0?.renderedImage == imageData)
+//        #expect(cell0?.isShowingRetry == false)
+//    }
+
+    @Test func galleryImageView_displaysRetryOnInvalidImageData() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+
+        // BEFORE invalid data - no retry button
+        #expect(cell0?.isShowingRetry == false)
+
+        // Complete with invalid image data (not a valid image format)
+        let invalidImageData = Data("invalid image data".utf8)
+
+        await withCheckedContinuation { continuation in
+            cell0?.onShowRetry = { continuation.resume() }
+            imageLoader.completeImageLoading(with: invalidImageData, at: 0)
+        }
+
+        // AFTER invalid data - retry button appears and loading stops
+        #expect(cell0?.isShowingRetry == true)
+        #expect(cell0?.isLoading == false)
+        #expect(cell0?.renderedImage == nil)
+    }
+
     @Test func galleryImageView_preloadsImageWhenCellIsNearVisible() async {
         let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
         let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
