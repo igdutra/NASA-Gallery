@@ -411,6 +411,20 @@ private extension UIControl {
     }
 }
 
+private extension GalleryImageCell {
+    var isLoading: Bool {
+        activityIndicator.isAnimating
+    }
+
+    var isShowingRetry: Bool {
+        !retryButton.isHidden
+    }
+
+    var titleText: String? {
+        titleLabel.text
+    }
+}
+
 private extension GalleryViewController {
     /// Note: If we simply called sut.viewIsAppearing we would let our view in a weird state.
     /// Thus, we should trigger all he lifeCycle methods, in order, and we can do so by triggering transitions.

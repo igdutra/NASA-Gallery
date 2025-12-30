@@ -12,13 +12,12 @@ import UIKit
 @MainActor public final class GalleryImageCell: UICollectionViewCell {
     // MARK: - Components
 
-    private let imageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
-    private let retryButton = UIButton(type: .system)
+    public let imageView = UIImageView()
+    public let titleLabel = UILabel()
+    public let activityIndicator = UIActivityIndicatorView(style: .medium)
+    public let retryButton = UIButton(type: .system)
 
     // MARK: - Init & lifecycle
-
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -98,19 +97,6 @@ import UIKit
 
     private func bringSpinnerToFront() {
         contentView.bringSubviewToFront(activityIndicator)
-    }
-    
-    // Note: could that me moved to a private DSL in the tests?
-    public var isLoading: Bool {
-        activityIndicator.isAnimating
-    }
-
-    public var isShowingRetry: Bool {
-        !retryButton.isHidden
-    }
-
-    public var titleText: String? {
-        titleLabel.text
     }
 
     /// Test hook: Called when stopLoading() executes. Allows tests to wait for async loading to complete.
