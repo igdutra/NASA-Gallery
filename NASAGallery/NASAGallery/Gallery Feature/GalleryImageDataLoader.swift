@@ -9,6 +9,7 @@ import Foundation
 
 public protocol GalleryImageDataLoaderTask {
     func cancel()
+    var value: Data { get async throws }
 }
 
 public protocol GalleryImageDataLoader {
