@@ -104,6 +104,8 @@ public final class GalleryViewController: UICollectionViewController {
     }
 
     // MARK: - UICollectionViewDelegate
+    
+    // TODO: should that be here? i think we should use diffable datasource! not willDisplay! but fine for now. will display and didEndDisplaying
 
     public override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? GalleryImageCell,
@@ -124,6 +126,8 @@ public final class GalleryViewController: UICollectionViewController {
         }
 
         cell.startLoading()
+        // FIXME: reset the states here
+        cell.imageView.image = nil
 
         Task { @MainActor in
             do {

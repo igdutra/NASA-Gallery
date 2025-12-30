@@ -224,6 +224,39 @@ struct GalleryViewControllerTests {
         // Should start loading images for those indices
         #expect(imageLoader.loadedImageURLs == [fixture1.url, fixture2.url])
     }
+
+    @Test func galleryImageView_rendersImageLoadedFromURL() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0, fixture1])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        let cell0 = sut.simulateGalleryImageViewVisible(at: 0)
+        let cell1 = sut.simulateGalleryImageViewVisible(at: 1)
+        #expect(cell0?.renderedImage == nil, "Expected no image for first view while loading first image")
+        #expect(cell1?.renderedImage == nil, "Expected no image for second view while loading second image")
+
+        // Create image data and normalize through the same pipeline as production code
+        // This ensures PNG encoding is identical (UIImage(data:) -> pngData() round-trip)
+        let imageData0 = UIImage(data: UIImage.make(withColor: .red).pngData()!)?.pngData()
+        await withCheckedContinuation { continuation in
+            cell0?.onDisplayImage = { continuation.resume() }
+            imageLoader.completeImageLoading(with: imageData0!, at: 0)
+        }
+        #expect(cell0?.renderedImage == imageData0, "Expected image for first view once first image loading completes successfully")
+        #expect(cell1?.renderedImage == nil, "Expected no image state change for second view once first image loading completes successfully")
+
+        let imageData1 = UIImage(data: UIImage.make(withColor: .blue).pngData()!)?.pngData()
+        await withCheckedContinuation { continuation in
+            cell1?.onDisplayImage = { continuation.resume() }
+            imageLoader.completeImageLoading(with: imageData1!, at: 1)
+        }
+        #expect(cell0?.renderedImage == imageData0, "Expected no image state change for first view once second image loading completes successfully")
+        #expect(cell1?.renderedImage == imageData1, "Expected image for second view once second image loading completes successfully")
+    }
 }
 
 // MARK: - Helpers
@@ -448,6 +481,23 @@ private extension GalleryImageCell {
 
     var titleText: String? {
         titleLabel.text
+    }
+
+    var renderedImage: Data? {
+        imageView.image?.pngData()
+    }
+}
+
+private extension UIImage {
+    static func make(withColor color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setFillColor(color.cgColor)
+        context.fill(rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
     }
 }
 

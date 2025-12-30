@@ -105,6 +105,9 @@ import UIKit
     /// Test hook: Called when showRetry() executes. Allows tests to wait for async error handling to complete.
     public var onShowRetry: (() -> Void)?
 
+    /// Test hook: Called when display(_:) executes. Allows tests to wait for async image rendering to complete.
+    public var onDisplayImage: (() -> Void)?
+
     public func startLoading() {
         activityIndicator.startAnimating()
         bringSpinnerToFront()
@@ -130,5 +133,6 @@ import UIKit
 
     public func display(_ image: UIImage) {
         imageView.image = image
+        onDisplayImage?()
     }
 }
