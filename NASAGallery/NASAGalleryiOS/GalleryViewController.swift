@@ -32,6 +32,7 @@ public final class GalleryViewController: UICollectionViewController {
         super.viewDidLoad()
 
         collectionView.delegate = self
+        collectionView.prefetchDataSource = self
 
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
@@ -141,6 +142,33 @@ private extension GalleryViewController {
         UICollectionViewCompositionalLayout { sectionIndex, environment in
             let config = UICollectionLayoutListConfiguration(appearance: .plain)
             return NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+        }
+    }
+}
+
+// MARK: - UICollectionViewDataSourcePrefetching
+
+extension GalleryViewController: UICollectionViewDataSourcePrefetching {
+    public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        guard let imageLoader = imageLoader else { return }
+
+        for indexPath in indexPaths {
+            guard indexPath.row < gallery.count else { continue }
+            guard imageLoadingTasks[indexPath] == nil else { continue }
+
+            let galleryImage = gallery[indexPath.row]
+            let task = imageLoader.loadImageData(from: galleryImage.url)
+            imageLoadingTasks[indexPath] = task
+
+            // Start loading in background - no UI to update since cell isn't visible yet
+            Task { @MainActor in
+                do {
+                    _ = try await task.value
+                    // Image is now cached/loaded, ready for when cell appears
+                } catch {
+                    // Prefetch errors are silently ignored - will retry when cell appears
+                }
+            }
         }
     }
 }

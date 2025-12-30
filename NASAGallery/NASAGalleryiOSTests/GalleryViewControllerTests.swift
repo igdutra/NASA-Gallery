@@ -183,6 +183,26 @@ struct GalleryViewControllerTests {
         // AFTER error - retry button appears
         #expect(cell0?.isShowingRetry == true)
     }
+
+    @Test func galleryImageView_preloadsImageWhenCellIsNearVisible() async {
+        let fixture0 = makeGalleryImageFixture(urlString: "https://url-0.com")
+        let fixture1 = makeGalleryImageFixture(urlString: "https://url-1.com")
+        let fixture2 = makeGalleryImageFixture(urlString: "https://url-2.com")
+        let (sut, loader, imageLoader) = makeSUT()
+        loader.stub(gallery: [fixture0, fixture1, fixture2])
+
+        sut.simulateAppearance()
+        await sut.waitForRefreshToEnd()
+
+        // No images loaded yet
+        #expect(imageLoader.loadedImageURLs.isEmpty)
+
+        // Simulate UICollectionView telling us index 1 and 2 are about to become visible
+        sut.simulatePrefetchImages(at: [1, 2])
+
+        // Should start loading images for those indices
+        #expect(imageLoader.loadedImageURLs == [fixture1.url, fixture2.url])
+    }
 }
 
 // MARK: - Helpers
@@ -456,6 +476,12 @@ private extension GalleryViewController {
         // Simulate UIKit calling didEndDisplaying delegate method
         let delegate = collectionView.delegate
         delegate?.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+    }
+
+    func simulatePrefetchImages(at indices: [Int], section: Int = 0) {
+        let indexPaths = indices.map { IndexPath(row: $0, section: section) }
+        let prefetchDataSource = collectionView.prefetchDataSource
+        prefetchDataSource?.collectionView(collectionView, prefetchItemsAt: indexPaths)
     }
 }
 
