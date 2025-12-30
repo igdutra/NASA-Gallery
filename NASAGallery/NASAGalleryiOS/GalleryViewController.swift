@@ -112,8 +112,16 @@ public final class GalleryViewController: UICollectionViewController {
 
         let galleryImage = gallery[indexPath.row]
 
-        let task = imageLoader.loadImageData(from: galleryImage.url)
-        imageLoadingTasks[indexPath] = task
+        // Check if we already have a task (from prefetch or previous load)
+        let task: GalleryImageDataLoaderTask
+        if let existingTask = imageLoadingTasks[indexPath] {
+            // REUSE the existing task! Prefetch work isn't wasted!
+            task = existingTask
+        } else {
+            // Create new task only if needed
+            task = imageLoader.loadImageData(from: galleryImage.url)
+            imageLoadingTasks[indexPath] = task
+        }
 
         cell.startLoading()
 
