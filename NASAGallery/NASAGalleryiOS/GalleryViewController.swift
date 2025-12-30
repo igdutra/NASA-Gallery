@@ -105,13 +105,26 @@ public final class GalleryViewController: UICollectionViewController {
     // MARK: - UICollectionViewDelegate
 
     public override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let imageLoader = imageLoader,
+        guard let cell = cell as? GalleryImageCell,
+              let imageLoader = imageLoader,
               indexPath.row < gallery.count else { return }
 
         let galleryImage = gallery[indexPath.row]
 
         let task = imageLoader.loadImageData(from: galleryImage.url)
         imageLoadingTasks[indexPath] = task
+
+        cell.startLoading()
+
+        Task { @MainActor in
+            defer {  cell.stopLoading() }
+            do {
+                _ = try await task.value
+                // TODO: display image with the data
+            } catch {
+                // Handle error in the future
+            }
+        }
     }
 
     public override func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
