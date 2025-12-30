@@ -242,15 +242,14 @@ private extension GalleryViewControllerTests {
 
     func assertThat(_ sut: GalleryViewController, isRendering gallery: [GalleryImage], inSection section: Int = 0, sourceLocation: SourceLocation = #_sourceLocation) {
         #expect(sut.numberOfGalleryImages() == gallery.count, sourceLocation: sourceLocation)
-        
+
         for (index, image) in gallery.enumerated() {
             guard let cell = sut.cell(row: index, section: section) as? GalleryImageCell else {
                 Issue.record("Cell should be of type GalleryImageCell", sourceLocation: sourceLocation)
                 return
             }
-            let config = cell.contentConfiguration as? UIListContentConfiguration
-            
-            #expect(config?.text == image.title, sourceLocation: sourceLocation)
+
+            #expect(cell.titleText == image.title, sourceLocation: sourceLocation)
         }
     }
 }

@@ -109,6 +109,10 @@ import UIKit
         !retryButton.isHidden
     }
 
+    public var titleText: String? {
+        titleLabel.text
+    }
+
     /// Test hook: Called when stopLoading() executes. Allows tests to wait for async loading to complete.
     public var onStopLoading: (() -> Void)?
 
