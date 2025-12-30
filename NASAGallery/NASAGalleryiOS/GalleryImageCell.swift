@@ -12,13 +12,12 @@ import UIKit
 @MainActor public final class GalleryImageCell: UICollectionViewCell {
     // MARK: - Components
 
-    private let imageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
-    private let retryButton = UIButton(type: .system)
+    public let imageView = UIImageView()
+    public let titleLabel = UILabel()
+    public let activityIndicator = UIActivityIndicatorView(style: .medium)
+    public let retryButton = UIButton(type: .system)
 
     // MARK: - Init & lifecycle
-
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +35,7 @@ import UIKit
         hideRetry()
         imageView.image = nil
         titleLabel.text = nil
+        onRetry = nil
     }
     
     // MARK: - Methods
@@ -88,6 +88,7 @@ import UIKit
         retryButton.titleLabel?.font = .systemFont(ofSize: 32)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
         retryButton.isHidden = true
+        retryButton.addTarget(self, action: #selector(retryButtonTapped), for: .touchUpInside)
         contentView.addSubview(retryButton)
 
         NSLayoutConstraint.activate([
@@ -96,21 +97,12 @@ import UIKit
         ])
     }
 
+    @objc private func retryButtonTapped() {
+        onRetry?()
+    }
+
     private func bringSpinnerToFront() {
         contentView.bringSubviewToFront(activityIndicator)
-    }
-    
-    // Note: could that me moved to a private DSL in the tests?
-    public var isLoading: Bool {
-        activityIndicator.isAnimating
-    }
-
-    public var isShowingRetry: Bool {
-        !retryButton.isHidden
-    }
-
-    public var titleText: String? {
-        titleLabel.text
     }
 
     /// Test hook: Called when stopLoading() executes. Allows tests to wait for async loading to complete.
@@ -118,6 +110,12 @@ import UIKit
 
     /// Test hook: Called when showRetry() executes. Allows tests to wait for async error handling to complete.
     public var onShowRetry: (() -> Void)?
+
+    /// Test hook: Called when display(_:) executes. Allows tests to wait for async image rendering to complete.
+    public var onDisplayImage: (() -> Void)?
+
+    /// Callback invoked when user taps the retry button. Set by the ViewController to reload the image.
+    public var onRetry: (() -> Void)?
 
     public func startLoading() {
         activityIndicator.startAnimating()
@@ -144,5 +142,6 @@ import UIKit
 
     public func display(_ image: UIImage) {
         imageView.image = image
+        onDisplayImage?()
     }
 }

@@ -86,6 +86,115 @@ This project follows strict TDD (Test-Driven Development). For every feature:
 - ALWAYS ask user before proceeding to next test
 - User runs all tests (Claude does not run test commands)
 
+### Critical: Always Think About Edge Cases
+
+**KEY PRINCIPLE: Always ask yourself "What will happen if...?"**
+
+Before writing ANY test, systematically consider:
+
+#### 1. Both Branches of Control Flow
+- **do/catch blocks**: Are we testing BOTH success and failure paths?
+- **if/else statements**: Are we testing both branches?
+- **defer blocks**: What happens on success? What happens on failure?
+- **guard statements**: What happens when the guard passes? When it fails?
+
+**Example - Testing Both Scenarios:**
+```swift
+// If you have a defer that cleans up on failure
+defer { if failed { cleanup() } }
+
+// You need tests for:
+// ✅ test_operation_doesNotCallCleanup_onSuccess
+// ✅ test_operation_callsCleanup_onFailure
+```
+
+#### 2. Negative Cases (Failure Scenarios)
+Don't just test the happy path! Always test what happens when things go wrong:
+
+- **What happens if a load fails?**
+  - Network errors
+  - Invalid data
+  - Missing resources
+
+- **UI failure states:**
+  - `test_feedImageView_showsRetryButton_onImageLoadError`
+  - `test_feedImageViewRetryButton_isVisibleOnInvalidImageData`
+  - `test_feedImageView_hidesImageView_onLoadFailure`
+
+- **State after failure:**
+  - Is loading indicator hidden?
+  - Are error messages displayed?
+  - Can the user retry?
+
+#### 3. Temporal Coupling in UI Tests
+In UI code, state changes happen in sequence. Test the full flow:
+
+```swift
+// ❌ BAD: Testing states in isolation
+test_isLoadingIndicator_isInitiallyFalse()
+test_isLoadingIndicator_isTrueWhileLoading()
+
+// ✅ GOOD: Testing temporal sequence in one test
+test_loadingIndicator_showsCorrectStatesThroughoutLoadLifecycle() {
+    #expect(sut.isLoading == false)  // Initial state
+
+    sut.loadGallery()
+    #expect(sut.isLoading == true)   // During load
+
+    completeLoading()
+    #expect(sut.isLoading == false)  // After load
+}
+```
+
+**Real example from GalleryViewController:**
+```swift
+// Testing the full loading lifecycle with temporal coupling
+#expect(cell0?.isLoading == false)      // Before
+imageLoader.completeImageLoading(at: 0)
+await imageLoader.waitForImageLoading(at: 0)
+#expect(cell0?.isLoading == false)      // After
+```
+
+#### 4. Systematic Edge Case Checklist
+
+For EVERY feature, ask:
+
+- [ ] **Success path**: Does it work when everything goes right?
+- [ ] **Failure path**: Does it handle errors gracefully?
+- [ ] **Both branches**: If there's a branch (if/else, do/catch, guard), are both tested?
+- [ ] **Boundary conditions**: Empty arrays? Nil values? Zero counts?
+- [ ] **State transitions**: Does the state flow correctly through the entire lifecycle?
+- [ ] **Side effects**: Are all side effects tested (directly or indirectly)?
+- [ ] **Cleanup**: Is cleanup tested for both success and failure?
+
+#### 5. Direct vs Indirect Testing
+
+You don't always need explicit tests for everything - some behaviors are covered indirectly:
+
+**Example:**
+```swift
+// This test DIRECTLY tests retry button visibility on failure
+test_imageCell_showsRetryButton_onLoadFailure()
+
+// This test INDIRECTLY confirms the retry button works
+test_imageCell_retriesImageLoad_onRetryButtonTap()
+// (If retry works, the button must be visible!)
+```
+
+**Guideline**:
+- Test critical paths DIRECTLY
+- Accept INDIRECT coverage for supporting behaviors
+- If uncertain, add the explicit test
+
+### Applying the Edge Case Mindset
+
+**Before writing each test, pause and ask:**
+1. "What's the opposite scenario?" (success ↔ failure)
+2. "What happens if this fails?"
+3. "Are there any branches I haven't covered?"
+4. "What state transitions are involved?"
+5. "What edge cases exist?" (empty, nil, zero, etc.)
+
 ## Testing Async Code: NEVER Use `Task.yield()`
 
 ### The Problem with `Task.yield()`

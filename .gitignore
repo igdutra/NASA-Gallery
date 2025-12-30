@@ -2,3 +2,6 @@
 
 ## User settings
 xcuserdata/
+
+## This is a place were we store some possible features/refactors that we don't wish to push to remote
+PossibleFeatureDocuments
