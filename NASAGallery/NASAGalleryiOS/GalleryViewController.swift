@@ -9,6 +9,9 @@ import Foundation
 import NASAGallery
 import UIKit
 
+
+// TODO: implement markdown plan
+
 public final class GalleryViewController: UICollectionViewController {
     private var loader: GalleryLoader?
     private var imageLoader: GalleryImageDataLoader?
